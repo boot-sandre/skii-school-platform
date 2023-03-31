@@ -1,7 +1,4 @@
 <template>
-  <h2 class="text-3xl text-center">
-    Teachers Space
-  </h2>
   <div class="flex flex-col items-center my-8 space-y-5">
     <DataTable :value="teachers" class="p-datatable p-datatable-table" 
       tableStyle="min-width: 50rem" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">

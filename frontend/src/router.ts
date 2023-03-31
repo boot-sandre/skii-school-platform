@@ -108,9 +108,44 @@ const routes: Array<RouteRecordRaw> = [
           title: "Teacher",
         }
       },
-    ],
-    
-  },
+      
+    ]},
+    {
+      path: "/location",
+      component: () => import("./views/skii/LocationView.vue"),
+      name: 'location-view',
+      meta: {
+        title: "Location(s)"
+      },
+      children: [
+        {
+          component: () => import("./components/skii/LocationList.vue"),
+          path: "/location/list",
+          name: "list_location_record",
+          meta: {
+            title: "Location(s)",
+          }
+        },
+        {
+          component: () => import("./components/skii/Location.vue"),
+          path: "/location/fetch/:djangoPk/",
+          name: "fetch_location_record",
+          props: true,
+          meta: {
+            title: "Location",
+          }
+        },
+        {
+          component: () => import("./components/skii/Location.vue"),
+          path: "/location/create",
+          name: "create_location_record",
+          props: true,
+          meta: {
+            title: "Location",
+          }
+        },
+      ],
+    },
   
   
   

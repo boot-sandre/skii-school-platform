@@ -30,7 +30,7 @@
   </template>
   
   <script setup lang="ts">
-  import { onBeforeMount, ref } from 'vue';
+  import { onBeforeMount, shallowRef } from 'vue';
   import { StudentAgentContract, StudentSingleResponse } from "@/interfaces";
   import { api, user, forms } from '@/state';
   import router from '@/router';
@@ -39,7 +39,7 @@
   import Button from 'primevue/button';
   import { confirmDanger, msg } from '@/notify';
   
-  const teacher = ref<StudentAgentContract>({
+  const teacher = shallowRef<StudentAgentContract>({
     user: {
       first_name: "",
       last_name: "",

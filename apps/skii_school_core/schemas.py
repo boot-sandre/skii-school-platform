@@ -1,8 +1,9 @@
+from django_countries.fields import Country
 from ninja import Schema, ModelSchema
 from django.contrib.auth import get_user_model
 from typing import Dict, List, Any
 
-from apps.skii_school_core.models import StudentAgent, TeacherAgent
+from apps.skii_school_core.models import StudentAgent, TeacherAgent, Location
 
 User = get_user_model()
 
@@ -100,3 +101,39 @@ class TeacherListResponse(Schema):
     model: str
     count: int
     items: List[TeacherContractShort] = []
+
+
+class CountryContract(Schema):
+    code: str
+    name: str
+    flag: str
+
+
+class LocationContract(ModelSchema):
+    country: CountryContract
+
+    class Config:
+        model = Location
+        model_fields = "__all__"
+        model_exclude = ["country"]
+
+
+class LocationContractShort(ModelSchema):
+    country: str
+
+    class Config:
+        model = Location
+        model_fields = "__all__"
+        model_exclude = ["last_modified", "created", "country"]
+
+
+class LocationRecordResponse(Schema):
+    model: str
+    count: int
+    item: LocationContract | None
+
+
+class LocationListResponse(Schema):
+    model: str
+    count: int
+    items: List[LocationContract] = []

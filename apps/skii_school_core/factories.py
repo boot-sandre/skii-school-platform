@@ -9,6 +9,11 @@ from apps.skii_school_core.models import (
     MoneyRessource,
     TimeRessource,
     Event,
+    Location,
+    GeoCoordinate,
+    VisualAlbum,
+    VisualElement,
+    VisualPicture
 )
 
 
@@ -74,3 +79,70 @@ class EventFactory(factory.django.DjangoModelFactory):
         model = Event
 
     editor = factory.SubFactory(UserFactory)
+
+
+latitude_config = {
+    'left_digits': 3,
+    'right_digits': 4,
+    'positive': False,
+    'min_value': -90,
+    'max_value': 90,
+}
+longitude_config = latitude_config.copy()
+longitude_config.update({
+    'min_value': -180,
+    'max_value': 180,
+})
+
+
+class GeoCoordinateFactory(factory.django.DjangoModelFactory):
+    latitude = factory.Faker("pyfloat", **latitude_config)
+    longitude = factory.Faker("pyfloat", **longitude_config)
+
+    class Meta:
+        model = GeoCoordinate
+
+
+class VisualAlbumFactory(factory.django.DjangoModelFactory):
+    title = factory.Faker("text")
+    description = factory.Faker("text")
+
+    class Meta:
+        model = VisualAlbum
+
+
+class VisualElementFactory(factory.django.DjangoModelFactory):
+    album = factory.SubFactory(VisualAlbumFactory)
+
+    title = factory.Faker("text")
+    description = factory.Faker("text")
+    picture = factory.django.ImageField()
+
+    class Meta:
+        model = VisualElement
+
+
+class VisualPictureFactory(factory.django.DjangoModelFactory):
+    title = factory.Faker("text")
+    description = factory.Faker("text")
+    picture = factory.django.ImageField()
+
+    class Meta:
+        model = VisualPicture
+
+
+class LocationFactory(factory.django.DjangoModelFactory):
+    """
+    Factory to create instance of an Event .
+    """
+    class Meta:
+        model = Location
+    address1 = factory.Faker("address")
+    city = factory.Faker("city")
+    country = factory.Faker("country_code")
+    label = factory.Faker("text")
+    description = factory.Faker("text")
+
+    coordinate = factory.SubFactory(GeoCoordinateFactory)
+    illustration = factory.SubFactory(VisualAlbumFactory)
+    cover = factory.SubFactory(VisualPictureFactory)

@@ -1,5 +1,7 @@
 import uuid
 from decimal import Decimal as Deci
+
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.timezone import now
 
 from django.db import models
@@ -31,23 +33,80 @@ class UUIDEntity(RecordIdentityHistory):
         return f"{str(self.uuid)[:8]}..."
 
 
-class DisplayEntity(models.Model):
+class DescribeEntity(models.Model):
     class Meta:
         abstract = True
 
-    label = models.CharField(max_length=255, verbose_name=_("Label/Title"))
     description = models.TextField(
-        verbose_name=_("A long description to display"), blank=True, null=True
-    )
-
-
-class DescriptionEntity(models.Model):
-    class Meta:
-        abstract = True
-
-    description_short = models.TextField(
         max_length=255, verbose_name=_("Short description"), blank=True, null=True
     )
+
+
+class LabelEntity(models.Model):
+    class Meta:
+        abstract = True
+    label = models.CharField(max_length=255, verbose_name=_("Label"), default="")
+
+
+class TitleEntity(models.Model):
+    class Meta:
+        abstract = True
+    title = models.CharField(max_length=255, verbose_name=_("Title"), default="")
+
+
+class ContentEntity(models.Model):
+    class Meta:
+        abstract = True
+
+    content = models.TextField(
+        verbose_name=_("Full content to display"), blank=True, null=True
+    )
+
+
+class CMSDisplayEntity(TitleEntity, DescribeEntity):
+    class Meta:
+        abstract = True
+
+
+class NomenclatureEntity(LabelEntity, DescribeEntity):
+    class Meta:
+        abstract = True
+
+
+class UUIDLabelEntity(UUIDEntity, NomenclatureEntity):
+
+    class Meta:
+        abstract = True
+
+
+class CMSUUIDEntity(UUIDEntity, CMSDisplayEntity):
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return f"[{self.pk}] {self.title[:30]}"
+
+
+def get_default_cover_image():
+    return "default.png"
+
+
+class VisualEntity(CMSUUIDEntity):
+    class Meta:
+        abstract = True
+    picture = models.ImageField(
+        verbose_name=_("Picture"), default=get_default_cover_image)
+
+
+class GeoCoordinateEntity(models.Model):
+    class Meta:
+        abstract = True
+    latitude = models.DecimalField(validators=[MaxValueValidator(limit_value=90),
+                                               MinValueValidator(limit_value=-90)],
+                                   max_digits=6, decimal_places=4)
+    longitude = models.DecimalField(validators=[MaxValueValidator(limit_value=180),
+                                                MinValueValidator(limit_value=-180)],
+                                    max_digits=7, decimal_places=4)
 
 
 class StateChoices(models.TextChoices):
@@ -93,6 +152,8 @@ def mutate_event_state(value, initial):
         StateChoices.PLANNED,
     ]:
         new_status = value
+    print("mutate_event_state:new_status")
+    print(new_status)
     return new_status
 
 
@@ -108,7 +169,7 @@ class StateEntity(models.Model):
         return str(self.state)
 
 
-class AgendaEntity(UUIDEntity, DisplayEntity):
+class AgendaEntity(UUIDEntity, CMSDisplayEntity):
     class Meta:
         abstract = True
 
@@ -128,7 +189,7 @@ class AgentEntity(RecordIdentityHistory):
         return f"{self._meta.model_name}: {self.user.get_username()}"
 
 
-class RessourceEntity(UUIDEntity, DescriptionEntity):
+class RessourceEntity(UUIDLabelEntity):
     class Meta:
         abstract = True
 

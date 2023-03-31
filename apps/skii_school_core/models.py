@@ -8,10 +8,15 @@ from apps.skii_school_core.entities import (
     RessourceEntity,
     AgentEntity,
     UUIDEntity,
-    DisplayEntity,
-    DescriptionEntity,
     StateEntity,
     AgendaEntity,
+    CMSDisplayEntity,
+    NomenclatureEntity,
+    ContentEntity,
+    VisualEntity,
+    UUIDLabelEntity,
+    CMSUUIDEntity,
+    GeoCoordinateEntity
 )
 
 from django.contrib.auth import get_user_model
@@ -24,19 +29,60 @@ User = get_user_model()
 # AGENT ENTITIES #
 ##################
 
+class VisualAlbum(CMSUUIDEntity):
+    class Meta:
+        verbose_name = _("Visual Album")
+        verbose_name_plural = _("Visual Album(s)")
+        ordering = ["-last_modified", "-created", "title"]
+
+
+def get_default_album():
+    return VisualAlbum.objects.first().uuid
+
+
+class VisualElement(VisualEntity):
+    class Meta:
+        verbose_name = _("Visual Album Picture")
+        verbose_name_plural = _("Visual Album Picture(s)")
+        ordering = ["-last_modified", "-created", "title"]
+
+    album = models.ForeignKey(
+        VisualAlbum, on_delete=models.CASCADE, related_name="items",
+        verbose_name=_("Album"), default=get_default_album)
+
+    def __str__(self):
+        return f"[{self.uuid}] {self.title[:30]} from album {self.album.title[:30]}"
+
+
+class VisualPicture(VisualEntity):
+    class Meta:
+        verbose_name = _("Visual Picture")
+        verbose_name_plural = _("Visual Picture(s)")
+        ordering = ["-last_modified", "-created", "title"]
+
+
+class GeoCoordinate(GeoCoordinateEntity):
+    class Meta:
+        verbose_name = _("Geographic coordinate")
+        verbose_name_plural = _("Geographic coordinate(s)")
+        ordering = ["latitude", "longitude"]
+
+    def __str__(self):
+        return f"{self.latitude} / {self.longitude} "
+
 
 class StudentAgent(AgentEntity):
     class Meta:
         verbose_name = _("Student")
         verbose_name_plural = _("Student(s)")
-        ordering = ["-last_modified", "-created"]
+        ordering = ["-last_modified", "-created", "user__username"]
 
 
 class TeacherAgent(AgentEntity):
     class Meta:
         verbose_name = _("Teacher")
         verbose_name_plural = _("Teacher(s)")
-        ordering = ["-last_modified", "-created"]
+        ordering = ["-last_modified", "-created", "user__username"]
 
 
 ######################
@@ -80,7 +126,7 @@ class Event(StateEntity, AgendaEntity):
     class Meta:
         verbose_name = _("Event")
         verbose_name_plural = _("Event(s)")
-        ordering = ["state", "-created", "-start", "-stop", "label"]
+        ordering = ["state", "-created", "-start", "-stop", "title"]
 
     editor = models.ForeignKey(User, on_delete=models.PROTECT)
     agent_invited = models.ManyToManyField(
@@ -88,21 +134,29 @@ class Event(StateEntity, AgendaEntity):
     )
 
     def __str__(self):
-        return f"[{self.state}]{str(self.label)}:  Date {self.start} / {self.stop} "
+        return f"[{self.state}]{str(self.title)}:  Date {self.start} / {self.stop} "
 
 
-class Location(UUIDEntity, DisplayEntity):
+class Location(UUIDLabelEntity, ContentEntity):
     class Meta:
         verbose_name = _("Location")
         verbose_name_plural = _("Location(s)")
-        ordering = ["-created", "-last_modified", "country", "city", "label"]
+        ordering = ["-last_modified", "-created", "country", "city", "label"]
 
     address1 = models.CharField(verbose_name=_("Address line 1"), max_length=255)
     address2 = models.CharField(
         max_length=255, verbose_name=_("Address line 2"), blank=True, null=True
     )
     city = models.CharField(verbose_name=_("City"), max_length=255)
-    country = CountryField(verbose_name=_("Country"), default="EN")
+    country = CountryField(verbose_name=_("Country"), default="RO")
+
+    cover = models.ForeignKey(VisualPicture, on_delete=models.SET_NULL,
+                              blank=True, null=True)
+    illustration = models.ForeignKey(VisualAlbum, on_delete=models.SET_NULL,
+                                     blank=True, null=True)
+
+    coordinate = models.ForeignKey(GeoCoordinate, on_delete=models.PROTECT,
+                                      blank=True, null=True)
 
     def __str__(self):
-        return f"{self.label}:ModelSchema {self.city} / {self.country.name}"
+        return f"{self.label} {self.city} / {self.country.name}"

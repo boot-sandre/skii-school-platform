@@ -53,6 +53,11 @@ const items = ref([
               {
                   separator: true
               },
+              {
+                  label: 'Location',
+                  icon: 'pi pi-fw pi-user-plus',
+                  to: { "name": "list_location_record" }
+              },
           ]
       },
       {

@@ -55,6 +55,11 @@ class VisualElement(VisualEntity):
 
 
 class VisualPicture(VisualEntity):
+
+    @property
+    def picture_url(self):
+        return self.picture.url
+
     class Meta:
         verbose_name = _("Visual Picture")
         verbose_name_plural = _("Visual Picture(s)")
@@ -149,14 +154,12 @@ class Location(UUIDLabelEntity, ContentEntity):
     )
     city = models.CharField(verbose_name=_("City"), max_length=255)
     country = CountryField(verbose_name=_("Country"), default="RO")
-
     cover = models.ForeignKey(VisualPicture, on_delete=models.SET_NULL,
                               blank=True, null=True)
     illustration = models.ForeignKey(VisualAlbum, on_delete=models.SET_NULL,
                                      blank=True, null=True)
-
     coordinate = models.ForeignKey(GeoCoordinate, on_delete=models.PROTECT,
-                                      blank=True, null=True)
+                                   blank=True, null=True)
 
     def __str__(self):
         return f"{self.label} {self.city} / {self.country.name}"

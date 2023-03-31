@@ -46,7 +46,7 @@ def location_record_list(request: HttpRequest):
     return dict(
             items=list(qs),
             count=qs.count(),
-            model=f"{qs.first()._meta.model_name}",
+            model=f"{qs.model._meta.model_name}",
         )
 
 

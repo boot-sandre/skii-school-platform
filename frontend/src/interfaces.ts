@@ -31,6 +31,21 @@ interface StudentSingleResponse {
   item: StudentAgentContract
 }
 
+interface CountryContract {
+  code: string,
+  name: string,
+  flag: string
+}
+
+interface VisualPictureContract {
+  picture_url: string,
+  title: string
+}
+
+interface GeoCoordinateContract {
+  latitude: Number,
+  longitude: Number
+}
 
 interface LocationContract {
   uuid?: string | null,
@@ -40,11 +55,12 @@ interface LocationContract {
   address1: string,
   address2: string | null,
   city: string,
-  country: string,
+  country: CountryContract,
   cover?: {
-    path: string,
-    url: string
-  }
+    picture_url: string,
+    title: string,
+  },
+  coordinate?: GeoCoordinateContract
 }
 
 interface LocationListResponse {

@@ -1,9 +1,8 @@
-from django_countries.fields import Country
 from ninja import Schema, ModelSchema
 from django.contrib.auth import get_user_model
 from typing import Dict, List, Any
 
-from apps.skii_school_core.models import StudentAgent, TeacherAgent, Location
+from apps.skii_school_core.models import StudentAgent, TeacherAgent, Location, GeoCoordinate
 
 User = get_user_model()
 
@@ -109,13 +108,26 @@ class CountryContract(Schema):
     flag: str
 
 
+class VisualPictureContract(Schema):
+    picture_url: str
+    title: str
+
+
+class GeoCoordinateContract(ModelSchema):
+    class Config:
+        model = GeoCoordinate
+        model_fields = ["latitude", "longitude"]
+
+
 class LocationContract(ModelSchema):
     country: CountryContract
+    cover: VisualPictureContract
+    coordinate: GeoCoordinateContract
 
     class Config:
         model = Location
         model_fields = "__all__"
-        model_exclude = ["country"]
+        model_exclude = ["country", "cover", "coordinate"]
 
 
 class LocationContractShort(ModelSchema):

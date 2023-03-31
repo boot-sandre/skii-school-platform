@@ -96,8 +96,8 @@ longitude_config.update({
 
 
 class GeoCoordinateFactory(factory.django.DjangoModelFactory):
-    latitude = factory.Faker("pyfloat", **latitude_config)
-    longitude = factory.Faker("pyfloat", **longitude_config)
+    latitude = factory.Faker("pydecimal", **latitude_config)
+    longitude = factory.Faker("pydecimal", **longitude_config)
 
     class Meta:
         model = GeoCoordinate
@@ -123,7 +123,7 @@ class VisualElementFactory(factory.django.DjangoModelFactory):
 
 
 class VisualPictureFactory(factory.django.DjangoModelFactory):
-    title = factory.Faker("text")
+    title = factory.Faker("text", max_nb_chars=20)
     description = factory.Faker("text")
     picture = factory.django.ImageField()
 

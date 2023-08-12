@@ -17,7 +17,7 @@ router = Router(tags=["api_skii_platform", "core"])
 def ping(request: HttpRequest):
     """A simple ping endpoint to check if the API is up and display api's version."""
     return HttpResponse(
-        content=f"Welcome on Skii School Platform API: {distrib_version}"
+        content=f"Welcome on Skii School Platform API: {distrib_version}\n{str(router.api.get_openapi_schema())}"
     )
 
 

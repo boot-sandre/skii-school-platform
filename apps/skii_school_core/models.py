@@ -1,5 +1,3 @@
-from datetime import datetime
-from datetime import timedelta
 from django.db import models
 from decimal import Decimal as D
 
@@ -38,7 +36,6 @@ class CompanyAgent(models.Model):
         verbose_name = "Company"
         verbose_name_plural = "Companies"
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     created = models.DateTimeField("Created", auto_now_add=True)
     last_modified = models.DateTimeField("Last Modified", auto_now=True)
 
@@ -52,11 +49,13 @@ class CurrencyRessource(models.Model):
     code = models.CharField(max_length=3, unique=True)
     created = models.DateTimeField("Created", auto_now_add=True)
     last_modified = models.DateTimeField("Last Modified", auto_now=True)
-    values = models.DecimalField("Price factor against dollars", max_digits=5,
+    factor = models.DecimalField("Price factor against dollars", max_digits=5,
                                  decimal_places=3, default=D(1.000))
+    quantity = models.DecimalField("Price factor against dollars", max_digits=12,
+                                   decimal_places=2, default=D(0.))
 
     def __str__(self):
-        return f"{self.code}: {self.values}"
+        return f"{self.code}: {self.quantity} * {self.factor} = {self.quantity * self.factor}"
 
 
 class WorktimeRessource(models.Model):

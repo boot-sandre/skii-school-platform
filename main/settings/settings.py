@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     # project apps
     "apps.account",
     "apps.doc",
+    # Skii school apps
+    "apps.skii_school_core",
     # project dependencies
     "corsheaders",
 ]

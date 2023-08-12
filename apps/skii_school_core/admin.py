@@ -1,12 +1,7 @@
 from django.contrib import admin
 
-from .models import CompanyAgent, StudentAgent, TeacherAgent
+from .models import StudentAgent, TeacherAgent
 from .models import CurrencyRessource, WorktimeRessource, Event
-
-
-@admin.register(CompanyAgent)
-class CompanyAgentAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(StudentAgent)

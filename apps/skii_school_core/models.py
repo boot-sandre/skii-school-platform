@@ -2,7 +2,6 @@ from django.utils.timezone import now
 from django.db import models
 from decimal import Decimal as D
 
-from django.db.models.signals import pre_save
 from apps.account.forms.registration import User
 
 
@@ -30,15 +29,6 @@ class TeacherAgent(models.Model):
 
     def __str__(self):
         return f"Teacher: {self.user.email}"
-
-
-class CompanyAgent(models.Model):
-    class Meta:
-        verbose_name = "Company"
-        verbose_name_plural = "Companies"
-
-    created = models.DateTimeField("Created", auto_now_add=True)
-    last_modified = models.DateTimeField("Last Modified", auto_now=True)
 
 
 class CurrencyRessource(models.Model):

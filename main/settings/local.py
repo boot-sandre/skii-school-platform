@@ -2,3 +2,7 @@
 
 from .settings import *
 from .dev import *  # Share things on dev and version them
+
+INSTALLED_APPS += [
+    "django_extensions",
+]

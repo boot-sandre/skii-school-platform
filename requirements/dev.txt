@@ -10,3 +10,5 @@ pytest-django
 docdundee
 ipdb
 django-extensions
+django-countries
+django-money

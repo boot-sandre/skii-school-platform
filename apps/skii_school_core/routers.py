@@ -6,8 +6,8 @@ import json
 from apps.skii_school_core.models import StudentAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
-    StudentListContract,
-    StudentSingleContract,
+    StudentListResponse,
+    StudentSingleResponse,
 )
 
 
@@ -27,7 +27,7 @@ def info(request: HttpRequest):
 @route_skii.get(
     path="student/list",
     response={
-        200: StudentListContract,
+        200: StudentListResponse,
         422: FormErrorsResponseContract,
     },
 )
@@ -45,11 +45,11 @@ def agent_list(request: HttpRequest):
 @route_skii.get(
     path="student/{student_id}",
     response={
-        200: StudentSingleContract,
+        200: StudentSingleResponse,
         422: FormErrorsResponseContract,
     },
 )
-def fetch(request: HttpRequest, student_id: int):
+def agent_single(request: HttpRequest, student_id: int):
     obj = get_object_or_404(StudentAgent, pk=student_id)
     return dict(
         status=200,

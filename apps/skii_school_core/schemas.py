@@ -1,24 +1,31 @@
 from ninja import Schema, ModelSchema
 from apps.skii_school_core.entities import (
-    StateEntity,
     AgentEntity,
 )
-from typing import Dict, List, Any, Union, Iterable
+from django.contrib.auth import get_user_model
+from typing import Dict, List, Any, Union
 
 
-class StatusContract(Schema):
+User = get_user_model()
+
+
+class UserSchema(ModelSchema):
+    class Config:
+        model = User
+        model_fields = "__all__"
+
+
+class MessageResponseContract(Schema):
     status: int
-
-
-class MessageResponseContract(StatusContract):
     message: str
 
 
-class DataResponseContract(StatusContract):
+class DataResponseContract(Schema):
+    status: int
     data: Union[Dict, List]
 
 
-class FormErrorsResponseContract(StatusContract):
+class FormErrorsResponseContract(Schema):
     errors: Dict[str, List[Dict[str, Any]]]
 
 
@@ -41,19 +48,12 @@ class Country(Schema):
 #         model = DescriptionEntity
 #         model_fields = []
 #         model_fields_optional = ["description_short"]
-#
-
-
-class StateContract(ModelSchema):
-    class Config:
-        model = StateEntity
-        model_fields = ["state"]
 
 
 class AgentContract(ModelSchema):
     class Config:
         model = AgentEntity
-        model_fields = ["user"]
+        model_fields = "__all__"
 
 
 class IdContract(Schema):
@@ -61,28 +61,40 @@ class IdContract(Schema):
 
 
 class StudentInContract(AgentContract):
-    pass
+    user: UserSchema
 
 
 class StudentOutContract(AgentContract, IdContract):
-    pass
+    user: UserSchema
+
+    class Config:
+        model = AgentEntity
+        model_fields = ["user", "id"]
+
+
+class StudentFlatContract(AgentContract, IdContract):
+    class Config:
+        model = AgentEntity
+        model_fields = ["id"]
 
 
 class ListContract(Schema):
     model: str
     count: int
-    items: List[StudentOutContract] = []
+    items: List[StudentFlatContract] = []
 
 
-class StudentListContract(StatusContract):
-    data: ListContract
-
-
-class GetContract(Schema):
+class FetchContract(Schema):
     model: str
     count: int
     item: StudentOutContract | None
 
 
-class StudentSingleContract(StatusContract):
-    data: GetContract
+class StudentListResponse(Schema):
+    status: int
+    data: ListContract
+
+
+class StudentSingleResponse(Schema):
+    status: int
+    data: FetchContract

@@ -1,26 +1,24 @@
 from ninja import Schema, ModelSchema
 from apps.skii_school_core.entities import (
-    DisplayEntity,
-    DescriptionEntity,
     StateEntity,
     AgentEntity,
 )
-from typing import Dict, List, Any, Union
+from typing import Dict, List, Any, Union, Iterable
 
 
-class ResponseContract(Schema):
+class StatusContract(Schema):
     status: int
 
 
-class MessageResponseContract(ResponseContract):
+class MessageResponseContract(StatusContract):
     message: str
 
 
-class DataResponseContract(ResponseContract):
+class DataResponseContract(StatusContract):
     data: Union[Dict, List]
 
 
-class FormErrorsResponseContract(ResponseContract):
+class FormErrorsResponseContract(StatusContract):
     errors: Dict[str, List[Dict[str, Any]]]
 
 
@@ -57,13 +55,6 @@ class AgentContract(ModelSchema):
         model = AgentEntity
         model_fields = ["user"]
 
-    # user__first_name: str
-    # user__last_name: str
-    # label: str
-    # description: str | None
-    # state: Literal[StateChoices.choices] = []
-    # user: Any
-
 
 class IdContract(Schema):
     id: int
@@ -83,7 +74,7 @@ class ListContract(Schema):
     items: List[StudentOutContract] = []
 
 
-class StudentListContract(ResponseContract):
+class StudentListContract(StatusContract):
     data: ListContract
 
 
@@ -93,5 +84,5 @@ class GetContract(Schema):
     item: StudentOutContract | None
 
 
-class StudentGetContract(ResponseContract):
+class StudentSingleContract(StatusContract):
     data: GetContract

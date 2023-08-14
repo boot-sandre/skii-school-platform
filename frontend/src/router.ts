@@ -46,6 +46,20 @@ const routes: Array<RouteRecordRaw> = [
       title: "A page"
     }
   },
+  {
+    path: "/students",
+    component: () => import("./views/skii/StudentView.vue"),
+    meta: {
+      title: "Student(s)"
+    }
+  },
+  {
+    path: "/teachers",
+    component: () => import("./views/skii/TeacherView.vue"),
+    meta: {
+      title: "Teacher(s)"
+    }
+  },
 ]
 
 const router = createRouter({

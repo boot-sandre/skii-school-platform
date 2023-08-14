@@ -12,8 +12,9 @@
             @click="$router.push('/login')">Login</button>
         </div>
         <div v-else>
-          <button class="py-3 text-lg btn primary" @click="$router.push('/page')">Example page</button>
-          <button class="py-3 ml-5 text-lg font-bold text-white border-white btn" @click="logout()">Logout</button>
+          <button class="py-3 ml-5 text-lg btn primary" @click="$router.push('/students')">Students Space</button>
+          <button class="py-3 ml-5 text-lg btn primary" @click="$router.push('/teachers')">Teachers Space</button>
+          <button class="py-3 ml-20 text-lg font-bold text-white border-white btn" @click="logout()">Logout</button>
         </div>
       </div>
     </div>

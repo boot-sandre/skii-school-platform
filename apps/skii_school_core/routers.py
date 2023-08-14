@@ -1,13 +1,13 @@
+from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpResponse, HttpRequest
 import json
 
-# from apps.skii_school_core.api import api_skii
 from apps.skii_school_core.models import StudentAgent
 from apps.skii_school_core.schemas import (
-    DataResponseContract,
     FormErrorsResponseContract,
     StudentListContract,
+    StudentSingleContract,
 )
 
 
@@ -31,19 +31,29 @@ def info(request: HttpRequest):
         422: FormErrorsResponseContract,
     },
 )
-def get(request: HttpRequest):
+def agent_list(request: HttpRequest):
     qs = StudentAgent.objects.all()
-    return {"status": 200, "data": dict(items=qs.values_list(), count=qs.count())}
+    agent_count = qs.count()
+    return dict(
+        status=200,
+        data=dict(
+            items=list(qs), count=agent_count, model=f"{StudentAgent.Meta.verbose_name}"
+        ),
+    )
 
 
 @route_skii.get(
     path="student/{student_id}",
     response={
-        200: DataResponseContract,
+        200: StudentSingleContract,
         422: FormErrorsResponseContract,
     },
 )
-def get(request: HttpRequest, student_id: int):
-    breakpoint()
-    qs = StudentAgent.objects.all()
-    return dict(status=200, data=qs.get(pk=student_id))
+def fetch(request: HttpRequest, student_id: int):
+    obj = get_object_or_404(StudentAgent, pk=student_id)
+    return dict(
+        status=200,
+        data=dict(
+            item=obj, count=int(bool(obj)), model=f"{StudentAgent.Meta.verbose_name}"
+        ),
+    )

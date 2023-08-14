@@ -1,30 +1,49 @@
 from ninja import Router
-from ninja.security import django_auth
-from packaging.version import parse as parse_version
 from django.http import HttpResponse, HttpRequest
 import json
 
-# Get current package version
-current_package_name = __package__.split(".")[0]
-distrib_version = parse_version(__import__(current_package_name).__version__)
+# from apps.skii_school_core.api import api_skii
+from apps.skii_school_core.models import StudentAgent
+from apps.skii_school_core.schemas import (
+    DataResponseContract,
+    FormErrorsResponseContract,
+    StudentListContract,
+)
 
 
 # Create a django ninja API router dedicated to the skii school platform
-router = Router(tags=["api_skii_platform", "core"])
+route_skii = Router(tags=["api_skii_platform"])
 
 
-@router.get("/ping", auth=None)
-def ping(request: HttpRequest):
-    """A simple ping endpoint to check if the API is up and display api's version."""
-    return HttpResponse(
-        content=f"Welcome on Skii School Platform API: {distrib_version}\n{str(router.api.get_openapi_schema())}"
-    )
-
-
-@router.get("/info", auth=django_auth)
+@route_skii.get(path="/info")
 def info(request: HttpRequest):
-    """A info endpoint to display api's parameters."""
-    api_description = router.api.get_openapi_schema()
+    """Info endpoint to display api's parameters."""
+    api_description = route_skii.api.get_openapi_schema()
     return HttpResponse(
         content=json.dumps(api_description, indent=2), content_type="application/json"
     )
+
+
+@route_skii.get(
+    path="student/list",
+    response={
+        200: StudentListContract,
+        422: FormErrorsResponseContract,
+    },
+)
+def get(request: HttpRequest):
+    qs = StudentAgent.objects.all()
+    return {"status": 200, "data": dict(items=qs.values_list(), count=qs.count())}
+
+
+@route_skii.get(
+    path="student/{student_id}",
+    response={
+        200: DataResponseContract,
+        422: FormErrorsResponseContract,
+    },
+)
+def get(request: HttpRequest, student_id: int):
+    breakpoint()
+    qs = StudentAgent.objects.all()
+    return dict(status=200, data=qs.get(pk=student_id))

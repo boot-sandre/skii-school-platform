@@ -12,3 +12,4 @@ ipdb
 django-extensions
 django-countries
 django-money
+factory_boy

@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import StudentAgent, TeacherAgent
 from .models import MoneyRessource, TimeRessource
 from .models import Event, Location
+from .forms import EventForm, LocationForm
 
 
 @admin.register(StudentAgent)
@@ -27,13 +28,11 @@ class TimeRessourceAdmin(admin.ModelAdmin):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     fields = [("label", "state"), ("start", "stop"), "agent_invited"]
-    ordering = ["start", "stop", "state"]
-
-    def save_model(self, request, obj, form, change):
-        obj.user_creator = request.user
-        super().save_model(request, obj, form, change)
+    form = EventForm
+    date_hierarchy = "start"
 
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    pass
+    fields = ["label", "description", "country", ("address1", "address2"), "city"]
+    form = LocationForm

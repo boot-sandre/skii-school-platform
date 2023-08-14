@@ -1,122 +1,108 @@
-import uuid
-
-from django.utils.timezone import now
 from django.db import models
+from decimal import Decimal as Deci
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
-from decimal import Decimal as D
+from django.utils.translation import gettext_lazy as _
 
-from apps.account.forms.registration import User
+from apps.skii_school_core.entities import (
+    RessourceEntity,
+    AgentEntity,
+    UUIDEntity,
+    DisplayEntity,
+    DescriptionEntity,
+    StateEntity,
+    AgendaEntity,
+)
+
+from django.contrib.auth import get_user_model
 
 
-class StudentAgent(models.Model):
+User = get_user_model()
+
+
+##################
+# AGENT ENTITIES #
+##################
+
+
+class StudentAgent(AgentEntity):
     class Meta:
-        verbose_name = "Student"
-        verbose_name_plural = "Student(s)"
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    created = models.DateTimeField("Created", auto_now_add=True)
-    last_modified = models.DateTimeField("Last Modified", auto_now=True)
-
-    def __str__(self):
-        return f"Student: {self.user.email}"
+        verbose_name = _("Student")
+        verbose_name_plural = _("Student(s)")
+        ordering = ["-last_modified", "-created"]
 
 
-class TeacherAgent(models.Model):
+class TeacherAgent(AgentEntity):
     class Meta:
-        verbose_name = "Teacher"
-        verbose_name_plural = "Teacher(s)"
-
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    created = models.DateTimeField("Created", auto_now_add=True)
-    last_modified = models.DateTimeField("Last Modified", auto_now=True)
-
-    def __str__(self):
-        return f"Teacher: {self.user.email}"
+        verbose_name = _("Teacher")
+        verbose_name_plural = _("Teacher(s)")
+        ordering = ["-last_modified", "-created"]
 
 
-class MoneyRessource(models.Model):
+######################
+# RESSOURCE ENTITIES #
+######################
+
+
+class MoneyRessource(RessourceEntity):
     class Meta:
-        verbose_name = "Money"
-        verbose_name_plural = "Money(s)"
-
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    created = models.DateTimeField("Created", auto_now_add=True)
-    last_modified = models.DateTimeField("Last Modified", auto_now=True)
+        verbose_name = _("Money")
+        verbose_name_plural = _("Money(s)")
+        ordering = ["-last_modified", "-created", "amount"]
 
     amount = MoneyField(
-        "Money amount", max_digits=18, decimal_places=6,
-        default=D(0.0), default_currency="EUR"
+        verbose_name=_("Money amount"),
+        max_digits=18,
+        decimal_places=6,
+        default=Deci(0.0),
+        default_currency="EUR",
+    )
+
+
+class TimeRessource(RessourceEntity):
+    class Meta:
+        verbose_name = _("Time")
+        verbose_name_plural = _("Time(s)")
+        ordering = ["-last_modified", "-created", "amount"]
+
+    amount = models.DecimalField(
+        verbose_name=_("Time recorded (seconds)"),
+        default=Deci(0.0),
+        max_digits=20,
+        decimal_places=6,
+    )
+
+
+####################
+# EVENT / LOCATION #
+####################
+class Event(StateEntity, AgendaEntity):
+    class Meta:
+        verbose_name = _("Event")
+        verbose_name_plural = _("Event(s)")
+        ordering = ["state", "-created", "-start", "-stop", "label"]
+
+    editor = models.ForeignKey(User, on_delete=models.PROTECT)
+    agent_invited = models.ManyToManyField(
+        User, blank=True, related_name="events_linked"
     )
 
     def __str__(self):
-        return f"{str(self.uuid)[:6]}[...]: {self.amount}"
+        return f"[{self.state}]{str(self.label)}:  Date {self.start} / {self.stop} "
 
 
-class TimeRessource(models.Model):
+class Location(UUIDEntity, DisplayEntity):
     class Meta:
-        verbose_name = "Time"
-        verbose_name_plural = "Time(s)"
+        verbose_name = _("Location")
+        verbose_name_plural = _("Location(s)")
+        ordering = ["-created", "-last_modified", "country", "city", "label"]
 
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created = models.DateTimeField("Created", auto_now_add=True)
-    last_modified = models.DateTimeField("Last Modified", auto_now=True)
-
-    amount = models.FloatField("Time amount (seconds)", default=0.0)
-    amount_planned = models.FloatField("Time planned (seconds)", default=600.0)
+    address1 = models.CharField(verbose_name=_("Address line 1"), max_length=255)
+    address2 = models.CharField(
+        max_length=255, verbose_name=_("Address line 2"), blank=True, null=True
+    )
+    city = models.CharField(verbose_name=_("City"), max_length=255)
+    country = CountryField(verbose_name=_("Country"), default="EN")
 
     def __str__(self):
-        return f"{str(self.uuid)[:6]}[...]: {self.amount} sec / {self.amount_planned} sec"
-
-
-EVENTS_STATE = (
-    ("draft", "Draft"),
-    ("planned", "Planned"),
-    ("in_progress", "In progress"),
-    ("cancelled", "Cancelled"),
-    ("postponed", "Postponed in time"),
-    ("finished", "finished"),
-)
-
-
-class Event(models.Model):
-    class Meta:
-        verbose_name = "Event"
-        verbose_name_plural = "Event(s)"
-
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    label = models.CharField(max_length=255, name="Label event")
-    description = models.TextField()
-    created = models.DateTimeField("Created", auto_now_add=True)
-    last_modified = models.DateTimeField("Last Modified", auto_now=True)
-
-    user_creator = models.ForeignKey(User, on_delete=models.PROTECT)
-
-    state = models.CharField(max_length=128, choices=EVENTS_STATE, default="draft")
-
-    start = models.DateTimeField("Start time", default=now)
-    stop = models.DateTimeField("Stop time", default=now)
-    agent_invited = models.ManyToManyField(User, blank=True, related_name="events")
-
-    def __str__(self):
-        return f"{str(self.label)}: {self.state} Date {self.start} / {self.stop} "
-
-
-class Location(models.Model):
-    class Meta:
-        verbose_name = "Location"
-        verbose_name_plural = "Location(s)"
-
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    label = models.CharField(max_length=255, default="New location")
-    address1 = models.CharField(max_length=255, default="Address1")
-    address2 = models.CharField(max_length=255, default="Address2",
-                                blank=True, null=True)
-    city = models.CharField(max_length=128, default="city")
-    country = CountryField(multiple=False, default="EN")
-
-    def __str__(self):
-        return f"{self.label}: {self.city} / {self.country.name}"
+        return f"{self.label}:ModelSchema {self.city} / {self.country.name}"

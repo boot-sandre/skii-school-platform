@@ -11,13 +11,9 @@ from apps.skii_school_core.factories import (
 
 class TestSkiiSchoolPlateform(NinjaTestCase):
     def test_create_fixtures(self):
-        teachers = TeacherAgentFactory.create_batch(
-            10,
-        )
+        teachers = TeacherAgentFactory.create_batch(10)
         assert len(teachers) == 10
-        students = StudentAgentFactory.create_batch(
-            50,
-        )
+        students = StudentAgentFactory.create_batch(50)
         assert len(students) == 50
         events = EventFactory.create_batch(5)
         assert len(events) == 5

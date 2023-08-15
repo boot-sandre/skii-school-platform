@@ -13,6 +13,10 @@ class UserSchema(ModelSchema):
     class Config:
         model = User
         model_fields = "__all__"
+        model_exclude = [
+            "password", "is_superuser", "is_staff",
+            "groups", "user_permissions"
+        ]
 
 
 class MessageResponseContract(Schema):
@@ -73,28 +77,21 @@ class StudentOutContract(AgentContract, IdContract):
 
 
 class StudentFlatContract(AgentContract, IdContract):
+    user: UserSchema
+
     class Config:
         model = AgentEntity
-        model_fields = ["id"]
+        model_fields = ["user", "id"]
 
 
-class ListContract(Schema):
+class StudentListResponse(Schema):
+    status: int
     model: str
     count: int
     items: List[StudentFlatContract] = []
 
 
-class FetchContract(Schema):
+class StudentSingleResponse(Schema):
     model: str
     count: int
     item: StudentOutContract | None
-
-
-class StudentListResponse(Schema):
-    status: int
-    data: ListContract
-
-
-class StudentSingleResponse(Schema):
-    status: int
-    data: FetchContract

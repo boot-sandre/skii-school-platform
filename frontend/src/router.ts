@@ -47,14 +47,22 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/students",
+    path: "/student",
     component: () => import("./views/skii/StudentView.vue"),
     meta: {
       title: "Student(s)"
     }
   },
   {
-    path: "/teachers",
+    path: "/student/:agent_pk",
+    component: () => import("./components/skii/StudentSingle.vue"),
+    props: true,
+    meta: {
+      title: "Student"
+    }
+  },
+  {
+    path: "/teacher",
     component: () => import("./views/skii/TeacherView.vue"),
     meta: {
       title: "Teacher(s)"

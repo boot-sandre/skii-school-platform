@@ -6,8 +6,8 @@ import json
 from apps.skii_school_core.models import StudentAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
-    StudentListResponse,
     StudentSingleResponse,
+    StudentListResponse,
 )
 
 
@@ -34,12 +34,12 @@ def info(request: HttpRequest):
 def agent_list(request: HttpRequest):
     qs = StudentAgent.objects.all()
     agent_count = qs.count()
-    return dict(
-        status=200,
-        data=dict(
-            items=list(qs), count=agent_count, model=f"{StudentAgent.Meta.verbose_name}"
-        ),
-    )
+    return 200, dict(
+            status=200,
+            items=list(qs),
+            count=agent_count,
+            model=f"{StudentAgent.Meta.verbose_name}"
+        )
 
 
 @route_skii.get(
@@ -51,9 +51,37 @@ def agent_list(request: HttpRequest):
 )
 def agent_single(request: HttpRequest, student_id: int):
     obj = get_object_or_404(StudentAgent, pk=student_id)
-    return dict(
+    return 200, dict(
         status=200,
-        data=dict(
-            item=obj, count=int(bool(obj)), model=f"{StudentAgent.Meta.verbose_name}"
-        ),
-    )
+        item=obj,
+        count=int(bool(obj)),
+        model=f"{StudentAgent.Meta.verbose_name}"
+        )
+
+
+@route_skii.delete(
+    path="student/delete/{agent_id}",
+)
+def agent_delete(request: HttpRequest, agent_id: int):
+    qs = StudentAgent.objects.all().get(pk=agent_id)
+    qs.delete()
+    return 200, dict(
+            status=200,
+        )
+
+
+@route_skii.post(
+    path="student/save/{agent_id}",
+)
+def agent_save(request: HttpRequest, agent_id: int):
+    qs = StudentAgent.objects.all().get(pk=agent_id)
+    payload = json.loads(request.body)
+    user = payload["user"]
+    del payload["user"]
+    agent = payload
+    breakpoint()
+    qs.save(agent)
+    qs.user.save(user)
+    return 200, dict(
+            status=200,
+        )

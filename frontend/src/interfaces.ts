@@ -10,8 +10,22 @@ interface StudentAgentContract {
   user_id: number
 }
 
+interface StudentListResponse {
+  count: number,
+  model: string,
+  items: Array<StudentAgentContract>
+}
+
+interface StudentSingleResponse {
+  count: number,
+  model: string,
+  item: StudentAgentContract
+}
+
 export {
   FormError,
   FormErrors,
-  StudentAgentContract
+  StudentAgentContract,
+  StudentListResponse,
+  StudentSingleResponse,
 }

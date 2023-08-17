@@ -1,11 +1,10 @@
 
 <template>
     <div class="flex flex-col centered-container">
-      <h1>
+      <h1 class="text-center">
         Students Space
       </h1>
       <div v-if="student" class="flex flex-col items-center my-8 space-y-5">
-          <Panel  :toggleable="true">
             <form-card class="mx-3">
               <span>
                 <label for="username">Username</label>
@@ -24,9 +23,8 @@
                 <InputText type="text" v-model="student.user.last_name" id="last_name"/>
               </span>
               <button class="mt-5 btn txt-light" @click="$router.back()">Cancel</button>
-              <button class="w-full btn bord-background success" @click="saveAgent()">Save</button>
+              <button class="w-full btn bord-background success" @click="saveRecord()">Save</button>
             </form-card>
-          </Panel>
       </div>
     </div>
   </template>
@@ -38,59 +36,82 @@
   import router from '@/router';
   import FormCard from '@/widgets/FormCard.vue';
   import InputText from 'primevue/inputtext';
+  import Button from 'primevue/button';
   import { confirmDanger, msg } from '@/notify';
   
-  const student = ref<StudentAgentContract>();
+  const student = ref<StudentAgentContract>({
+    user: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      id: null,
+      last_login: null,
+      username: "user",
+      is_active: true,
+      date_joined: null,
+    },
+    id: null,
+  })
 
   const props = defineProps({
-    agent_pk: {
+    djangoPk: {
       type: String,
       required: true,
     }
   });
   
   async function load() {
-    fetch_agent(Number(props.agent_pk));
+      console.log("Component StudentAgentRecord loading");
+      console.log("djangoPk: " + props.djangoPk);
+      fetchRecord()
   }
 
-  async function fetch_agent(agent_pk: number) {
-    const url = `/skii/models/student/${agent_pk}`
-    console.log("url: " + url)
-    const res = await api.get<StudentSingleResponse>(url);
-    console.log("DATA", JSON.stringify(res.data, null, "  "));
-    if (res.ok) {
-      student.value = res.data.item;
+  async function fetchRecord() {
+    const is_digits: boolean = Boolean(
+      String(Number(props.djangoPk)) === props.djangoPk)
+    if ( is_digits ) {
+      const res = await api.get<StudentSingleResponse>(
+        `/skii/models/student/${props.djangoPk}`);
+      if (res.ok) {
+        student.value = res.data.item;
+      }
     }
   }
   
-  function saveAgent() {
+  function saveRecord() {
     confirmDanger(
-      `Save the ${student.value.id} student?`,
+      `Save the ${student.value.user.username} student?`,
       "The student will be permanently modified",
       async () => {
-        const url = `/skii/models/student/save/${student.value.id}`;
+        const url = `/skii/models/student/save/${props.djangoPk}`;
         const payload = student.value;
-        console.log("save agent url", url);
+        console.log("saveRecord url", url);
+        console.log("saveRecord payload", payload);
         const { error, res, errors } = await forms.post(url, payload);
         if (res.ok) {
-          router.push("/student")
+          // Notify user about deleteRecord success
           msg.success("Student saved", "The student has been successfuly saved");
+          // Refresh current component
+          student.value = res.data.item;
+          router.push({name: "list_student_record"})
         }
       }
     )
   }
 
-  function deleteStudent(student: StudentAgentContract) {
+  function deleteRecord(student: StudentAgentContract) {
     confirmDanger(
       `Delete the ${student.id} student?`,
       "The student will be permanently deleted",
       async () => {
         const url = `/skii/models/student/delete/${student.id}`;
-        console.log("DEL", url);
+        console.log("deleteRecord url", url);
         const res = await api.del(url);
         if (res.ok) {
+          // Notify user about deleteRecord success
           msg.success("Student deleted", "The student has been successfuly deleted");
-          router.push("/student");
+          // Get back to student list
+          router.push({ name: "list_student_record"});
         }
       }
     )

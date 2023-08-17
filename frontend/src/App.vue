@@ -42,6 +42,7 @@ onMounted(() => initUserState());
     @apply danger border-none ring-0
   & .p-button.warningbtn, .p-button.warningbtn:enabled:hover
     @apply warning border-none ring-0
+
 </style>
 
 

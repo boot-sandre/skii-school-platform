@@ -5,9 +5,20 @@ interface FormError {
 
 type FormErrors = Record<string, Array<FormError>>;
 
+interface UserContract {
+  id: number | null,
+  last_login: string | null,
+  username: string | null,
+  first_name: string | null,
+  last_name: string | null,
+  email: string | null,
+  is_active: boolean | null,
+  date_joined: string | null
+}
+
 interface StudentAgentContract {
-  id: number,
-  user_id: number
+  id: number | null,
+  user: UserContract
 }
 
 interface StudentListResponse {

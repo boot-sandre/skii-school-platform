@@ -2,17 +2,21 @@ from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpResponse, HttpRequest
 import json
+from django.contrib.auth import get_user_model
 
 from apps.skii_school_core.models import StudentAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
-    StudentSingleResponse,
-    StudentListResponse,
+    StudentRecordResponse,
+    StudentListResponse, StudentContract,
 )
 
 
+UserModel = get_user_model()
+
+
 # Create a django ninja API router dedicated to the skii school platform
-route_skii = Router(tags=["api_skii_platform"])
+route_skii = Router(tags=["skii", "student"])
 
 
 @route_skii.get(path="/info")
@@ -25,63 +29,93 @@ def info(request: HttpRequest):
 
 
 @route_skii.get(
-    path="student/list",
+    path="student/{record_pk}",
+    response={
+        200: StudentRecordResponse,
+        422: FormErrorsResponseContract,
+    },
+)
+def student_record(request: HttpRequest, record_pk: int):
+    obj = get_object_or_404(StudentAgent, pk=record_pk)
+    return dict(
+        count=int(bool(obj)),
+        model=f"{StudentAgent.Meta.verbose_name}",
+        item=obj,
+    )
+
+
+@route_skii.get(
+    path="student/fetch/list",
     response={
         200: StudentListResponse,
         422: FormErrorsResponseContract,
     },
 )
-def agent_list(request: HttpRequest):
+def student_record_list(request: HttpRequest):
     qs = StudentAgent.objects.all()
     agent_count = qs.count()
-    return 200, dict(
-            status=200,
+    return dict(
             items=list(qs),
             count=agent_count,
             model=f"{StudentAgent.Meta.verbose_name}"
         )
 
 
-@route_skii.get(
-    path="student/{student_id}",
-    response={
-        200: StudentSingleResponse,
-        422: FormErrorsResponseContract,
-    },
-)
-def agent_single(request: HttpRequest, student_id: int):
-    obj = get_object_or_404(StudentAgent, pk=student_id)
-    return 200, dict(
-        status=200,
-        item=obj,
-        count=int(bool(obj)),
-        model=f"{StudentAgent.Meta.verbose_name}"
-        )
-
-
 @route_skii.delete(
-    path="student/delete/{agent_id}",
+    path="student/delete/{record_id}",
 )
-def agent_delete(request: HttpRequest, agent_id: int):
-    qs = StudentAgent.objects.all().get(pk=agent_id)
+def record_delete(request: HttpRequest, record_id: int):
+    qs = StudentAgent.objects.all().get(pk=record_id)
     qs.delete()
-    return 200, dict(
-            status=200,
-        )
+    return dict(
+        message="Success",
+    )
 
 
 @route_skii.post(
-    path="student/save/{agent_id}",
+    path="student/save/{record_id}",
+    response={
+        200: StudentRecordResponse,
+        422: FormErrorsResponseContract,
+    },
 )
-def agent_save(request: HttpRequest, agent_id: int):
-    qs = StudentAgent.objects.all().get(pk=agent_id)
-    payload = json.loads(request.body)
-    user = payload["user"]
-    del payload["user"]
-    agent = payload
-    breakpoint()
-    qs.save(agent)
-    qs.user.save(user)
-    return 200, dict(
-            status=200,
-        )
+def record_save(request: HttpRequest, record_id: int, payload: StudentContract):
+    agent_payload = payload.dict()
+    user_payload = agent_payload.pop("user")
+    agent_obj = get_object_or_404(StudentAgent, id=record_id)
+    user_obj = get_object_or_404(UserModel, id=agent_obj.user.id)
+    for attr, value in agent_payload.items():
+        setattr(agent_obj, attr, value)
+    agent_obj.save()
+    for attr, value in user_payload.items():
+        setattr(user_obj, attr, value)
+    user_obj.save()
+    agent_obj.refresh_from_db()
+    agent_obj.user.refresh_from_db()
+    return dict(
+        count=int(bool(agent_obj)),
+        model=f"{StudentAgent.Meta.verbose_name}",
+        item=agent_obj,
+    )
+
+
+@route_skii.post(
+    path="student/create/",
+    response={
+        200: StudentRecordResponse,
+        422: FormErrorsResponseContract,
+    },
+)
+def record_create(request: HttpRequest, payload: StudentContract):
+    agent_payload = payload.dict()
+    user_payload = agent_payload.pop("user")
+    user_obj = UserModel(**user_payload)
+    user_obj.save()
+    agent_payload["user"] = user_obj
+    agent_obj = StudentAgent(**agent_payload)
+    agent_obj.save()
+    return dict(
+        count=int(bool(agent_obj)),
+        model=f"{StudentAgent.Meta.verbose_name}",
+        item=agent_obj,
+    )

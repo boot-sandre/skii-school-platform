@@ -6,9 +6,10 @@ const baseTitle = "App"
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
+    name: "home",
     component: HomeView,
     meta: {
-      title: "Home"
+      title: "Home",
     }
   },
   {
@@ -47,18 +48,29 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/student",
     component: () => import("./views/skii/StudentView.vue"),
+    path: "/student/fetch/list",
+    name: "list_student_record",
     meta: {
-      title: "Student(s)"
+      title: "Student(s)",
     }
   },
   {
-    path: "/student/:agent_pk",
     component: () => import("./components/skii/StudentSingle.vue"),
+    path: "/student/:djangoPk",
+    name: "fetch_student_record",
     props: true,
     meta: {
-      title: "Student"
+      title: "Student",
+    }
+  },
+  {
+    component: () => import("./components/skii/StudentSingle.vue"),
+    path: "/student/create",
+    name: "create_student_record",
+    props: true,
+    meta: {
+      title: "Student",
     }
   },
   {

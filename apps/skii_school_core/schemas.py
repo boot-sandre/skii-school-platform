@@ -5,8 +5,21 @@ from apps.skii_school_core.entities import (
 from django.contrib.auth import get_user_model
 from typing import Dict, List, Any, Union
 
+from apps.skii_school_core.models import StudentAgent
 
 User = get_user_model()
+
+
+class MessageResponseContract(Schema):
+    message: str
+
+
+class FormErrorsResponseContract(Schema):
+    errors: Dict[str, List[Dict[str, Any]]]
+
+
+class IdContract(Schema):
+    id: int
 
 
 class UserSchema(ModelSchema):
@@ -15,83 +28,48 @@ class UserSchema(ModelSchema):
         model_fields = "__all__"
         model_exclude = [
             "password", "is_superuser", "is_staff",
-            "groups", "user_permissions"
+            "groups", "user_permissions",
+            "id"
         ]
 
 
-class MessageResponseContract(Schema):
-    status: int
-    message: str
-
-
-class DataResponseContract(Schema):
-    status: int
-    data: Union[Dict, List]
-
-
-class FormErrorsResponseContract(Schema):
-    errors: Dict[str, List[Dict[str, Any]]]
-
-
-class Country(Schema):
-    name: str
-    value: str
-    flag: str
-
-
-#
-# class DisplayContract(ModelSchema):
-#     class Config:
-#         model = DisplayEntity
-#         model_fields = ["label"]
-#         model_fields_optional = ["description"]
-
-#
-# class DescriptionContract(ModelSchema):
-#     class Config:
-#         model = DescriptionEntity
-#         model_fields = []
-#         model_fields_optional = ["description_short"]
-
-
-class AgentContract(ModelSchema):
-    class Config:
-        model = AgentEntity
+class UserSchemaShort(ModelSchema):
+    id: int
+    class Config(UserSchema.Config):
+        model = User
         model_fields = "__all__"
+        model_exclude = [
+            "password", "is_superuser", "is_staff",
+            "groups", "user_permissions",
+            "date_joined", "last_login"
+        ]
 
 
-class IdContract(Schema):
+class StudentContract(ModelSchema):
+    user: UserSchema
+
+    class Config:
+        model = StudentAgent
+        model_fields = "__all__"
+        model_exclude = ["id"]
+
+
+class StudentContractShort(ModelSchema):
+    user: UserSchemaShort
     id: int
 
-
-class StudentInContract(AgentContract):
-    user: UserSchema
-
-
-class StudentOutContract(AgentContract, IdContract):
-    user: UserSchema
-
     class Config:
-        model = AgentEntity
+        model = StudentAgent
         model_fields = ["user", "id"]
 
 
-class StudentFlatContract(AgentContract, IdContract):
-    user: UserSchema
-
-    class Config:
-        model = AgentEntity
-        model_fields = ["user", "id"]
+class StudentRecordResponse(Schema):
+    model: str
+    count: int
+    item: StudentContract | None
 
 
 class StudentListResponse(Schema):
-    status: int
     model: str
     count: int
-    items: List[StudentFlatContract] = []
-
-
-class StudentSingleResponse(Schema):
-    model: str
-    count: int
-    item: StudentOutContract | None
+    items: List[StudentContractShort] = []

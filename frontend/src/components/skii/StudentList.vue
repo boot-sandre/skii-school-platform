@@ -1,20 +1,33 @@
 
 <template>
-    <div class="flex flex-col centered-container">
-      <page-title class="text-center">
+    <div class="centered-container">
+      <h2 class="text-3xl text-center">
         Students Space
-      </page-title>
+      </h2>
       <div class="flex flex-col items-center my-8 space-y-5">
-          <Panel  :toggleable="true">
-            <DataTable :value="students" tableStyle="min-width: 50rem" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+          <Panel header="Students board" :toggleable="true">
+            <DataTable :value="students" class="p-datatable p-datatable-table" 
+              tableStyle="min-width: 50rem" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
+              <template #header>
+                <div class="flex-row-reverse flex-wrap ap-2">
+                  <span class="text-xl font-bold text-900">Students list ({{ count }} record(s))</span>
+                </div>
+                <div class="flex flex-row-reverse flex-wrap ap-2">
+                  <Button type="button" @click="createAgent()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Create</Button>
+                  <Button type="button" @click="refresh()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Refresh</Button>
+                </div>
+                
+              </template>
               <Column field="user.username" header="Username"></Column>
               <Column field="user.email" header="Email"></Column>
               <Column header="Action" field="id">
-                <template #body="slotProps">
+                <template #body="{ data }">
                   <button type="button"
-                    @click="$router.push(`/student/${slotProps.data.id}`)">Edit</button>
+                    @click="editStudent(data.id)"
+                    class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Edit</button>
                   <button type="button"
-                    @click="deleteStudent(slotProps.data)">Delete</button>
+                    @click="deleteStudent(data)"
+                    class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Delete</button>
                 </template>
               </Column>
             </DataTable>
@@ -27,24 +40,50 @@
   import { onBeforeMount, ref } from 'vue';
   import { StudentAgentContract, StudentListResponse } from "@/interfaces";
   import { serverUrl, api } from '@/state';
+  import InputSwitch from 'primevue/inputswitch';
   import DataTable from 'primevue/datatable';
   import Column from 'primevue/column';
   import Panel from 'primevue/panel';
+  import Button from 'primevue/button';
   import { confirmDanger, msg } from '@/notify';
+  import router from '@/router';
   
   const students = ref<Array<StudentAgentContract>>([]);
+  var count = ref<Number>(0)
   
   async function load() {
-    const res = await api.get<StudentListResponse>("/skii/models/student/list");
-    console.log("DATA", JSON.stringify(res.data, null, "  "));
+    console.log("Component StudentList loading")
+    const res = await api.get<StudentListResponse>("/skii/models/student/fetch/list");
+    // console.log("DATA", JSON.stringify(res.data, null, "  "));
     if (res.ok) {
       students.value = res.data.items;
+      count.value = res.data.count;
     }
   }
   
+  function createAgent() {
+    router.push({
+      name: "create_student_record"
+    })
+  }
+
+  function refresh() {
+    students.value = []
+    load()
+  }
+
+  function editStudent(record_id: number) {
+    router.push({
+      name: "fetch_student_record",
+      params: {
+        djangoPk: record_id
+      }
+    })
+  }
+
   function deleteStudent(student: StudentAgentContract) {
     confirmDanger(
-      `Delete the ${student.id} student?`,
+      `Delete the ${student.user.username} student?`,
       "The student will be permanently deleted",
       async () => {
         const url = `/skii/models/student/delete/${student.id}`;

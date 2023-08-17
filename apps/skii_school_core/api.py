@@ -21,7 +21,7 @@ api_kwargs = {
     "title": _("Skii School Platform apps"),
     "version": distrib_version.base_version,
     "description": _(
-        "Web application to put in relation skii teacher with skii student"
+        _("Web application to put in relation skii teacher with skii student")
     ),
     "auth": django_auth,
     "csrf": True,

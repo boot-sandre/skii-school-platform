@@ -13,8 +13,8 @@
                   <span class="text-xl font-bold text-900">Students list ({{ count }} record(s))</span>
                 </div>
                 <div class="flex flex-row-reverse flex-wrap ap-2">
-                  <Button type="button" @click="createAgent()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Create</Button>
-                  <Button type="button" @click="refresh()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Refresh</Button>
+                  <button type="button" @click="createAgent()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Create</Button>
+                  <button type="button" @click="refresh()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Refresh</Button>
                 </div>
                 
               </template>
@@ -23,7 +23,7 @@
               <Column header="Action" field="id">
                 <template #body="{ data }">
                   <button type="button"
-                    @click="editStudent(data.id)"
+                    @click="editStudent(data)"
                     class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Edit</button>
                   <button type="button"
                     @click="deleteStudent(data)"

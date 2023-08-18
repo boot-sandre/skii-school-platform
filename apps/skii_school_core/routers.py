@@ -8,7 +8,7 @@ from apps.skii_school_core.models import StudentAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
     StudentRecordResponse,
-    StudentListResponse, StudentContract,
+    StudentListResponse, StudentContract, StudentContractShort,
 )
 
 
@@ -106,7 +106,7 @@ def record_save(request: HttpRequest, record_id: int, payload: StudentContract):
         422: FormErrorsResponseContract,
     },
 )
-def record_create(request: HttpRequest, payload: StudentContract):
+def record_create(request: HttpRequest, payload: StudentContractShort):
     agent_payload = payload.dict()
     user_payload = agent_payload.pop("user")
     user_obj = UserModel(**user_payload)

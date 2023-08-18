@@ -34,8 +34,7 @@ class UserSchema(ModelSchema):
 
 
 class UserSchemaShort(ModelSchema):
-    id: int
-    class Config(UserSchema.Config):
+    class Config:
         model = User
         model_fields = "__all__"
         model_exclude = [
@@ -43,6 +42,7 @@ class UserSchemaShort(ModelSchema):
             "groups", "user_permissions",
             "date_joined", "last_login"
         ]
+        model_optional_fields = ["id"]
 
 
 class StudentContract(ModelSchema):
@@ -56,17 +56,17 @@ class StudentContract(ModelSchema):
 
 class StudentContractShort(ModelSchema):
     user: UserSchemaShort
-    id: int
 
     class Config:
         model = StudentAgent
-        model_fields = ["user", "id"]
+        model_fields = ["user"]
+        model_optional_fields = ["id"]
 
 
 class StudentRecordResponse(Schema):
     model: str
     count: int
-    item: StudentContract | None
+    item: StudentContractShort | None
 
 
 class StudentListResponse(Schema):

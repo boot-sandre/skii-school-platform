@@ -5,26 +5,26 @@
         Students Space
       </h1>
       <div v-if="student" class="flex flex-col items-center my-8 space-y-5">
-            <form-card class="mx-3">
-              <span>
+            <div class="grid mx-3 formgrid p-fluid">
+              <div class="mb-4 ield col-12 md:col-6">
                 <label for="username">Username</label>
                 <InputText type="text" v-model="student.user.username" id="username"/>
-              </span>
-              <span>
+              </div>
+              <div class="mb-4 ield col-12 md:col-6">
                 <label for="email">Email</label>
                 <InputText type="text" v-model="student.user.email" id="email"/>
-              </span>
-              <span>
+              </div>
+              <div class="mb-4 ield col-12 md:col-6">
                 <label for="first_name">Firstname</label>
                 <InputText type="text" v-model="student.user.first_name" id="first_name"/>
-              </span>
-              <span>
+              </div>
+              <div class="mb-4 ield col-12 md:col-6">
                 <label for="last_name">Lastname</label>
                 <InputText type="text" v-model="student.user.last_name" id="last_name"/>
-              </span>
-              <button class="mt-5 btn txt-light" @click="$router.back()">Cancel</button>
-              <button class="w-full btn bord-background success" @click="saveRecord()">Save</button>
-            </form-card>
+              </div>
+              <button class="px-5 mt-5 border-2 border-gray-400 rounded-md btn txt-light p-button-sm" @click="$router.back()">Cancel</Button>
+              <button class="px-5 mt-5 border-2 border-gray-400 rounded-md btn txt-light p-button-sm" @click="saveRecord(Boolean(!props.djangoPk))">Save</Button>
+            </div>
       </div>
     </div>
   </template>
@@ -45,10 +45,8 @@
       last_name: "",
       email: "",
       id: null,
-      last_login: null,
       username: "user",
       is_active: true,
-      date_joined: null,
     },
     id: null,
   })
@@ -78,12 +76,17 @@
     }
   }
   
-  function saveRecord() {
+  function saveRecord(creation=false) {
     confirmDanger(
       `Save the ${student.value.user.username} student?`,
       "The student will be permanently modified",
       async () => {
-        const url = `/skii/models/student/save/${props.djangoPk}`;
+        var url:string = ""
+        if (creation) {
+          url = `/skii/models/student/create/`;
+        } else {
+          url = `/skii/models/student/save/${props.djangoPk}`;
+        }
         const payload = student.value;
         console.log("saveRecord url", url);
         console.log("saveRecord payload", payload);

@@ -1,6 +1,6 @@
 
 <template>
-  <student-list></student-list>
+  <student-list />
 </template>
 
 <script setup lang="ts">

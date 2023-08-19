@@ -1,3 +1,8 @@
 <template>
-  <div class="container p-3 mx-auto">Teachers^^</div>
+  <div class="mx-auto centered-container">
+    <router-view ></router-view>
+  </div>
 </template>
+
+<script setup lang="ts">
+</script>

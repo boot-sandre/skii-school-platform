@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 from ninja import Router
-from django.http import HttpResponse, HttpRequest
-import json
+from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
 from apps.skii_school_core.models import StudentAgent

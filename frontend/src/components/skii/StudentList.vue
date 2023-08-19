@@ -52,9 +52,8 @@
   var count = ref<Number>(0)
   
   async function load() {
-    console.log("Component StudentList loading")
-    const res = await api.get<StudentListResponse>("/skii/models/student/fetch/list");
-    // console.log("DATA", JSON.stringify(res.data, null, "  "));
+    console.log("load component StudentList")
+    const res = await api.get<StudentListResponse>("/skii/student/list/");
     if (res.ok) {
       students.value = res.data.items;
       count.value = res.data.count;
@@ -62,6 +61,7 @@
   }
   
   function createAgent() {
+    console.log("go to create StudentAgent view")
     router.push({
       name: "create_student_record"
     })
@@ -72,22 +72,23 @@
     load()
   }
 
-  function editStudent(record_id: number) {
+  function editStudent(student: StudentAgentContract) {
+    console.log("Edit a student", student);
     router.push({
       name: "fetch_student_record",
       params: {
-        djangoPk: record_id
+        djangoPk: student.id
       }
     })
   }
 
   function deleteStudent(student: StudentAgentContract) {
+    console.log("Delete a student", student);
     confirmDanger(
       `Delete the ${student.user.username} student?`,
       "The student will be permanently deleted",
       async () => {
-        const url = `/skii/models/student/delete/${student.id}`;
-        console.log("DEL", url);
+        const url = `/skii/student/delete/${student.id}/`;
         const res = await api.del(url);
         if (res.ok) {
           load()

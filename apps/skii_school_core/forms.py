@@ -1,5 +1,4 @@
 from django import forms
-from django_countries.widgets import CountrySelectWidget
 
 from apps.skii_school_core.entities import mutate_event_state
 from apps.skii_school_core.models import Event, Location

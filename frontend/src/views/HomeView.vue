@@ -4,7 +4,7 @@
     <div class="relative w-full h-full text-center">
       <div class="absolute left-0 flex flex-col items-center justify-center w-full h-full top-64 sm:top-96">
         <div class="p-3 text-white text-7xl mb-28">
-          Just <span class="font-bold txt-success">code</span> your endpoints
+          Just <span class="font-bold txt-success">learn</span> your passion
         </div>
         <div v-if="!user.isLoggedIn.value === true">
           <button class="py-3 text-lg btn success" @click="$router.push('/account')">Create an account</button>

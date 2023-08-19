@@ -3,6 +3,13 @@
     <div class="flex flex-col h-full min-h-screen lightbg">
       <the-header></the-header>
       <div class="flex-grow w-full pb-24">
+        <Menubar :model="items">
+            <template #start>
+            </template>
+            <template #end>
+                <InputText placeholder="Search" type="text" />
+            </template>
+        </Menubar>
         <router-view></router-view>
       </div>
     </div>
@@ -21,12 +28,68 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import Toast from 'primevue/toast';
 import ConfirmDialog from 'primevue/confirmdialog';
 import TheHeader from "@/components/TheHeader.vue";
+import Menubar from 'primevue/menubar';
+import InputText from 'primevue/inputtext';
 import { initState, initUserState, user } from '@/state';
-
+const items = ref([
+      {
+          label: 'Profile',
+          icon: 'pi pi-fw pi pi-fw pi-user',
+          items: [
+              {
+                  label: 'Student',
+                  icon: 'pi pi-fw pi-user-plus',
+                  to: { "name": "list_student_record" }
+              },
+              {
+                  label: 'Teacher',
+                  icon: 'pi pi-fw pi-user-plus',
+                  to: { "name": "list_teacher_record" }
+              },
+              {
+                  separator: true
+              },
+          ]
+      },
+      {
+        label: 'Events',
+        icon: 'pi pi-fw pi-calendar',
+        items: [
+            {
+                label: 'Edit',
+                icon: 'pi pi-fw pi-pencil',
+                items: [
+                    {
+                        label: 'Save',
+                        icon: 'pi pi-fw pi-calendar-plus'
+                    },
+                    {
+                        label: 'Delete',
+                        icon: 'pi pi-fw pi-calendar-minus'
+                    }
+                ]
+            },
+            {
+                label: 'Archieve',
+                icon: 'pi pi-fw pi-calendar-times',
+                items: [
+                    {
+                        label: 'Remove',
+                        icon: 'pi pi-fw pi-calendar-minus'
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        label: 'Quit',
+        icon: 'pi pi-fw pi-power-off'
+    }
+])
 onBeforeMount(() => initState());
 onMounted(() => initUserState());
 </script>

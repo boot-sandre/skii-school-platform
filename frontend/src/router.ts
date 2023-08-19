@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "./views/HomeView.vue"
+import NotFound from "./views/NotFound.vue"
 
 const baseTitle = "App"
 
@@ -56,7 +57,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    component: () => import("./components/skii/StudentSingle.vue"),
+    component: () => import("./components/skii/Student.vue"),
     path: "/student/:djangoPk",
     name: "fetch_student_record",
     props: true,
@@ -76,9 +77,46 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/teacher",
     component: () => import("./views/skii/TeacherView.vue"),
+    name: 'user-view',
     meta: {
       title: "Teacher(s)"
-    }
+    },
+    children: [
+      {
+        component: () => import("./components/skii/TeacherList.vue"),
+        path: "/teacher/list",
+        name: "list_teacher_record",
+        meta: {
+          title: "Teacher(s)",
+        }
+      },
+      {
+        component: () => import("./components/skii/Teacher.vue"),
+        path: "/teacher/fetch/:djangoPk/",
+        name: "fetch_teacher_record",
+        props: true,
+        meta: {
+          title: "Teacher",
+        }
+      },
+      {
+        component: () => import("./components/skii/Teacher.vue"),
+        path: "/teacher/create",
+        name: "create_teacher_record",
+        props: true,
+        meta: {
+          title: "Teacher",
+        }
+      },
+    ],
+    
+  },
+  
+  
+  
+  {
+    path: "/:catchAll(.*)",
+    component: NotFound,
   },
 ]
 

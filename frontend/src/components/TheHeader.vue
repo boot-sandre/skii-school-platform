@@ -8,25 +8,20 @@
     <template #mobile-branding>
       <div class="inline-flex flex-row items-center h-full pt-1 ml-2 text-2xl truncate" @click="$router.push('/')">
         <div v-if="isHome" class="flex flex-row items-center h-full">
-          <i-twemoji:ninja-medium-light-skin-tone class="mx-3 text-5xl"></i-twemoji:ninja-medium-light-skin-tone>
-          <div class="text-2xl txt-lighter">Django Spa Ninja</div>
+          <div class="text-2xl txt-lighter">Skii School Platform</div>
         </div>
         <div v-else v-html="$router.currentRoute.value.meta?.title"></div>
       </div>
     </template>
     <template #branding>
       <div class="flex flex-row items-center h-full cursor-pointer" @click="$router.push('/')">
-        <div class="mx-3">
-          <i-twemoji:ninja-medium-light-skin-tone class="text-5xl"></i-twemoji:ninja-medium-light-skin-tone>
-        </div>
-        <div class="text-2xl txt-lighter">Django Spa Ninja</div>
+        <div class="text-2xl txt-lighter">Skii School Platform</div>
       </div>
     </template>
     <template #menu>
       <div class="flex flex-row items-center justify-end w-full h-full space-x-3"
         v-if="!($router.currentRoute.value.path == '/')">
         <template v-if="user.isLoggedIn.value === true">
-          <!-- div>{{user.name}}</div -->
           <button class="flex flex-row border-none btn" @click="logout()">
             <div class="mr-2">
               <i-humbleicons:logout class="text-2xl"></i-humbleicons:logout>
@@ -96,9 +91,11 @@ export default defineComponent({
     SwMobileMenu,
   },
   setup() {
-    const isMenuVisible = ref(false);
+    const isMenuVisible = ref(true);
 
     const isHome = computed<boolean>(() => router.currentRoute.value.path == "/");
+
+    
 
     function closeMenu() {
       isMenuVisible.value = false;
@@ -113,4 +110,5 @@ export default defineComponent({
     }
   }
 })
+
 </script>

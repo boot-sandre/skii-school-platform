@@ -1,9 +1,6 @@
 from ninja import Schema, ModelSchema
-from apps.skii_school_core.entities import (
-    AgentEntity,
-)
 from django.contrib.auth import get_user_model
-from typing import Dict, List, Any, Union
+from typing import Dict, List, Any
 
 from apps.skii_school_core.models import StudentAgent, TeacherAgent
 

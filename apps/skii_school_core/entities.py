@@ -125,7 +125,7 @@ class AgentEntity(RecordIdentityHistory):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.Meta.verbose_name}: {self.user.email}"
+        return f"{self._meta.model_name}: {self.user.get_username()}"
 
 
 class RessourceEntity(UUIDEntity, DescriptionEntity):

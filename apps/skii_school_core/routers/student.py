@@ -16,20 +16,11 @@ UserModel = get_user_model()
 
 
 # Create a django ninja API router dedicated to the skii school platform
-route_skii = Router(tags=["skii", "student"])
+route_student = Router(tags=["skii", "student"])
 
 
-@route_skii.get(path="/info")
-def info(request: HttpRequest):
-    """Info endpoint to display api's parameters."""
-    api_description = route_skii.api.get_openapi_schema()
-    return HttpResponse(
-        content=json.dumps(api_description, indent=2), content_type="application/json"
-    )
-
-
-@route_skii.get(
-    path="student/{record_pk}",
+@route_student.get(
+    path="/fetch/{record_pk}/",
     response={
         200: StudentRecordResponse,
         422: FormErrorsResponseContract,
@@ -44,8 +35,8 @@ def student_record(request: HttpRequest, record_pk: int):
     )
 
 
-@route_skii.get(
-    path="student/fetch/list",
+@route_student.get(
+    path="/list/",
     response={
         200: StudentListResponse,
         422: FormErrorsResponseContract,
@@ -61,8 +52,8 @@ def student_record_list(request: HttpRequest):
         )
 
 
-@route_skii.delete(
-    path="student/delete/{record_id}",
+@route_student.delete(
+    path="/delete/{record_id}/",
 )
 def record_delete(request: HttpRequest, record_id: int):
     qs = StudentAgent.objects.all().get(pk=record_id)
@@ -72,8 +63,8 @@ def record_delete(request: HttpRequest, record_id: int):
     )
 
 
-@route_skii.post(
-    path="student/save/{record_id}",
+@route_student.post(
+    path="/save/{record_id}/",
     response={
         200: StudentRecordResponse,
         422: FormErrorsResponseContract,
@@ -99,8 +90,8 @@ def record_save(request: HttpRequest, record_id: int, payload: StudentContract):
     )
 
 
-@route_skii.post(
-    path="student/create/",
+@route_student.post(
+    path="/create/",
     response={
         200: StudentRecordResponse,
         422: FormErrorsResponseContract,

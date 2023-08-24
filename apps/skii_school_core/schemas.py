@@ -121,8 +121,8 @@ class GeoCoordinateContract(ModelSchema):
 
 class LocationContract(ModelSchema):
     country: CountryContract
-    cover: VisualPictureContract
-    coordinate: GeoCoordinateContract
+    cover: VisualPictureContract | None
+    coordinate: GeoCoordinateContract | None
 
     class Config:
         model = Location

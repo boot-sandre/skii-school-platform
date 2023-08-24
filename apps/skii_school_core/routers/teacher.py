@@ -47,7 +47,7 @@ def record_list(request: HttpRequest):
     return 200, dict(
             items=list(qs),
             count=agent_count,
-            model=f"{qs.first()._meta.model_name}"
+            model=f"{qs.model._meta.model_name}"
         )
 
 

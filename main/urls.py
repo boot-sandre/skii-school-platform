@@ -8,14 +8,14 @@ from .api import api
 from apps.skii_school_core.api import api_skii
 
 
-urlpatterns = [
+urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
     path("admin/", admin.site.urls),
     path("api/", api.urls),
     path("skii/", api_skii.urls),
     path("", include("apps.account.urls")),
-    # path("", include("apps.skii_school_core.urls")),
-    re_path(r"^", TemplateView.as_view(template_name="index.html")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    re_path(r"^", TemplateView.as_view(template_name="index.html"))
+]
 
 if settings.DEBUG:
     # Turn on debug toolbar

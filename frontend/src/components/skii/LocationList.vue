@@ -5,37 +5,9 @@
         Locations Space
       </h2>
       <div class="flex flex-col items-center my-8 space-y-5">
-          <Panel header="Locations board" :toggleable="true">
-            <DataTable :value="locations" class="p-datatable p-datatable-table" 
-              tableStyle="min-width: 50rem" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]">
-              <template #header>
-                <div class="flex-row-reverse flex-wrap ap-2">
-                  <span class="text-xl font-bold text-900">Locations list ({{ count }} record(s))</span>
-                </div>
-                <div class="flex flex-row-reverse flex-wrap ap-2">
-                  <button type="button" @click="createLocation()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Create</Button>
-                  <button type="button" @click="refresh()" class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Refresh</Button>
-                </div>
-                
-              </template>
-              <Column field="label" header="Label"></Column>
-              <Column field="address1" header="Address1"></Column>
-              <Column field="address2" header="Address2"></Column>
-              <Column field="city" header="City"></Column>
-              <Column field="country" header="Country"></Column>
-
-              <Column header="Action" field="id">
-                <template #body="{ data }">
-                  <button type="button"
-                    @click="editLocation(data)"
-                    class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Edit</button>
-                  <button type="button"
-                    @click="deleteLocation(data)"
-                    class="px-5 border-2 border-gray-400 rounded-md p-button-sm">Delete</button>
-                </template>
-              </Column>
-            </DataTable>
-          </Panel>
+            <div class="flex my-8 space-y-5 flex-rowitems-center" v-for="location in locations">
+              <location :djangoPk="location.uuid"></location>
+            </div>
       </div>
     </div>
   </template>
@@ -51,6 +23,7 @@
   import Button from 'primevue/button';
   import { confirmDanger, msg } from '@/notify';
   import router from '@/router';
+  import Location from '@/components/skii/Location.vue'
   
   const locations = ref<Array<LocationContract>>([]);
   var count = ref<Number>(0)

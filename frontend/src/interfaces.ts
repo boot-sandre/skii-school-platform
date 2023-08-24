@@ -63,6 +63,22 @@ interface LocationContract {
   coordinate?: GeoCoordinateContract
 }
 
+interface LocationSaveContract {
+  uuid?: string | null,
+  label: string,
+  description: string | null,
+  content?: string | null,
+  address1: string,
+  address2: string | null,
+  city: string,
+  country: string,
+  cover?: {
+    picture_url: string,
+    title: string,
+  },
+  coordinate?: GeoCoordinateContract
+}
+
 interface LocationListResponse {
   count: number,
   model: string,
@@ -75,6 +91,10 @@ interface LocationSingleResponse {
   item: LocationContract
 }
 
+interface LocationState {
+  editMode: boolean,
+}
+
 export {
   FormError,
   FormErrors,
@@ -83,5 +103,7 @@ export {
   StudentSingleResponse,
   LocationContract,
   LocationListResponse,
-  LocationSingleResponse
+  LocationSingleResponse,
+  LocationState,
+  LocationSaveContract
 }

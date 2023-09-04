@@ -12,8 +12,6 @@ BLACK=$(VENV_BIN)/black
 DJANGOPROJECT_DIR=main
 DJANGO_SETTINGS=main.settings.local
 STATICFILES_DIR=$(DJANGOPROJECT_DIR)/webapp_statics
-FRONTEND_DIR=frontend
-NPM=yarn# or npm
 
 # Formatting variables, FORMATRESET is always to be used last to close formatting
 FORMATBLUE:=$(shell tput setab 4)
@@ -24,15 +22,12 @@ help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo
 	@echo "  install-backend               -- to install backend requirements with Virtualenv and Pip"
-	@echo "  install-frontend              -- to install frontend requirements with Npm"
 	@echo "  install-pycheck               -- to install globally Pycheck (WARNING: Have to install/clean manually)"
-	@echo "  install                       -- to install backend and frontend"
+	@echo "  install                       -- to install backend"
 	@echo
 	@echo "  clean                         -- to clean EVERYTHING (WARNING: you cannot recovery from this)"
 	@echo "  clean-backend-install         -- to clean backend installation"
 	@echo "  clean-db                      -- to clean db files"
-	@echo "  clean-frontend-install        -- to clean frontend installation"
-	@echo "  clean-frontend-build          -- to clean frontend built files"
 	@echo "  clean-pycache                 -- to remove all __pycache__, this is recursive from current directory"
 	@echo "  clean-pycheck                 -- to remove Pycheck installation"
 	@echo
@@ -44,10 +39,6 @@ help:
 	@echo "  shell                         -- to open a Django shell"
 	@echo
 	@echo "  test                          -- run the unit tests"
-	@echo
-	@echo "  build-front                   -- to build the frontend for production"
-	@echo "  front                         -- to run the frontend in dev mode with watch autoreload"
-	@echo "  netfront                      -- to run the frontend in dev network mode with watch autoreload"
 	@echo
 	@echo "  check                         -- to run the check management command"
 	@echo "  flake                         -- to launch Flake8 checking"
@@ -82,22 +73,7 @@ clean-db:
 	rm -Rf db.sqlite3
 .PHONY: clean-db
 
-clean-frontend-build:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Cleaning frontend built files <---$(FORMATRESET)\n"
-	@echo ""
-	rm -Rf $(STATICFILES_DIR)/frontend/assets/*
-.PHONY: clean-frontend-build
-
-clean-frontend-install:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Cleaning frontend install <---$(FORMATRESET)\n"
-	@echo ""
-	rm -Rf $(FRONTEND_DIR)/node_modules
-	rm -Rf $(FRONTEND_DIR)/yarn.lock
-.PHONY: clean-frontend-install
-
-clean: clean-backend-install clean-db clean-frontend-install clean-frontend-build clean-pycache
+clean: clean-backend-install clean-db clean-pycache
 .PHONY: clean
 
 clean-pycheck:
@@ -134,14 +110,7 @@ install-backend:
 	$(PIP) install -r requirements/dev.txt
 .PHONY: install-backend
 
-install-frontend:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Installing frontend requirements <---$(FORMATRESET)\n"
-	@echo ""
-	cd $(FRONTEND_DIR) && $(NPM) install
-.PHONY: install-frontend
-
-install: venv install-backend migrate install-frontend
+install: venv install-backend migrate
 .PHONY: install
 
 shell:
@@ -185,27 +154,6 @@ run:
 	@echo ""
 	$(DJANGO_MANAGE) runserver 8000 --settings=${DJANGO_SETTINGS}
 .PHONY: run
-
-build-front:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Building the frontend <---$(FORMATRESET)\n"
-	@echo ""
-	cd $(FRONTEND_DIR) && $(NPM) build
-.PHONY: build-front
-
-front:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Running the frontend in dev mode <---$(FORMATRESET)\n"
-	@echo ""
-	cd $(FRONTEND_DIR) && $(NPM) dev
-.PHONY: front
-
-netfront:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Running the frontend in dev network mode <---$(FORMATRESET)\n"
-	@echo ""
-	cd $(FRONTEND_DIR) && $(NPM) net
-.PHONY: front
 
 test:
 	@echo ""

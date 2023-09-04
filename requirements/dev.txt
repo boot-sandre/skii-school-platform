@@ -5,11 +5,8 @@ black
 flake8
 pyright
 django-debug-toolbar
+django-extensions
 django-vitevue
 pytest-django
 docdundee
 ipdb
-django-extensions
-django-countries
-django-money
-factory_boy

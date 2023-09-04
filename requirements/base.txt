@@ -3,5 +3,9 @@
 django>=4.0.0,<5.0.0
 django-ninja
 django-cors-headers
+django-countries
+django-money
+Pillow
+factory_boy
 pyjwt
 pytz

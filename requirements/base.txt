@@ -9,3 +9,4 @@ Pillow
 factory_boy
 pyjwt
 pytz
+django-stubs

@@ -164,8 +164,26 @@ class LocationListResponse(Schema):
     items: List[LocationContract] = []
 
 
-class EventContract(Schema):
+class EventContract(ModelSchema):
     class Config:
         model = Event
         model_fields = "__all__"
-        model_exclude = ["last_modified", "created", "country"]
+        model_exclude = ["last_modified", "created"]
+
+
+class EventListResponse(Schema):
+    model: str
+    count: int
+    items: List[EventContract] = []
+
+
+class EventRecordResponse(LocationRecordResponse):
+    item: EventContract | None
+
+
+class EventContractShort(ModelSchema):
+    class Config:
+        model = Location
+        model_fields = "__all__"
+        model_exclude = ["last_modified", "created"]
+

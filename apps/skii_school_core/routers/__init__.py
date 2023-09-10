@@ -1,6 +1,12 @@
 from .student import route_student
 from .teacher import route_teacher
 from .location import route_location
+from .event import route_event
 
 
-__all__ = [route_teacher, route_student, route_location]
+__all__ = [
+    route_teacher,
+    route_student,
+    route_location,
+    route_event,
+]

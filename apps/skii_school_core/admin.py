@@ -28,7 +28,7 @@ class TimeRessourceAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    fields = [("label", "state"), ("start", "stop"), "agent_invited"]
+    fields = [("title", "state"), ("start", "stop"), "teacher", "students"]
     form = EventForm
     date_hierarchy = "start"
 

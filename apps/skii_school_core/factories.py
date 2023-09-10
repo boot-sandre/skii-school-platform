@@ -1,4 +1,7 @@
+from datetime import timedelta, datetime, UTC
+
 import factory
+from factory import fuzzy
 from django.conf import settings
 
 from django.contrib.auth.hashers import make_password
@@ -133,7 +136,7 @@ class VisualPictureFactory(factory.django.DjangoModelFactory):
 
 class LocationFactory(factory.django.DjangoModelFactory):
     """
-    Factory to create instance of an Event .
+    Factory to create instance of a Location .
     """
     class Meta:
         model = Location
@@ -146,3 +149,21 @@ class LocationFactory(factory.django.DjangoModelFactory):
     coordinate = factory.SubFactory(GeoCoordinateFactory)
     illustration = factory.SubFactory(VisualAlbumFactory)
     cover = factory.SubFactory(VisualPictureFactory)
+
+
+class EventFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Event
+
+    title = factory.Faker("text")
+    teacher = factory.SubFactory(TeacherAgentFactory)
+    start = fuzzy.FuzzyDateTime(start_dt=datetime.now(tz=UTC) - timedelta(days=25), end_dt=datetime.now(tz=UTC), force_year=2023, )
+    stop = fuzzy.FuzzyDateTime(start_dt=datetime.now(tz=UTC), end_dt=datetime.now(tz=UTC) + timedelta(hours=4))
+
+    @factory.post_generation
+    def students(self, create, extracted, **kwargs):
+        if not create or not extracted:
+            return None
+
+        # Add the iterable of groups using bulk addition
+        self.students.add(*extracted)

@@ -7,7 +7,7 @@ from apps.skii_school_core.models import Event, Location
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ["title", "state", "start", "stop", "agent_invited"]
+        fields = ["title", "state", "start", "stop", "teacher", "students"]
 
     def clean_state(self):
         if "state" in self.changed_data:

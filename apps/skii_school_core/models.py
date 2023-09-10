@@ -133,13 +133,15 @@ class Event(StateEntity, AgendaEntity):
         verbose_name_plural = _("Event(s)")
         ordering = ["state", "-created", "-start", "-stop", "title"]
 
-    editor = models.ForeignKey(User, on_delete=models.PROTECT)
-    agent_invited = models.ManyToManyField(
-        User, blank=True, related_name="events_linked"
+    teacher = models.ForeignKey(TeacherAgent, on_delete=models.PROTECT)
+    students = models.ManyToManyField(
+        StudentAgent, blank=True, related_name="events_linked"
     )
 
-    def __str__(self):
-        return f"[{self.state}]{str(self.title)}:  Date {self.start} / {self.stop} "
+    def __str__(self) -> str:
+        start_datetime = self.start.strftime(format="%Y-%m-%d %H:%M:%S")
+        stop_datetime = self.stop.strftime(format="%Y-%m-%d %H:%M:%S")
+        return f"{self.pk} [{self.state}] {str(self.title)}: {start_datetime} / {stop_datetime} "
 
 
 class Location(UUIDLabelEntity, ContentEntity):
@@ -163,3 +165,5 @@ class Location(UUIDLabelEntity, ContentEntity):
 
     def __str__(self):
         return f"{self.label} {self.city} / {self.country.name}"
+
+

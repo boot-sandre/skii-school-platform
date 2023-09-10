@@ -2,7 +2,7 @@ from ninja import Schema, ModelSchema
 from django.contrib.auth import get_user_model
 from typing import Dict, List, Any
 
-from apps.skii_school_core.models import StudentAgent, TeacherAgent, Location, GeoCoordinate
+from apps.skii_school_core.models import StudentAgent, TeacherAgent, Location, GeoCoordinate, Event
 
 User = get_user_model()
 
@@ -149,3 +149,9 @@ class LocationListResponse(Schema):
     model: str
     count: int
     items: List[LocationContract] = []
+
+class EventContract(Schema):
+    class Config:
+        model = Event
+        model_fields = "__all__"
+        model_exclude = ["last_modified", "created", "country"]

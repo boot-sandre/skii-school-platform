@@ -16,7 +16,7 @@ from apps.skii_school_core.entities import (
     VisualEntity,
     UUIDLabelEntity,
     CMSUUIDEntity,
-    GeoCoordinateEntity
+    GeoCoordinateEntity,
 )
 
 from django.contrib.auth import get_user_model
@@ -28,6 +28,7 @@ User = get_user_model()
 ##################
 # AGENT ENTITIES #
 ##################
+
 
 class VisualAlbum(CMSUUIDEntity):
     class Meta:
@@ -47,15 +48,18 @@ class VisualElement(VisualEntity):
         ordering = ["-last_modified", "-created", "title"]
 
     album = models.ForeignKey(
-        VisualAlbum, on_delete=models.CASCADE, related_name="items",
-        verbose_name=_("Album"), default=get_default_album)
+        VisualAlbum,
+        on_delete=models.CASCADE,
+        related_name="items",
+        verbose_name=_("Album"),
+        default=get_default_album,
+    )
 
     def __str__(self):
         return f"[{self.uuid}] {self.title[:30]} from album {self.album.title[:30]}"
 
 
 class VisualPicture(VisualEntity):
-
     @property
     def picture_url(self):
         return self.picture.url
@@ -156,14 +160,15 @@ class Location(UUIDLabelEntity, ContentEntity):
     )
     city = models.CharField(verbose_name=_("City"), max_length=255)
     country = CountryField(verbose_name=_("Country"), default="RO")
-    cover = models.ForeignKey(VisualPicture, on_delete=models.SET_NULL,
-                              blank=True, null=True)
-    illustration = models.ForeignKey(VisualAlbum, on_delete=models.SET_NULL,
-                                     blank=True, null=True)
-    coordinate = models.ForeignKey(GeoCoordinate, on_delete=models.PROTECT,
-                                   blank=True, null=True)
+    cover = models.ForeignKey(
+        VisualPicture, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    illustration = models.ForeignKey(
+        VisualAlbum, on_delete=models.SET_NULL, blank=True, null=True
+    )
+    coordinate = models.ForeignKey(
+        GeoCoordinate, on_delete=models.PROTECT, blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.label} {self.city} / {self.country.name}"
-
-

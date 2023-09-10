@@ -35,8 +35,14 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    fields = ["label", "description", ("address1", "address2"),
-              ("city", "country"), "coordinate", ("cover", "illustration")]
+    fields = [
+        "label",
+        "description",
+        ("address1", "address2"),
+        ("city", "country"),
+        "coordinate",
+        ("cover", "illustration"),
+    ]
     list_display = ["uuid", "label", "coordinate", "city", "country"]
     form = LocationForm
 

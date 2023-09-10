@@ -45,12 +45,14 @@ class DescribeEntity(models.Model):
 class LabelEntity(models.Model):
     class Meta:
         abstract = True
+
     label = models.CharField(max_length=255, verbose_name=_("Label"), default="")
 
 
 class TitleEntity(models.Model):
     class Meta:
         abstract = True
+
     title = models.CharField(max_length=255, verbose_name=_("Title"), default="")
 
 
@@ -74,7 +76,6 @@ class NomenclatureEntity(LabelEntity, DescribeEntity):
 
 
 class UUIDLabelEntity(UUIDEntity, NomenclatureEntity):
-
     class Meta:
         abstract = True
 
@@ -94,19 +95,32 @@ def get_default_cover_image():
 class VisualEntity(CMSUUIDEntity):
     class Meta:
         abstract = True
+
     picture = models.ImageField(
-        verbose_name=_("Picture"), default=get_default_cover_image)
+        verbose_name=_("Picture"), default=get_default_cover_image
+    )
 
 
 class GeoCoordinateEntity(models.Model):
     class Meta:
         abstract = True
-    latitude = models.DecimalField(validators=[MaxValueValidator(limit_value=90),
-                                               MinValueValidator(limit_value=-90)],
-                                   max_digits=6, decimal_places=4)
-    longitude = models.DecimalField(validators=[MaxValueValidator(limit_value=180),
-                                                MinValueValidator(limit_value=-180)],
-                                    max_digits=7, decimal_places=4)
+
+    latitude = models.DecimalField(
+        validators=[
+            MaxValueValidator(limit_value=90),
+            MinValueValidator(limit_value=-90),
+        ],
+        max_digits=6,
+        decimal_places=4,
+    )
+    longitude = models.DecimalField(
+        validators=[
+            MaxValueValidator(limit_value=180),
+            MinValueValidator(limit_value=-180),
+        ],
+        max_digits=7,
+        decimal_places=4,
+    )
 
 
 class StateChoices(models.TextChoices):

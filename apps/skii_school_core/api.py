@@ -7,9 +7,7 @@ from ninja.errors import ValidationError
 from ninja.security import django_auth
 from django.utils.translation import gettext_lazy as _
 
-from apps.skii_school_core.routers import (
-    route_student, route_teacher, route_location
-)
+from apps.skii_school_core.routers import route_student, route_teacher, route_location
 
 # Get current package version
 from packaging.version import parse as parse_version
@@ -56,4 +54,3 @@ def custom_validation_errors(
 api_skii.add_router(prefix="student", router=route_student)
 api_skii.add_router(prefix="teacher", router=route_teacher)
 api_skii.add_router(prefix="location", router=route_location)
-

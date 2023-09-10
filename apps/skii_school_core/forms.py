@@ -23,5 +23,14 @@ class EventForm(forms.ModelForm):
 class LocationForm(forms.ModelForm):
     class Meta:
         model = Location
-        fields = ["label", "description", "country", "address1", "address2", "city",
-                  "cover", "illustration", "coordinate"]
+        fields = [
+            "label",
+            "description",
+            "country",
+            "address1",
+            "address2",
+            "city",
+            "cover",
+            "illustration",
+            "coordinate",
+        ]

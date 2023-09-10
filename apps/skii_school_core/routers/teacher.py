@@ -7,7 +7,9 @@ from apps.skii_school_core.models import TeacherAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
     StudentRecordResponse,
-    StudentListResponse, StudentContract, StudentContractShort,
+    StudentListResponse,
+    StudentContract,
+    StudentContractShort,
 )
 
 
@@ -45,10 +47,8 @@ def record_list(request: HttpRequest):
     qs = TeacherAgent.objects.all()
     agent_count = qs.count()
     return 200, dict(
-            items=list(qs),
-            count=agent_count,
-            model=f"{qs.model._meta.model_name}"
-        )
+        items=list(qs), count=agent_count, model=f"{qs.model._meta.model_name}"
+    )
 
 
 @route_teacher.delete(

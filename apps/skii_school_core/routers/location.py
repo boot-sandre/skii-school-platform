@@ -7,7 +7,8 @@ from apps.skii_school_core.models import Location
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
     LocationRecordResponse,
-    LocationListResponse, LocationContractShort,
+    LocationListResponse,
+    LocationContractShort,
 )
 
 
@@ -44,10 +45,10 @@ def location_record(request: HttpRequest, record_pk: int | str):
 def location_record_list(request: HttpRequest):
     qs = Location.objects.all()
     return dict(
-            items=list(qs),
-            count=qs.count(),
-            model=f"{qs.model._meta.model_name}",
-        )
+        items=list(qs),
+        count=qs.count(),
+        model=f"{qs.model._meta.model_name}",
+    )
 
 
 @route_location.delete(
@@ -68,7 +69,9 @@ def record_delete(request: HttpRequest, record_id: int | str):
         422: FormErrorsResponseContract,
     },
 )
-def record_save(request: HttpRequest, record_id: int | str, payload: LocationContractShort):
+def record_save(
+    request: HttpRequest, record_id: int | str, payload: LocationContractShort
+):
     location_payload = payload.dict()
     location_obj = get_object_or_404(Location, pk=record_id)
     for attr, value in location_payload.items():

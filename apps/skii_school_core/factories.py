@@ -16,7 +16,7 @@ from apps.skii_school_core.models import (
     GeoCoordinate,
     VisualAlbum,
     VisualElement,
-    VisualPicture
+    VisualPicture,
 )
 
 
@@ -85,17 +85,19 @@ class EventFactory(factory.django.DjangoModelFactory):
 
 
 latitude_config = {
-    'left_digits': 3,
-    'right_digits': 4,
-    'positive': False,
-    'min_value': -90,
-    'max_value': 90,
+    "left_digits": 3,
+    "right_digits": 4,
+    "positive": False,
+    "min_value": -90,
+    "max_value": 90,
 }
 longitude_config = latitude_config.copy()
-longitude_config.update({
-    'min_value': -180,
-    'max_value': 180,
-})
+longitude_config.update(
+    {
+        "min_value": -180,
+        "max_value": 180,
+    }
+)
 
 
 class GeoCoordinateFactory(factory.django.DjangoModelFactory):
@@ -138,8 +140,10 @@ class LocationFactory(factory.django.DjangoModelFactory):
     """
     Factory to create instance of a Location .
     """
+
     class Meta:
         model = Location
+
     address1 = factory.Faker("address")
     city = factory.Faker("city")
     country = factory.Faker("country_code")
@@ -157,8 +161,14 @@ class EventFactory(factory.django.DjangoModelFactory):
 
     title = factory.Faker("text")
     teacher = factory.SubFactory(TeacherAgentFactory)
-    start = fuzzy.FuzzyDateTime(start_dt=datetime.now(tz=UTC) - timedelta(days=25), end_dt=datetime.now(tz=UTC), force_year=2023, )
-    stop = fuzzy.FuzzyDateTime(start_dt=datetime.now(tz=UTC), end_dt=datetime.now(tz=UTC) + timedelta(hours=4))
+    start = fuzzy.FuzzyDateTime(
+        start_dt=datetime.now(tz=UTC) - timedelta(days=25),
+        end_dt=datetime.now(tz=UTC),
+        force_year=2023,
+    )
+    stop = fuzzy.FuzzyDateTime(
+        start_dt=datetime.now(tz=UTC), end_dt=datetime.now(tz=UTC) + timedelta(hours=4)
+    )
 
     @factory.post_generation
     def students(self, create, extracted, **kwargs):

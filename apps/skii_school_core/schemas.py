@@ -2,7 +2,13 @@ from ninja import Schema, ModelSchema
 from django.contrib.auth import get_user_model
 from typing import Dict, List, Any
 
-from apps.skii_school_core.models import StudentAgent, TeacherAgent, Location, GeoCoordinate, Event
+from apps.skii_school_core.models import (
+    StudentAgent,
+    TeacherAgent,
+    Location,
+    GeoCoordinate,
+    Event,
+)
 
 User = get_user_model()
 
@@ -24,9 +30,12 @@ class UserSchema(ModelSchema):
         model = User
         model_fields = "__all__"
         model_exclude = [
-            "password", "is_superuser", "is_staff",
-            "groups", "user_permissions",
-            "id"
+            "password",
+            "is_superuser",
+            "is_staff",
+            "groups",
+            "user_permissions",
+            "id",
         ]
 
 
@@ -35,9 +44,13 @@ class UserSchemaShort(ModelSchema):
         model = User
         model_fields = "__all__"
         model_exclude = [
-            "password", "is_superuser", "is_staff",
-            "groups", "user_permissions",
-            "date_joined", "last_login"
+            "password",
+            "is_superuser",
+            "is_staff",
+            "groups",
+            "user_permissions",
+            "date_joined",
+            "last_login",
         ]
         model_optional_fields = ["id"]
 
@@ -149,6 +162,7 @@ class LocationListResponse(Schema):
     model: str
     count: int
     items: List[LocationContract] = []
+
 
 class EventContract(Schema):
     class Config:

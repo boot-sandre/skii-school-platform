@@ -3,13 +3,14 @@ from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
-from apps.skii_school_core.models import Event
+from apps.skii_school_core.models import Event, TeacherAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
     EventRecordResponse,
     EventListResponse,
     EventContractShort,
 )
+from apps.skii_school_core.interfaces import AgendaInterface
 
 
 UserModel = get_user_model()
@@ -26,12 +27,30 @@ route_event = Router(tags=["skii", "event"])
         422: FormErrorsResponseContract,
     },
 )
-def location_record(request: HttpRequest, record_pk: int | str):
+def event_record(request: HttpRequest, record_pk: int | str):
     obj = get_object_or_404(Event, pk=record_pk)
     return dict(
         count=int(bool(obj)),
         model=f"{obj._meta.model_name}",
         item=obj,
+    )
+
+
+@route_event.get(
+    path="/event_list_by_teacher/{teacher_pk}/",
+    response={
+        200: EventListResponse,
+        422: FormErrorsResponseContract,
+    },
+)
+def event_list_by_teacher(request: HttpRequest, teacher_pk: int):
+    event_list = AgendaInterface.list_teacher_event(
+        agent=TeacherAgent.objects.get(pk=teacher_pk)
+    )
+    return dict(
+        items=list(event_list),
+        count=event_list.count(),
+        model=f"{event_list.model._meta.model_name}",
     )
 
 
@@ -42,7 +61,7 @@ def location_record(request: HttpRequest, record_pk: int | str):
         422: FormErrorsResponseContract,
     },
 )
-def location_record_list(request: HttpRequest):
+def event_record_list(request: HttpRequest):
     qs = Event.objects.all()
     return dict(
         items=list(qs),

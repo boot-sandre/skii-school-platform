@@ -3,6 +3,7 @@ from decimal import Decimal as Deci
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
 from django.utils.translation import gettext_lazy as _
+from ninja import Schema
 
 from apps.skii_school_core.entities import (
     RessourceEntity,
@@ -18,11 +19,29 @@ from apps.skii_school_core.entities import (
     CMSUUIDEntity,
     GeoCoordinateEntity,
 )
-
 from django.contrib.auth import get_user_model
 
 
 User = get_user_model()
+
+
+class GantStyleConfigContract(Schema):
+    background: str
+    color: str
+    borderRadius: str
+
+
+class GanttBarConfig(Schema):
+    id: str
+    hasHandles: bool
+    label: str
+    style: GantStyleConfigContract
+
+
+class GantConfigContract(Schema):
+    start: str
+    stop: str
+    ganttBarConfig: GanttBarConfig
 
 
 ##################
@@ -145,7 +164,24 @@ class Event(StateEntity, AgendaEntity):
     def __str__(self) -> str:
         start_datetime = self.start.strftime(format="%Y-%m-%d %H:%M:%S")
         stop_datetime = self.stop.strftime(format="%Y-%m-%d %H:%M:%S")
-        return f"{self.pk} [{self.state}] {str(self.title)}: {start_datetime} / {stop_datetime} "
+        return f"[{self.state}] {self.teacher.user.username}: {start_datetime} / {stop_datetime} "
+
+    @property
+    def gant_config(self) -> GantConfigContract:
+        return {
+            "start": self.start.strftime(format="%Y-%m-%d %H:%M:%S"),
+            "stop": self.stop.strftime(format="%Y-%m-%d %H:%M:%S"),
+            "ganttBarConfig": {
+                "id": str(self.uuid),
+                "hasHandles": True,
+                "label": self.title,
+                "style": {
+                    "background": "#e09b69",
+                    "color": "black",
+                    "borderRadius": "20px"
+                }
+            }
+        }
 
 
 class Location(UUIDLabelEntity, ContentEntity):

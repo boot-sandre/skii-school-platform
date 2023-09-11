@@ -7,7 +7,7 @@ from apps.skii_school_core.models import TeacherAgent
 from apps.skii_school_core.schemas import (
     FormErrorsResponseContract,
     StudentRecordResponse,
-    StudentListResponse,
+    TeacherListResponse,
     StudentContract,
     StudentContractShort,
 )
@@ -39,15 +39,15 @@ def fetch_record(request: HttpRequest, record_pk: int):
 @route_teacher.get(
     path="/list/",
     response={
-        200: StudentListResponse,
+        200: TeacherListResponse,
         422: FormErrorsResponseContract,
     },
 )
 def record_list(request: HttpRequest):
-    qs = TeacherAgent.objects.all()
-    agent_count = qs.count()
+    agent_list = TeacherAgent.objects.all()
+    agent_count = agent_list.count()
     return 200, dict(
-        items=list(qs), count=agent_count, model=f"{qs.model._meta.model_name}"
+        items=list(agent_list), count=agent_count, model=f"{agent_list.model._meta.model_name}"
     )
 
 

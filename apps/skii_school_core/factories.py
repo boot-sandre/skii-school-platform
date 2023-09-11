@@ -162,12 +162,18 @@ class EventFactory(factory.django.DjangoModelFactory):
     title = factory.Faker("text")
     teacher = factory.SubFactory(TeacherAgentFactory)
     start = fuzzy.FuzzyDateTime(
-        start_dt=datetime.now(tz=UTC) - timedelta(days=25),
+        start_dt=datetime.now(tz=UTC) - timedelta(hours=2),
         end_dt=datetime.now(tz=UTC),
         force_year=2023,
+        force_month=7,
+        force_day=13
     )
     stop = fuzzy.FuzzyDateTime(
-        start_dt=datetime.now(tz=UTC), end_dt=datetime.now(tz=UTC) + timedelta(hours=4)
+        start_dt=datetime.now(tz=UTC),
+        end_dt=datetime.now(tz=UTC) + timedelta(hours=4),
+        force_year=2023,
+        force_month=7,
+        force_day=13
     )
 
     @factory.post_generation

@@ -1,6 +1,12 @@
+from datetime import datetime
+from uuid import UUID
+
+from django.db.models import QuerySet
 from ninja import Schema, ModelSchema
 from django.contrib.auth import get_user_model
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Iterable
+
+from ninja.orm import create_schema
 
 from apps.skii_school_core.models import (
     StudentAgent,
@@ -8,6 +14,7 @@ from apps.skii_school_core.models import (
     Location,
     GeoCoordinate,
     Event,
+    GantConfigContract
 )
 
 User = get_user_model()
@@ -94,13 +101,9 @@ class TeacherContract(ModelSchema):
         model_exclude = ["id"]
 
 
-class TeacherContractShort(ModelSchema):
+class TeacherContractShort(Schema):
+    id: int
     user: UserSchemaShort
-
-    class Config:
-        model = TeacherAgent
-        model_fields = ["user"]
-        model_optional_fields = ["id"]
 
 
 class TeacherRecordResponse(Schema):
@@ -164,11 +167,13 @@ class LocationListResponse(Schema):
     items: List[LocationContract] = []
 
 
-class EventContract(ModelSchema):
-    class Config:
-        model = Event
-        model_fields = "__all__"
-        model_exclude = ["last_modified", "created"]
+class EventContract(Schema):
+    gant_config: GantConfigContract
+    start: datetime
+    stop: datetime
+    teacher: TeacherContract
+    students: List[StudentContract]
+    uuid: UUID
 
 
 class EventListResponse(Schema):

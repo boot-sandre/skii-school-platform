@@ -7,7 +7,7 @@ from ninja.errors import ValidationError
 from ninja.security import django_auth
 from django.utils.translation import gettext_lazy as _
 
-from apps.skii_school_core.routers import (
+from skii.skii_school_api.routers import (
     route_student,
     route_teacher,
     route_location,

@@ -6,12 +6,12 @@ from django.conf import settings
 
 from django.contrib.auth.hashers import make_password
 
-from apps.skii_school_core.models import (
+from skii.platform.models import (
     StudentAgent,
     TeacherAgent,
     MoneyRessource,
     TimeRessource,
-    Event,
+    Lesson,
     Location,
     GeoCoordinate,
     VisualAlbum,
@@ -22,7 +22,7 @@ from apps.skii_school_core.models import (
 
 class UserFactory(factory.django.DjangoModelFactory):
     """
-    Create a fake user with Faker.
+    Create a fake dj user with Faker.
     """
 
     class Meta:
@@ -71,17 +71,6 @@ class TimeRessourceFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = TimeRessource
-
-
-class EventFactory(factory.django.DjangoModelFactory):
-    """
-    Factory to create instance of an Event .
-    """
-
-    class Meta:
-        model = Event
-
-    editor = factory.SubFactory(UserFactory)
 
 
 latitude_config = {
@@ -155,31 +144,39 @@ class LocationFactory(factory.django.DjangoModelFactory):
     cover = factory.SubFactory(VisualPictureFactory)
 
 
-class EventFactory(factory.django.DjangoModelFactory):
+class LessonFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Event
+        model = Lesson
 
-    title = factory.Faker("text")
+    label = factory.Faker("text")
     teacher = factory.SubFactory(TeacherAgentFactory)
     start = fuzzy.FuzzyDateTime(
         start_dt=datetime.now(tz=UTC) - timedelta(hours=2),
         end_dt=datetime.now(tz=UTC),
         force_year=2023,
         force_month=7,
-        force_day=13
+        force_day=13,
     )
     stop = fuzzy.FuzzyDateTime(
         start_dt=datetime.now(tz=UTC),
         end_dt=datetime.now(tz=UTC) + timedelta(hours=4),
         force_year=2023,
         force_month=7,
-        force_day=13
+        force_day=13,
     )
 
     @factory.post_generation
     def students(self, create, extracted, **kwargs):
+        """Permit to transmit students to link with lesson.
+
+        Example:
+         - event_objs = EventFactory.create(
+               students=[
+                   StudentAgentFactory(),
+                   StudentAgentFactory()
+               ]
+           )
+        """
         if not create or not extracted:
             return None
-
-        # Add the iterable of groups using bulk addition
         self.students.add(*extracted)

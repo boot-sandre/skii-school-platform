@@ -3,11 +3,8 @@ from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
-from apps.skii_school_core.models import TeacherAgent
-from apps.skii_school_core.schemas import (
-    FormErrorsResponseContract,
-    StudentRecordResponse,
-    TeacherListResponse,
+from skii.plateform.models import TeacherAgent
+from skii.skii_school_api.schemas import (
     StudentContract,
     StudentContractShort,
 )
@@ -16,7 +13,7 @@ from apps.skii_school_core.schemas import (
 UserModel = get_user_model()
 
 
-# Create a django ninja API router dedicated to the skii school platform
+# Create a django ninja API router dedicated to the skii plateform platform
 route_teacher = Router(tags=["skii", "teacher"])
 
 

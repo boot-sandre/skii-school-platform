@@ -4,16 +4,20 @@ from decimal import Decimal as Deci
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.timezone import now
 
-from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+
+from django.db import models
 
 
 User = get_user_model()
 
 
 class RecordIdentityHistory(models.Model):
-    """To track and store on an object creation/update datetime."""
+    """Abstract model to track and store on an object
+
+    creation/update datetime.
+    """
 
     class Meta:
         abstract = True
@@ -23,6 +27,12 @@ class RecordIdentityHistory(models.Model):
 
 
 class UUIDEntity(RecordIdentityHistory):
+    """Abstract model to use uuid as primary key.
+
+    UUID can give more flexibility with SaaS deployment, distribued data/db.
+    Have impact compare to a typical integer id on database storage and performance.
+    """
+
     class Meta:
         abstract = True
 
@@ -30,10 +40,17 @@ class UUIDEntity(RecordIdentityHistory):
 
     @property
     def short_prefix_uuid(self):
+        """Usefull for have short uuid preview."""
         return f"{str(self.uuid)[:8]}..."
 
 
 class DescribeEntity(models.Model):
+    """Abstract model to add short description fields
+
+    Give the capacity to a models to store a short record description about it.
+
+    """
+
     class Meta:
         abstract = True
 
@@ -42,14 +59,47 @@ class DescribeEntity(models.Model):
     )
 
 
-class LabelEntity(models.Model):
+class DescribeFullEntity(models.Model):
+    """Abstract model to add short and long description fields
+
+    Give the capacity to store a long record description
+    and a short one.
+
+    TODO: May use ckeditor HTMLField with wysiwyg.
+    """
+
     class Meta:
         abstract = True
 
-    label = models.CharField(max_length=255, verbose_name=_("Label"), default="")
+    description = models.TextField(
+        max_length=1020, verbose_name=_("Long description"), blank=True, null=True
+    )
+    description_short = models.TextField(
+        max_length=255, verbose_name=_("Long description"), blank=True, null=True
+    )
+
+
+class LabelEntity(models.Model):
+    """Abstract model to add a Label on a record
+
+    Vue.js use mostly label property to display content.
+    It's more usefully to keep same name back and front.
+
+    Label field can be more universal than "title" semantic
+    """
+
+    class Meta:
+        abstract = True
+
+    label = models.CharField(max_length=80, verbose_name=_("Label"), default="")
 
 
 class TitleEntity(models.Model):
+    """Abstract model to add a title on a record
+
+    Usefull for named content, like cms page, book, documents
+    """
+
     class Meta:
         abstract = True
 
@@ -57,6 +107,8 @@ class TitleEntity(models.Model):
 
 
 class ContentEntity(models.Model):
+    """Abstract model to store big text content."""
+
     class Meta:
         abstract = True
 
@@ -132,11 +184,7 @@ class StateChoices(models.TextChoices):
 
 
 def mutate_event_state(value, initial):
-    print("mutate_event_state:value")
-    print(value)
-    print("mutate_event_state:initial")
-    print(initial)
-
+    """Centralize state workflow condition."""
     new_status = initial
     if value == StateChoices.DRAFT and initial in [
         StateChoices.PLANNED,
@@ -166,12 +214,15 @@ def mutate_event_state(value, initial):
         StateChoices.PLANNED,
     ]:
         new_status = value
-    print("mutate_event_state:new_status")
-    print(new_status)
     return new_status
 
 
 class StateEntity(models.Model):
+    """State usefully to establish record workflow condition.
+
+    TODO: Use django signal with mutate_event_state
+    """
+
     class Meta:
         abstract = True
 
@@ -179,16 +230,22 @@ class StateEntity(models.Model):
         max_length=32, choices=StateChoices.choices, default=StateChoices.DRAFT
     )
 
-    def __str__(self):
-        return str(self.state)
 
+class EventEntity(UUIDEntity, NomenclatureEntity):
+    """Abstract class with start/stop time delta repr."""
 
-class AgendaEntity(UUIDEntity, CMSDisplayEntity):
     class Meta:
         abstract = True
 
     start = models.DateTimeField(verbose_name=_("Start time"), default=now)
     stop = models.DateTimeField(verbose_name=_("Stop time"), default=now)
+
+    @property
+    def time_delta(self):
+        """Get event time delta (minutes)."""
+        delta = self.stop - self.start
+        minutes_count = round(delta.total_seconds() / 60, 2)
+        return minutes_count
 
 
 class AgentEntity(RecordIdentityHistory):
@@ -207,9 +264,7 @@ class RessourceEntity(UUIDLabelEntity):
     class Meta:
         abstract = True
 
-    amount = models.DecimalField(
-        verbose_name=_("Time ressource (seconds)"), default=Deci(0.0)
-    )
+    amount = models.DecimalField(verbose_name=_("Time ressource"), default=Deci(0.0))
 
     def __str__(self):
         return f"{self.short_prefix_uuid}: {self.amount}"

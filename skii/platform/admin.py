@@ -1,9 +1,25 @@
 from django.contrib import admin
-from .models import StudentAgent, TeacherAgent, GeoCoordinate
-from .models import MoneyRessource, TimeRessource
-from .models import Event, Location
-from .models import VisualAlbum, VisualElement, VisualPicture
-from .forms import EventForm, LocationForm
+
+from skii.platform.models.agent import (
+    StudentAgent,
+    TeacherAgent,
+)
+from skii.platform.models.common import (
+    GeoCoordinate,
+    VisualAlbum,
+    VisualElement,
+    VisualPicture,
+)
+from skii.platform.models.ressource import (
+    MoneyRessource,
+    TimeRessource,
+)
+from skii.platform.models.event import (
+    Lesson,
+    Location,
+)
+
+from .forms import LessonForm, LocationForm
 
 
 @admin.register(StudentAgent)
@@ -26,10 +42,10 @@ class TimeRessourceAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
-    fields = [("title", "state"), ("start", "stop"), "teacher", "students"]
-    form = EventForm
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    fields = [("label", "state"), ("start", "stop"), "teacher", "students"]
+    form = LessonForm
     date_hierarchy = "start"
 
 

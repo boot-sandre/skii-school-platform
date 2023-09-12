@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class SkiiSchoolCore(AppConfig):
+class SkiiSchoolApi(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "apps.skii_school_core"
+    name = "skii.skii_school_api"

@@ -71,3 +71,6 @@ docs/_build/
 
 # PyBuilder
 
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/

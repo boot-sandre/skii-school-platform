@@ -1,5 +1,5 @@
-import json
-
+import orjson
+from ninja.renderers import BaseRenderer
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest, HttpResponse
 from ninja import NinjaAPI
@@ -21,6 +21,14 @@ current_package_name = __package__.split(".")[0]
 distrib_version = parse_version(__import__(current_package_name).__version__)
 
 
+
+class ORJSONRenderer(BaseRenderer):
+    media_type = "application/json"
+
+    def render(self, request, data, *, response_status):
+        return orjson.dumps(data)
+
+
 api_kwargs = {
     "title": _("Skii Platform"),
     "version": distrib_version.base_version,
@@ -31,6 +39,7 @@ api_kwargs = {
     "csrf": True,
     "docs_decorator": staff_member_required,
     "urls_namespace": "skii",
+    "renderer": ORJSONRenderer(),
 }
 
 # Create skii app dedicated api

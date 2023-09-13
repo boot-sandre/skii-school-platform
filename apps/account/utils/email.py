@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.auth.models import AbstractBaseUser
 
-from skii.account.utils.token import encode_token
+from apps.account.utils.token import encode_token
 
 
 def email_message(message: str, subject: str, to_email: str) -> int:

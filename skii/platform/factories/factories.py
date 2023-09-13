@@ -6,16 +6,20 @@ from django.conf import settings
 
 from django.contrib.auth.hashers import make_password
 
-from skii.platform.models import (
+from skii.platform.models.agent import (
     StudentAgent,
     TeacherAgent,
+)
+from skii.platform.models.common import VisualElement
+from skii.platform.models.ressource import (
     MoneyRessource,
     TimeRessource,
+)
+from skii.platform.models.event import (
     Lesson,
     Location,
     GeoCoordinate,
     VisualAlbum,
-    VisualElement,
     VisualPicture,
 )
 

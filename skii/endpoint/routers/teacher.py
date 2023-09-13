@@ -3,28 +3,27 @@ from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
-from apps.skii_school_core.models import TeacherAgent
-from apps.skii_school_core.schemas import (
-    FormErrorsResponseContract,
-    StudentRecordResponse,
-    TeacherListResponse,
+from apps.base.schemas import FormInvalidResponseContract
+from skii.platform.models.agent import TeacherAgent
+from skii.platform.schemas.agent import (
     StudentContract,
     StudentContractShort,
 )
+from skii.platform.schemas.http import SkiiResponse, SkiiListResponse, MsgResponseContract
 
 
 UserModel = get_user_model()
 
 
-# Create a django ninja API router dedicated to the skii school platform
-route_teacher = Router(tags=["skii", "teacher"])
+# Create a django ninja API router dedicated to the skii platform
+route_teacher = Router(tags=["skii", "platform", "agent", "teacher"])
 
 
 @route_teacher.get(
     path="/fetch/{record_pk}/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def fetch_record(request: HttpRequest, record_pk: int):
@@ -39,8 +38,8 @@ def fetch_record(request: HttpRequest, record_pk: int):
 @route_teacher.get(
     path="/list/",
     response={
-        200: TeacherListResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_list(request: HttpRequest):
@@ -67,8 +66,8 @@ def record_delete(request: HttpRequest, record_pk: int):
 @route_teacher.post(
     path="/save/{record_pk}/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_save(request: HttpRequest, record_pk: int, payload: StudentContract):
@@ -94,8 +93,8 @@ def record_save(request: HttpRequest, record_pk: int, payload: StudentContract):
 @route_teacher.post(
     path="/create/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_create(request: HttpRequest, payload: StudentContractShort):

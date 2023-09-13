@@ -29,12 +29,12 @@ class Lesson(StateEntity, EventEntity):
         constraints = [
             CheckConstraint(
                 check=(
-                    Q(start__lt=F("end"))
-                    & ~Q(  # Vérifie que start est inférieur à end
-                        start__range=(F("start"), F("end"))
+                    Q(start__lt=F("stop"))
+                    & ~Q(  # Vérifie que start est inférieur à stop
+                        start__range=(F("start"), F("stop"))
                     )
                     & ~Q(  # Vérifie qu'il n'y a pas de chevauchement
-                        end__range=(F("start"), F("end"))
+                        stop__range=(F("start"), F("stop"))
                     )  # Vérifie qu'il n'y a pas de chevauchement
                 ),
                 name="check_no_overlap",
@@ -53,7 +53,7 @@ class Lesson(StateEntity, EventEntity):
 
     @property
     def gant_config(self):
-        from skii.gateway.schemas.vuejs import GanttConfigContract
+        from skii.platform.schemas.vuejs import GanttConfigContract
         return GanttConfigContract(
             {
                 "start": self.start.strftime(format="%Y-%m-%d %H:%M"),

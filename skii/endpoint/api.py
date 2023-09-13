@@ -7,13 +7,11 @@ from ninja.errors import ValidationError
 from ninja.security import django_auth
 from django.utils.translation import gettext_lazy as _
 
-from apps.skii_school_core.routers import (
-    route_student,
-    route_teacher,
-    route_location,
-    route_lesson,
-    route_agenda,
-)
+from skii.endpoint.routers.student import route_student
+from skii.endpoint.routers.teacher import route_teacher
+from skii.endpoint.routers.location import route_location
+from skii.endpoint.routers.lesson import route_lesson
+from skii.endpoint.routers.agenda import route_agenda
 
 # Get current package version
 from packaging.version import parse as parse_version
@@ -24,7 +22,7 @@ distrib_version = parse_version(__import__(current_package_name).__version__)
 
 
 api_kwargs = {
-    "title": _("Skii School Platform"),
+    "title": _("Skii Platform"),
     "version": distrib_version.base_version,
     "description": _(
         _("Web application to put in relation skii teacher with skii student")
@@ -53,7 +51,7 @@ def custom_validation_errors(
     Returns:
         HttpResponse: a Django http response
     """
-    print(json.dumps(exc.errors, indent=2))
+    breakpoint()
     return api_skii.create_response(request, data={"detail": exc.errors}, status=418)
 
 

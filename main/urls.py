@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from .api import api
-from apps.skii_school_core.api import api_skii
+from skii.endpoint.api import api_skii
 
 
 urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \

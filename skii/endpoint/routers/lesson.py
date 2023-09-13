@@ -3,22 +3,26 @@ from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
-from skii.plateform.models import Lesson, TeacherAgent
-from skii.plateform.interfaces import AgendaInterface
+from apps.base.schemas import FormInvalidResponseContract
 
+from skii.platform.models.agent import TeacherAgent
+from skii.platform.models.event import Lesson
+from skii.platform.interfaces import AgendaInterface
+from skii.platform.schemas.event import LessonContractShort
+from skii.platform.schemas.http import SkiiResponse, SkiiListResponse
 
 UserModel = get_user_model()
 
 
-# Create a django ninja API router dedicated to the skii plateform platform
+# Create a django ninja API router dedicated to the skii platform platform
 route_lesson = Router(tags=["skii", "lesson"])
 
 
 @route_lesson.get(
     path="/fetch/{record_pk}/",
     response={
-        200: EventRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def lesson_record(request: HttpRequest, record_pk: int | str):
@@ -33,11 +37,11 @@ def lesson_record(request: HttpRequest, record_pk: int | str):
 @route_lesson.get(
     path="/lesson_list_by_teacher/{teacher_pk}/",
     response={
-        200: EventListResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
-def lesson_list_by_teacher(request: HttpRequest, teacher_pk: int):
+def teacher_lesson_list(request: HttpRequest, teacher_pk: int):
     lesson_list = AgendaInterface.list_teacher_lesson(
         agent=TeacherAgent.objects.get(pk=teacher_pk)
     )
@@ -51,12 +55,12 @@ def lesson_list_by_teacher(request: HttpRequest, teacher_pk: int):
 @route_lesson.get(
     path="/list/",
     response={
-        200: EventListResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def lesson_record_list(request: HttpRequest):
-    qs = Event.objects.all()
+    qs = Lesson.objects.all()
     return dict(
         items=list(qs),
         count=qs.count(),
@@ -78,39 +82,37 @@ def record_delete(request: HttpRequest, record_id: int | str):
 @route_lesson.post(
     path="/save/{record_id}/",
     response={
-        200: EventRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_save(
     request: HttpRequest, record_id: int | str, payload: LessonContractShort
 ):
-    location_payload = payload.dict()
-    location_obj = get_object_or_404(Event, pk=record_id)
-    for attr, value in location_payload.items():
-        setattr(location_obj, attr, value)
-    location_obj.save()
-    location_obj.refresh_from_db()
+    lesson_payload = payload.dict()
+    lesson_obj = get_object_or_404(Lesson, pk=record_id)
+    for attr, value in lesson_payload.items():
+        setattr(lesson_obj, attr, value)
+    lesson_obj.save()
+    lesson_obj.refresh_from_db()
     return dict(
-        count=int(bool(location_obj)),
-        model=f"{location_obj._meta.model_name}",
-        item=location_obj,
+        count=int(bool(lesson_obj)),
+        data=lesson_obj,
     )
 
 
 @route_lesson.post(
     path="/create/",
     response={
-        200: EventRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_create(request: HttpRequest, payload: LessonContractShort):
     record_payload = payload.dict()
-    record_obj = Event(**record_payload)
+    record_obj = Lesson(**record_payload)
     record_obj.save()
     return dict(
         count=int(bool(record_obj)),
-        model=f"{record_obj._meta.verbose_name}",
         item=record_obj,
     )

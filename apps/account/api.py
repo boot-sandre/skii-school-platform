@@ -7,15 +7,15 @@ from django.contrib.auth import authenticate, logout, login
 from ninja import Router
 
 from django.contrib.auth.forms import AuthenticationForm
-from skii.account.forms.registration import RegistrationForm
-from skii.account.utils.token import decode_token
-from skii.account.utils.email import email_activation_token
+from apps.account.forms.registration import RegistrationForm
+from apps.account.utils.token import decode_token
+from apps.account.utils.email import email_activation_token
 
-from skii.base.schemas import (
-    MsgResponseContract,
+from apps.base.schemas import (
     FormInvalidResponseContract,
 )
-from skii.account.schemas import (
+from skii.platform.schemas.http import MsgResponseContract
+from apps.account.schemas import (
     LoginFormContract,
     RegisterFormContract,
     StateContract,

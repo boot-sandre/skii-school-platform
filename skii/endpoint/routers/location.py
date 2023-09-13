@@ -1,36 +1,26 @@
 from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpRequest
-from django.contrib.auth import get_user_model
 
-from apps.skii_school_core.models import Location
-from apps.skii_school_core.schemas import (
-    FormErrorsResponseContract,
-    LocationRecordResponse,
-    LocationListResponse,
-    LocationContractShort,
-)
+from apps.base.schemas import FormInvalidResponseContract
+from skii.platform.models.event import Location
+from skii.platform.schemas.event import LocationContractShort
+from skii.platform.schemas.http import SkiiResponse, SkiiListResponse
 
-
-UserModel = get_user_model()
-
-
-# Create a django ninja API router dedicated to the skii school platform
 route_location = Router(tags=["skii", "location"])
 
 
 @route_location.get(
     path="/fetch/{record_pk}/",
     response={
-        200: LocationRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def location_record(request: HttpRequest, record_pk: int | str):
     obj = get_object_or_404(Location, pk=record_pk)
     return dict(
         count=int(bool(obj)),
-        model=f"{obj._meta.model_name}",
         item=obj,
     )
 
@@ -38,16 +28,15 @@ def location_record(request: HttpRequest, record_pk: int | str):
 @route_location.get(
     path="/list/",
     response={
-        200: LocationListResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def location_record_list(request: HttpRequest):
     qs = Location.objects.all()
     return dict(
-        items=list(qs),
+        data=list(qs),
         count=qs.count(),
-        model=f"{qs.model._meta.model_name}",
     )
 
 
@@ -65,8 +54,8 @@ def record_delete(request: HttpRequest, record_id: int | str):
 @route_location.post(
     path="/save/{record_id}/",
     response={
-        200: LocationRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_save(
@@ -88,8 +77,8 @@ def record_save(
 @route_location.post(
     path="/create/",
     response={
-        200: LocationRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_create(request: HttpRequest, payload: LocationContractShort):

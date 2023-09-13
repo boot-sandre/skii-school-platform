@@ -1,13 +1,16 @@
+from typing import Optional, List
+
 from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
-from skii.plateform.models import TeacherAgent
-from skii.skii_school_api.schemas import (
-    StudentContract,
-)
+from apps.base.schemas import FormInvalidResponseContract
 
+from skii.platform.schemas.agent import StudentContract, TeacherContract, UserSchema
+from skii.platform.models.agent import TeacherAgent
+from skii.platform.schemas.event import LessonContract
+from skii.platform.schemas.http import SkiiListResponse
 
 UserModel = get_user_model()
 
@@ -15,11 +18,17 @@ UserModel = get_user_model()
 route_agenda = Router(tags=["skii", "agenda"])
 
 
+class TeacherLessonContract(TeacherContract):
+    user: UserSchema
+    id: Optional[int]
+    lessons: List[LessonContract] = []
+
+
 @route_agenda.post(
     path="/fetch_teacher_agenda/{record_pk}/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def fetch_teacher_agenda(
@@ -39,6 +48,5 @@ def fetch_teacher_agenda(
     agent_obj.user.refresh_from_db()
     return dict(
         count=int(bool(agent_obj)),
-        model=f"{TeacherAgent.Meta.verbose_name}",
         item=agent_obj,
     )

@@ -4,13 +4,17 @@ from uuid import UUID, uuid4
 
 from ninja import Schema
 
-from skii.skii_school_api.schemas import (
+from skii.platform.schemas.common import (
     CountryContract,
     VisualPictureContract,
+    GeoCoordinateContract,
+)
+from skii.platform.schemas.vuejs import (
     GanttConfigContract,
+)
+from skii.platform.schemas.agent import (
     TeacherContract,
     StudentContract,
-    GeoCoordinateContract,
 )
 
 

@@ -264,7 +264,8 @@ class RessourceEntity(UUIDLabelEntity):
     class Meta:
         abstract = True
 
-    amount = models.DecimalField(verbose_name=_("Time ressource"), default=Deci(0.0))
+    amount = models.DecimalField(verbose_name=_("Time ressource"), default=Deci(0.0),
+                                 max_digits=18, decimal_places=2,)
 
     def __str__(self):
         return f"{self.short_prefix_uuid}: {self.amount}"

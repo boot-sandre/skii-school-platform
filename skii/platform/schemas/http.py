@@ -1,6 +1,33 @@
-from typing import Dict, List, Any
+from typing import List, Any, Dict
 
 from ninja import Schema
+from pydantic import conint
+
+
+class SkiiResponse(Schema):
+    data: Any | None
+
+
+class SkiiListResponse(Schema):
+    data: List[Any] = []
+    count: conint(gt=0)
+
+
+class MsgResponseContract(Schema):
+    """A response with a text message
+
+    Args:
+        message (str): the text message
+
+    Example:
+        ::
+
+        {
+            "message": "The message"
+        }
+    """
+
+    message: str
 
 
 class FormInvalidResponseContract(Schema):

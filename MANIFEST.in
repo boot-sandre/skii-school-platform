@@ -1,5 +1,7 @@
 recursive-include apps/account *
 recursive-include apps/base *
+recursive-include skii/platform *
+recursive-include skii/endpoint *
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -37,13 +38,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_countries",
     "djmoney",
-    # project apps
+    # Project generic apps
+    "apps.base",
     "apps.account",
     "apps.doc",
-    # Skii school apps
-    "apps.skii_school_core",
-    # project dependencies
-    "corsheaders",
+    # Skii platform apps
+    "skii.platform",
+    "skii.endpoint",
 ]
 
 MIDDLEWARE = [

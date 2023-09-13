@@ -1,5 +1,5 @@
 {
-  "reportMissingImports": false,
+  "reportMissingImports": true,
   "reportMissingTypeStubs": false,
   "strictSetInference": true,
   "strictDictionaryInference": true,
@@ -17,6 +17,7 @@
   "enableTypeIgnoreComments": true,
   "useLibraryCodeForTypes": true,
   "ignore": [
-    "tests"
+    "tests",
+    "migrate"
   ]
 }

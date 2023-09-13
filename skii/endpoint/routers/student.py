@@ -2,54 +2,60 @@ from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
-
-from skii.plateform.models import StudentAgent
-from skii.skii_school_api.schemas import (
+from apps.base.schemas import FormInvalidResponseContract
+from skii.platform.models.agent import StudentAgent
+from skii.platform.schemas.agent import (
     StudentContract,
     StudentContractShort,
 )
-
+from skii.platform.schemas.http import (
+    SkiiListResponse,
+    SkiiResponse,
+    MsgResponseContract,
+)
 
 UserModel = get_user_model()
 
 
-# Create a django ninja API router dedicated to the skii plateform platform
-route_student = Router(tags=["skii", "student"])
+# Create a django ninja API router dedicated to the skii platform
+route_student = Router(tags=["skii", "platform", "agent", "student"])
 
 
 @route_student.get(
-    path="/fetch/{record_pk}/",
+    path="/record_get/{record_pk}/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
-def student_record(request: HttpRequest, record_pk: int):
+def record_get(request: HttpRequest, record_pk: int):
     obj = get_object_or_404(StudentAgent, pk=record_pk)
     return dict(
         count=int(bool(obj)),
-        model=f"{StudentAgent.Meta.verbose_name}",
-        item=obj,
+        data=obj,
     )
 
 
 @route_student.get(
-    path="/list/",
+    path="/record_list/",
     response={
-        200: StudentListResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
-def student_record_list(request: HttpRequest):
+def record_list(request: HttpRequest):
     qs = StudentAgent.objects.all()
     agent_count = qs.count()
     return dict(
-        items=list(qs), count=agent_count, model=f"{StudentAgent.Meta.verbose_name}"
+        data=list(qs), count=agent_count
     )
 
 
 @route_student.delete(
-    path="/delete/{record_id}/",
+    path="/record_delete/{record_id}/",
+    response={
+        200: MsgResponseContract,
+    },
 )
 def record_delete(request: HttpRequest, record_id: int):
     qs = StudentAgent.objects.all().get(pk=record_id)
@@ -62,8 +68,8 @@ def record_delete(request: HttpRequest, record_id: int):
 @route_student.post(
     path="/save/{record_id}/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiListResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_save(request: HttpRequest, record_id: int, payload: StudentContract):
@@ -81,16 +87,15 @@ def record_save(request: HttpRequest, record_id: int, payload: StudentContract):
     agent_obj.user.refresh_from_db()
     return dict(
         count=int(bool(agent_obj)),
-        model=f"{StudentAgent.Meta.verbose_name}",
-        item=agent_obj,
+        data=agent_obj,
     )
 
 
 @route_student.post(
     path="/create/",
     response={
-        200: StudentRecordResponse,
-        422: FormErrorsResponseContract,
+        200: SkiiResponse,
+        422: FormInvalidResponseContract,
     },
 )
 def record_create(request: HttpRequest, payload: StudentContractShort):
@@ -103,6 +108,5 @@ def record_create(request: HttpRequest, payload: StudentContractShort):
     agent_obj.save()
     return dict(
         count=int(bool(agent_obj)),
-        model=f"{StudentAgent.Meta.verbose_name}",
-        item=agent_obj,
+        data=agent_obj,
     )

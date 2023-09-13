@@ -12,29 +12,29 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("Processing")
-        ds = parse_functions("skii.account.api")
+        ds = parse_functions("apps.account.api")
         doc = parse_docstrings(ds)
         # this will write to the docsite assets
         write_docstrings(
             "./docsite/public/doc/account_app/endpoints/docstrings.json", doc
         )
-        ds = parse_functions("skii.account.schemas")
+        ds = parse_functions("apps.account.schemas")
         doc = parse_docstrings(ds)
         # this will write to the docsite assets
         write_docstrings(
             "./docsite/public/doc/account_app/schemas/docstrings.json", doc
         )
-        ds = parse_functions("skii.base.schemas")
+        ds = parse_functions("apps.base.schemas")
         doc = parse_docstrings(ds)
         # this will write to the docsite assets
         write_docstrings("./docsite/public/doc/base_app/schemas/docstrings.json", doc)
-        ds = parse_functions("skii.account.utils.email")
+        ds = parse_functions("apps.account.utils.email")
         doc = parse_docstrings(ds)
         # this will write to the docsite assets
         write_docstrings(
             "./docsite/public/doc/account_app/utilities/email/docstrings.json", doc
         )
-        ds = parse_functions("skii.account.utils.token")
+        ds = parse_functions("apps.account.utils.token")
         doc = parse_docstrings(ds)
         # this will write to the docsite assets
         write_docstrings(

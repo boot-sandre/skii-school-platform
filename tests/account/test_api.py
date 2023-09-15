@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from apps.account.utils.token import encode_token
 from main.api import api
-from ..testcase import NinjaTestCase
+from ..testcase import SkiiTestCase
 import json
 
 PWD = "testpwd"
@@ -20,7 +20,7 @@ def test_admin_account_state(admin_client):
     assert response.content == b'{"is_connected": true, "username": "admin"}'
 
 
-class TestAccount(NinjaTestCase):
+class TestAccount(SkiiTestCase):
     def test_anonymous_account_state(self):
         response = self.client.get(f"{api.root_path}account/state")
         assert response.status_code == 200

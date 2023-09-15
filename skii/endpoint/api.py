@@ -48,7 +48,6 @@ class SkiiJsonRenderer(BaseRenderer):
 
 
 class SkiiParser(Parser):
-
     def parse_body(self, request: HttpRequest) -> DictStrAny:
         return cast(DictStrAny, json.loads(request.body))
 
@@ -75,7 +74,7 @@ api_kwargs = {
     "docs_decorator": staff_member_required,
     "urls_namespace": "skii",
     "renderer": SkiiJsonRenderer(),
-    "parser": SkiiParser()
+    "parser": SkiiParser(),
 }
 
 # Create skii app dedicated api

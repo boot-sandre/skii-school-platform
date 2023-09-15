@@ -18,6 +18,7 @@ class SkiiMsgContract(Schema):
 
 class IdentifierContract(Schema):
     pk: Optional[UUID4]
+
     class Config:
         fields = {}
 

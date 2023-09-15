@@ -1,4 +1,4 @@
-from ..testcase import NinjaTestCase
+from ..testcase import SkiiTestCase
 
 from skii.platform.factories.factories import (
     TeacherAgentFactory,
@@ -6,7 +6,7 @@ from skii.platform.factories.factories import (
 )
 
 
-class TestAgent(NinjaTestCase):
+class TestAgent(SkiiTestCase):
     """ Basic unit testing of Agent models and schema.
     """
     def test_agent_student_create(self):

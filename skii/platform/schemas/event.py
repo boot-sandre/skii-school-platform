@@ -35,4 +35,3 @@ class LocationContract(Schema):
 
 class LocationSaveContract(LocationContract):
     country: str
-

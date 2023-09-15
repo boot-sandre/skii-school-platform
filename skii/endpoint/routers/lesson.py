@@ -83,9 +83,7 @@ def record_delete(request: HttpRequest, record_id: int | str):
         422: FormInvalidResponseContract,
     },
 )
-def record_save(
-    request: HttpRequest, record_id: int | str, payload: LessonContract
-):
+def record_save(request: HttpRequest, record_id: int | str, payload: LessonContract):
     lesson_payload = payload.dict()
     lesson_obj = get_object_or_404(Lesson, pk=record_id)
     for attr, value in lesson_payload.items():

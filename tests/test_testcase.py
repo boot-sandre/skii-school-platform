@@ -1,7 +1,7 @@
-from .testcase import NinjaTestCase
+from .testcase import SkiiTestCase
 
 
-class TestNinjaTestCase(NinjaTestCase):
+class TestSkiiTestCase(SkiiTestCase):
     def test_get_public(self):
         res = self.client.get("/")
         assert res.status_code == 200

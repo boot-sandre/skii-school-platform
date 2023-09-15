@@ -7,10 +7,12 @@ from django.contrib.auth import get_user_model
 
 from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.models.agent import StudentAgent
-from skii.platform.schemas.agent import (
-    StudentContract, StudentSaveContract
+from skii.platform.schemas.agent import StudentContract, StudentSaveContract
+from skii.endpoint.schemas.ninja import (
+    SkiiRecordContract,
+    SkiiListContract,
+    SkiiMsgContract,
 )
-from skii.endpoint.schemas.ninja import SkiiRecordContract, SkiiListContract, SkiiMsgContract
 
 
 UserModel = get_user_model()
@@ -55,7 +57,6 @@ def list(request: HttpRequest):
 def fetch(request: HttpRequest, pk: int | str):
     record = get_object_or_404(SubRouteModel, pk=pk)
     return 200, dict(data=record)
-
 
 
 @sub_route.delete(

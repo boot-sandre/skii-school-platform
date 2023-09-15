@@ -7,9 +7,7 @@ from django.contrib.auth import get_user_model
 
 from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.models.agent import TeacherAgent
-from skii.platform.schemas.agent import (
-    TeacherContract, TeacherSaveContract
-)
+from skii.platform.schemas.agent import TeacherContract, TeacherSaveContract
 from skii.endpoint.schemas.ninja import SkiiMsgContract
 
 
@@ -27,6 +25,7 @@ SubRouteSaveContract = TeacherSaveContract
 
 ListResponseContract = List[SubRouteContract]
 ResponseContract = SubRouteContract
+
 
 @sub_route.get(
     path="/list/",
@@ -74,9 +73,9 @@ def delete(request: HttpRequest, pk: int | str):
 def update(request: HttpRequest, pk: int | str, payload: SubRouteSaveContract):
     payload = payload.dict()
     user_payload = payload.pop("user")
-    record = get_object_or_404(SubRouteModel,pk=pk)
+    record = get_object_or_404(SubRouteModel, pk=pk)
     user_obj = get_object_or_404(UserModel, id=user_payload["id"])
-    for attr, value     in payload.items():
+    for attr, value in payload.items():
         setattr(record, attr, value)
     record.save()
     for attr, value in user_payload.items():

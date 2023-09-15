@@ -38,6 +38,8 @@ class SkiiTestCase(NinjaTestCase):
     client_class = SkiiClient
     api_factory = None
     api_save_contract = None
+    api_route_namespace = None
+    api_route_prefix = None
 
     def create_client_helper(self):
         """Create test user and log them to dedicated client."""
@@ -47,13 +49,8 @@ class SkiiTestCase(NinjaTestCase):
         return res
 
     def link_api_helper(self):
-        """ Override original method to link Skii API"""
+        """Override original method to link Skii API"""
         self.api = api_skii
         self.root_path = self.api.root_path
         self.docs_url = self.api.docs_url
-        self.student_route = "student"
-        self.teacher_route = "teacher"
-        self.student_url = f"{self.root_path}{self.student_route}"
-        self.teacher_url = f"{self.root_path}{self.teacher_route}"
-
-
+        self.api_route_prefix = f"{self.root_path}{self.api_route_namespace}"

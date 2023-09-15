@@ -8,11 +8,7 @@ from django.contrib.auth import get_user_model
 from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.models.agent import StudentAgent
 from skii.platform.schemas.agent import StudentContract, StudentSaveContract
-from skii.endpoint.schemas.ninja import (
-    SkiiRecordContract,
-    SkiiListContract,
-    SkiiMsgContract,
-)
+from skii.endpoint.schemas.ninja import SkiiMsgContract
 
 
 UserModel = get_user_model()
@@ -27,36 +23,30 @@ SubRouteContract = StudentContract
 SubRouteSaveContract = StudentSaveContract
 
 
-class RecordContract(SkiiRecordContract):
-    data = SubRouteContract
-
-
-class ListContract(SkiiListContract):
-    data: List[SubRouteContract] = []
+ListResponseContract = List[SubRouteContract]
+ResponseContract = SubRouteContract
 
 
 @sub_route.get(
     path="/list/",
     response={
-        200: ListContract,
+        200: ListResponseContract,
         422: FormInvalidResponseContract,
     },
 )
 def list(request: HttpRequest):
-    record_list = SubRouteModel.objects.all()
-    return 200, dict(data=record_list)
+    return 200, SubRouteModel.objects.all()
 
 
 @sub_route.get(
     path="/fetch/{pk}/",
     response={
-        200: RecordContract,
+        200: ResponseContract,
         422: FormInvalidResponseContract,
     },
 )
 def fetch(request: HttpRequest, pk: int | str):
-    record = get_object_or_404(SubRouteModel, pk=pk)
-    return 200, dict(data=record)
+    return 200, get_object_or_404(SubRouteModel, pk=pk)
 
 
 @sub_route.delete(
@@ -67,43 +57,43 @@ def fetch(request: HttpRequest, pk: int | str):
     },
 )
 def delete(request: HttpRequest, pk: int | str):
-    qs = SubRouteModel.objects.all().get(pk=pk)
-    if qs.exist():
+    qs = SubRouteModel.objects.all().filter(pk=pk)
+    if qs.exists():
         qs.delete()
-    return 200, dict(message="OK")
+    return 200, SkiiMsgContract(message="OK")
 
 
 @sub_route.post(
-    path="/save/{pk}/",
+    path="/update/{pk}/",
     response={
-        200: RecordContract,
+        200: ResponseContract,
         422: FormInvalidResponseContract,
     },
 )
-def save(request: HttpRequest, pk: int | str, payload: SubRouteContract):
-    record_payload = payload.dict()
-    user_payload = record_payload.pop("user")
-    record_obj = get_object_or_404(SubRouteModel, id=pk)
-    user_obj = get_object_or_404(UserModel, id=user_payload["pk"])
-    for attr, value in record_payload.items():
-        setattr(record_obj, attr, value)
-    record_obj.save()
+def update(request: HttpRequest, pk: int | str, payload: SubRouteSaveContract):
+    payload = payload.dict()
+    user_payload = payload.pop("user")
+    record = get_object_or_404(SubRouteModel, pk=pk)
+    user_obj = get_object_or_404(UserModel, id=user_payload["id"])
+    for attr, value in payload.items():
+        setattr(record, attr, value)
+    record.save()
     for attr, value in user_payload.items():
         setattr(user_obj, attr, value)
     user_obj.save()
-    record_obj.refresh_from_db()
-    record_obj.user.refresh_from_db()
-    return 200, dict(data=record_obj)
+    record.refresh_from_db()
+    record.user.refresh_from_db()
+    return 200, record
 
 
 @sub_route.post(
     path="/create/",
     response={
-        200: RecordContract,
+        200: ResponseContract,
         422: FormInvalidResponseContract,
     },
 )
-def create(request: HttpRequest, payload: SubRouteContract):
+def create(request: HttpRequest, payload: SubRouteSaveContract):
     record_payload = payload.dict()
     user_payload = record_payload.pop("user")
     user_obj = UserModel(**user_payload)
@@ -111,4 +101,4 @@ def create(request: HttpRequest, payload: SubRouteContract):
     record_payload["user"] = user_obj
     record = SubRouteModel(**record_payload)
     record.save()
-    return 200, dict(data=record)
+    return 200, record

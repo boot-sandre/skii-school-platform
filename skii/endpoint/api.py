@@ -98,7 +98,7 @@ def custom_validation_errors(
     return api_skii.create_response(request, data={"detail": exc.errors}, status=418)
 
 
-# api_skii.add_router(prefix="student", router=route_student)
+api_skii.add_router(prefix="student", router=route_student)
 api_skii.add_router(prefix="teacher", router=route_teacher)
 # api_skii.add_router(prefix="location", router=route_location)
 # api_skii.add_router(prefix="lesson", router=route_lesson)

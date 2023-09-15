@@ -7,8 +7,8 @@ from skii.platform.factories.factories import (
 
 
 class TestAgent(SkiiTestCase):
-    """ Basic unit testing of Agent models and schema.
-    """
+    """Basic unit testing of Agent models and schema."""
+
     def test_agent_student_create(self):
         student = StudentAgentFactory.create()
         assert student.user
@@ -22,4 +22,3 @@ class TestAgent(SkiiTestCase):
         serialized_user = teacher.user.__dict__
         assert serialized_user["username"]
         assert serialized_user["is_active"]
-

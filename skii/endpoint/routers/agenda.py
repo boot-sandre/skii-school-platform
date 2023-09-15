@@ -10,7 +10,7 @@ from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.schemas.agent import StudentContract, TeacherContract, UserSchema
 from skii.platform.models.agent import TeacherAgent
 from skii.platform.schemas.event import LessonContract
-from skii.platform.schemas.http import SkiiListResponse
+from skii.endpoint.schemas.ninja import SkiiListContract
 
 UserModel = get_user_model()
 
@@ -27,7 +27,7 @@ class TeacherLessonContract(TeacherContract):
 @route_agenda.post(
     path="/fetch_teacher_agenda/{record_pk}/",
     response={
-        200: SkiiListResponse,
+        200: SkiiListContract,
         422: FormInvalidResponseContract,
     },
 )

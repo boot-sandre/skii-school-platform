@@ -11,3 +11,4 @@ pyjwt
 pytz
 django-stubs
 orjson
+email-validator

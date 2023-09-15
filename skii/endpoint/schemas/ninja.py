@@ -1,33 +1,29 @@
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Optional
 
 from ninja import Schema
-from pydantic import conint
+from pydantic import UUID4
 
 
-class SkiiResponse(Schema):
-    data: Any | None
+class SkiiRecordContract(Schema):
+    data: Any
 
 
-class SkiiListResponse(Schema):
+class SkiiListContract(Schema):
     data: List[Any] = []
-    count: conint(gt=0)
 
 
-class MsgResponseContract(Schema):
-    """A response with a text message
-
-    Args:
-        message (str): the text message
-
-    Example:
-        ::
-
-        {
-            "message": "The message"
-        }
-    """
-
+class SkiiMsgContract(Schema):
     message: str
+
+
+class IdentifierContract(Schema):
+    pk: Optional[UUID4]
+    class Config:
+        fields = {}
+
+
+class SkiiIdentifierContract(Schema):
+    data: IdentifierContract
 
 
 class FormInvalidResponseContract(Schema):

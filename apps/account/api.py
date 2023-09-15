@@ -14,7 +14,7 @@ from apps.account.utils.email import email_activation_token
 from apps.base.schemas import (
     FormInvalidResponseContract,
 )
-from skii.platform.schemas.http import MsgResponseContract
+from skii.endpoint.schemas.ninja import SkiiMsgContract
 from apps.account.schemas import (
     LoginFormContract,
     RegisterFormContract,
@@ -90,13 +90,13 @@ def register_save(request: HttpRequest, data: RegisterFormContract):
     response={
         200: None,
         204: None,
-        401: MsgResponseContract,
+        401: SkiiMsgContract,
     },
     url_name="activate",
 )
 def activate_save(
     request: HttpRequest, token: str
-) -> Tuple[int, None | MsgResponseContract]:
+) -> Tuple[int, None | SkiiMsgContract]:
     """Activate a user from a token
 
     Endpoint url: /api/account/activate/{token}
@@ -122,13 +122,13 @@ def activate_save(
     """
     is_valid, email = decode_token(token)
     if is_valid is False:
-        return 401, MsgResponseContract(**{"message": "Account activation refused"})
+        return 401, SkiiMsgContract(**{"message": "Account activation refused"})
     user = get_user_model().objects.get(email=email)
     if user:
         user.is_active = True
         user.save()
         return 204, None
-    return 401, MsgResponseContract(**{"message": "Account activation refused"})
+    return 401, SkiiMsgContract(**{"message": "Account activation refused"})
 
 
 @router.post(
@@ -137,12 +137,12 @@ def activate_save(
     response={
         200: None,
         422: FormInvalidResponseContract,
-        401: MsgResponseContract,
+        401: SkiiMsgContract,
     },
 )
 def authlogin(
     request: HttpRequest, data: LoginFormContract
-) -> Tuple[int, None | FormInvalidResponseContract | MsgResponseContract]:
+) -> Tuple[int, None | FormInvalidResponseContract | SkiiMsgContract]:
     """Login a user from a username and password payload
 
     Endpoint url: /api/account/login
@@ -169,7 +169,7 @@ def authlogin(
         login(request, user)  # returns a 200
         return 200, None
     else:
-        return 401, MsgResponseContract(**{"message": "Login refused"})
+        return 401, SkiiMsgContract(**{"message": "Login refused"})
 
 
 @router.get(

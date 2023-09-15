@@ -231,7 +231,7 @@ class StateEntity(models.Model):
     )
 
 
-class EventEntity(UUIDEntity, NomenclatureEntity):
+class EventEntity(UUIDLabelEntity):
     """Abstract class with start/stop time delta repr."""
 
     class Meta:
@@ -248,7 +248,7 @@ class EventEntity(UUIDEntity, NomenclatureEntity):
         return minutes_count
 
 
-class AgentEntity(RecordIdentityHistory):
+class AgentEntity(UUIDLabelEntity):
     class Meta:
         abstract = True
         verbose_name = _("Agent")

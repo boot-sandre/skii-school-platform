@@ -4,8 +4,8 @@ from django.http import HttpRequest
 
 from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.models.event import Location
-from skii.platform.schemas.event import LocationContractShort
-from skii.platform.schemas.http import SkiiResponse, SkiiListResponse
+from skii.platform.schemas.event import LocationContract
+from skii.endpoint.schemas.ninja import SkiiRecordContract, SkiiListContract
 
 route_location = Router(tags=["skii", "location"])
 
@@ -13,7 +13,7 @@ route_location = Router(tags=["skii", "location"])
 @route_location.get(
     path="/fetch/{record_pk}/",
     response={
-        200: SkiiResponse,
+        200: SkiiRecordContract,
         422: FormInvalidResponseContract,
     },
 )
@@ -28,7 +28,7 @@ def location_record(request: HttpRequest, record_pk: int | str):
 @route_location.get(
     path="/list/",
     response={
-        200: SkiiListResponse,
+        200: SkiiListContract,
         422: FormInvalidResponseContract,
     },
 )
@@ -54,12 +54,12 @@ def record_delete(request: HttpRequest, record_id: int | str):
 @route_location.post(
     path="/save/{record_id}/",
     response={
-        200: SkiiResponse,
+        200: SkiiRecordContract,
         422: FormInvalidResponseContract,
     },
 )
 def record_save(
-    request: HttpRequest, record_id: int | str, payload: LocationContractShort
+    request: HttpRequest, record_id: int | str, payload: LocationContract
 ):
     location_payload = payload.dict()
     location_obj = get_object_or_404(Location, pk=record_id)
@@ -77,11 +77,11 @@ def record_save(
 @route_location.post(
     path="/create/",
     response={
-        200: SkiiResponse,
+        200: SkiiRecordContract,
         422: FormInvalidResponseContract,
     },
 )
-def record_create(request: HttpRequest, payload: LocationContractShort):
+def record_create(request: HttpRequest, payload: LocationContract):
     record_payload = payload.dict()
     record_obj = Location(**record_payload)
     record_obj.save()

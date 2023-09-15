@@ -27,16 +27,12 @@ class LessonContract(Schema):
     uuid: Optional[UUID] = uuid4
 
 
-class LessonContractShort(LessonContract):
-    pass
-
-
 class LocationContract(Schema):
     country: CountryContract
     cover: VisualPictureContract | None
     coordinate: GeoCoordinateContract | None
 
 
-class LocationContractShort(LocationContract):
+class LocationSaveContract(LocationContract):
     country: str
 

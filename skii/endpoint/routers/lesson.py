@@ -8,20 +8,20 @@ from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.models.agent import TeacherAgent
 from skii.platform.models.event import Lesson
 from skii.platform.interfaces import AgendaInterface
-from skii.platform.schemas.event import LessonContractShort
-from skii.platform.schemas.http import SkiiResponse, SkiiListResponse
+from skii.platform.schemas.event import LessonContract
+from skii.endpoint.schemas.ninja import SkiiRecordContract, SkiiListContract
 
 UserModel = get_user_model()
 
 
-# Create a django ninja API router dedicated to the skii platform platform
-route_lesson = Router(tags=["skii", "lesson"])
+# Create a django ninja API router dedicated to the skii platform
+route_lesson = Router(tags=["skii", "event", "lesson"])
 
 
 @route_lesson.get(
     path="/fetch/{record_pk}/",
     response={
-        200: SkiiResponse,
+        200: SkiiRecordContract,
         422: FormInvalidResponseContract,
     },
 )
@@ -29,15 +29,14 @@ def lesson_record(request: HttpRequest, record_pk: int | str):
     obj = get_object_or_404(Lesson, pk=record_pk)
     return dict(
         count=int(bool(obj)),
-        model=f"{obj._meta.model_name}",
-        item=obj,
+        data=obj,
     )
 
 
 @route_lesson.get(
     path="/lesson_list_by_teacher/{teacher_pk}/",
     response={
-        200: SkiiListResponse,
+        200: SkiiListContract,
         422: FormInvalidResponseContract,
     },
 )
@@ -48,14 +47,13 @@ def teacher_lesson_list(request: HttpRequest, teacher_pk: int):
     return dict(
         items=list(lesson_list),
         count=lesson_list.count(),
-        model=f"{lesson_list.model._meta.model_name}",
     )
 
 
 @route_lesson.get(
     path="/list/",
     response={
-        200: SkiiListResponse,
+        200: SkiiListContract,
         422: FormInvalidResponseContract,
     },
 )
@@ -64,7 +62,6 @@ def lesson_record_list(request: HttpRequest):
     return dict(
         items=list(qs),
         count=qs.count(),
-        model=f"{qs.model._meta.model_name}",
     )
 
 
@@ -72,7 +69,7 @@ def lesson_record_list(request: HttpRequest):
     path="/delete/{record_id}/",
 )
 def record_delete(request: HttpRequest, record_id: int | str):
-    qs = Event.objects.all().get(pk=record_id)
+    qs = Lesson.objects.all().get(pk=record_id)
     qs.delete()
     return dict(
         message="Success",
@@ -82,12 +79,12 @@ def record_delete(request: HttpRequest, record_id: int | str):
 @route_lesson.post(
     path="/save/{record_id}/",
     response={
-        200: SkiiResponse,
+        200: SkiiRecordContract,
         422: FormInvalidResponseContract,
     },
 )
 def record_save(
-    request: HttpRequest, record_id: int | str, payload: LessonContractShort
+    request: HttpRequest, record_id: int | str, payload: LessonContract
 ):
     lesson_payload = payload.dict()
     lesson_obj = get_object_or_404(Lesson, pk=record_id)
@@ -104,11 +101,11 @@ def record_save(
 @route_lesson.post(
     path="/create/",
     response={
-        200: SkiiResponse,
+        200: SkiiRecordContract,
         422: FormInvalidResponseContract,
     },
 )
-def record_create(request: HttpRequest, payload: LessonContractShort):
+def record_create(request: HttpRequest, payload: LessonContract):
     record_payload = payload.dict()
     record_obj = Lesson(**record_payload)
     record_obj.save()

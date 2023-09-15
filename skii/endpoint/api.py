@@ -1,4 +1,10 @@
-import orjson
+import json
+from ipaddress import IPv4Address, IPv6Address
+from typing import Type, Mapping, Any, cast, List
+
+from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.datastructures import MultiValueDict
+from ninja.parser import Parser
 from ninja.renderers import BaseRenderer
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpRequest, HttpResponse
@@ -6,9 +12,11 @@ from ninja import NinjaAPI
 from ninja.errors import ValidationError
 from ninja.security import django_auth
 from django.utils.translation import gettext_lazy as _
+from ninja.types import DictStrAny
+from pydantic import BaseModel
 
-from skii.endpoint.routers.student import route_student
-from skii.endpoint.routers.teacher import route_teacher
+from skii.endpoint.routers.student import sub_route as route_student
+from skii.endpoint.routers.teacher import sub_route as route_teacher
 from skii.endpoint.routers.location import route_location
 from skii.endpoint.routers.lesson import route_lesson
 from skii.endpoint.routers.agenda import route_agenda
@@ -21,12 +29,39 @@ current_package_name = __package__.split(".")[0]
 distrib_version = parse_version(__import__(current_package_name).__version__)
 
 
+class SkiiJSONEncoder(DjangoJSONEncoder):
+    def default(self, o: Any) -> Any:
+        if isinstance(o, BaseModel):
+            return o.dict()
+        if isinstance(o, (IPv4Address, IPv6Address)):
+            return str(o)
+        return super().default(o)
 
-class ORJSONRenderer(BaseRenderer):
+
+class SkiiJsonRenderer(BaseRenderer):
     media_type = "application/json"
+    encoder_class: Type[json.JSONEncoder] = SkiiJSONEncoder
+    json_dumps_params: Mapping[str, Any] = {}
 
     def render(self, request, data, *, response_status):
-        return orjson.dumps(data)
+        return json.dumps(data, cls=self.encoder_class, **self.json_dumps_params)
+
+
+class SkiiParser(Parser):
+
+    def parse_body(self, request: HttpRequest) -> DictStrAny:
+        return cast(DictStrAny, json.loads(request.body))
+
+    def parse_querydict(
+        self, data: MultiValueDict, list_fields: List[str], request: HttpRequest
+    ) -> DictStrAny:
+        result: DictStrAny = {}
+        for key in data.keys():
+            if key in list_fields:
+                result[key] = data.getlist(key)
+            else:
+                result[key] = data[key]
+        return result
 
 
 api_kwargs = {
@@ -39,7 +74,8 @@ api_kwargs = {
     "csrf": True,
     "docs_decorator": staff_member_required,
     "urls_namespace": "skii",
-    "renderer": ORJSONRenderer(),
+    "renderer": SkiiJsonRenderer(),
+    "parser": SkiiParser()
 }
 
 # Create skii app dedicated api
@@ -60,12 +96,11 @@ def custom_validation_errors(
     Returns:
         HttpResponse: a Django http response
     """
-    breakpoint()
     return api_skii.create_response(request, data={"detail": exc.errors}, status=418)
 
 
-api_skii.add_router(prefix="student", router=route_student)
+# api_skii.add_router(prefix="student", router=route_student)
 api_skii.add_router(prefix="teacher", router=route_teacher)
-api_skii.add_router(prefix="location", router=route_location)
-api_skii.add_router(prefix="lesson", router=route_lesson)
-api_skii.add_router(prefix="agenda", router=route_agenda)
+# api_skii.add_router(prefix="location", router=route_location)
+# api_skii.add_router(prefix="lesson", router=route_lesson)
+# api_skii.add_router(prefix="agenda", router=route_agenda)

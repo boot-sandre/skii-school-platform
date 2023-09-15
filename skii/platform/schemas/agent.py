@@ -1,6 +1,9 @@
 from typing import Optional
 
-from ninja import Schema
+from django.contrib.auth import get_user_model
+from ninja import ModelSchema, Schema
+
+from skii.endpoint.schemas.ninja import IdentifierContract
 
 
 class UserSchema(Schema):
@@ -12,35 +15,29 @@ class UserSchema(Schema):
     id: Optional[int]
     first_name: Optional[str]
     last_name: Optional[str]
-    login: str
+    username: Optional[str]
+    email: Optional[str]
 
 
-class UserSchemaShort(Schema):
-    """Short dj user schema generated from dj models
+class UserSaveSchema(ModelSchema):
 
-    Mostly to create/edit/save record
-    """
-    id: Optional[int]
-    first_name: Optional[str]
-    last_name: Optional[str]
-    login: str
+    class Config:
+        model = get_user_model()
+        model_fields = ['username', 'first_name', 'last_name']
 
 
-class StudentContract(Schema):
+class StudentContract(IdentifierContract):
     user: UserSchema
-    id: Optional[int]
 
 
-class StudentContractShort(Schema):
-    user: UserSchemaShort
-    id: Optional[int]
-
-
-class TeacherContract(Schema):
+class TeacherContract(IdentifierContract):
     user: UserSchema
-    id: Optional[int]
 
 
-class TeacherContractShort(Schema):
-    user: UserSchemaShort
-    id: Optional[int]
+class StudentSaveContract(IdentifierContract):
+    user: UserSchema
+
+
+class TeacherSaveContract(IdentifierContract):
+    user: UserSchema
+

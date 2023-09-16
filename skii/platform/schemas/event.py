@@ -4,11 +4,6 @@ from uuid import UUID, uuid4
 
 from ninja import Schema
 
-from skii.platform.schemas.common import (
-    CountryContract,
-    VisualPictureContract,
-    GeoCoordinateContract,
-)
 from skii.platform.schemas.vuejs import (
     GanttConfigContract,
 )
@@ -26,12 +21,3 @@ class LessonContract(Schema):
     students: List[StudentContract] = []
     uuid: Optional[UUID] = uuid4
 
-
-class LocationContract(Schema):
-    country: CountryContract
-    cover: VisualPictureContract | None
-    coordinate: GeoCoordinateContract | None
-
-
-class LocationSaveContract(LocationContract):
-    country: str

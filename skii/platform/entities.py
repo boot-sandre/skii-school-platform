@@ -249,6 +249,8 @@ class EventEntity(UUIDLabelEntity):
 
 
 class AgentEntity(UUIDLabelEntity):
+    """ An agent can be people or human agencies.
+    """
     class Meta:
         abstract = True
         verbose_name = _("Agent")
@@ -260,16 +262,20 @@ class AgentEntity(UUIDLabelEntity):
         return f"{self._meta.model_name}: {self.user.get_username()}"
 
 
-class RessourceEntity(UUIDLabelEntity):
+class ResourceEntity(UUIDLabelEntity):
+    """ A resource is something you need, and you may use to achieve.
+
+    Resource can be reserved or used by and Event.
+    """
     class Meta:
         abstract = True
 
-    amount = models.DecimalField(
-        verbose_name=_("Time ressource"),
+    value = models.DecimalField(
+        verbose_name=_("Resource value"),
         default=Deci(0.0),
         max_digits=18,
         decimal_places=2,
     )
 
     def __str__(self):
-        return f"{self.short_prefix_uuid}: {self.amount}"
+        return f"{self.short_prefix_uuid}: {self.value}"

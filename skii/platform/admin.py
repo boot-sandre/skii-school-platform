@@ -10,16 +10,16 @@ from skii.platform.models.common import (
     VisualElement,
     VisualPicture,
 )
-from skii.platform.models.ressource import (
-    MoneyRessource,
-    TimeRessource,
+from skii.platform.models.resource import (
+    MoneyResource,
+    TimeResource,
+    LocationResource,
 )
 from skii.platform.models.event import (
     Lesson,
-    Location,
 )
 
-from .forms import LessonForm, LocationForm
+from .forms import LessonForm, LocationResourceForm
 
 
 @admin.register(StudentAgent)
@@ -32,13 +32,13 @@ class TeacherAgentAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(MoneyRessource)
-class MoneyRessourceAdmin(admin.ModelAdmin):
+@admin.register(MoneyResource)
+class MoneyResourceAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(TimeRessource)
-class TimeRessourceAdmin(admin.ModelAdmin):
+@admin.register(TimeResource)
+class TimeResourceAdmin(admin.ModelAdmin):
     pass
 
 
@@ -49,8 +49,8 @@ class LessonAdmin(admin.ModelAdmin):
     date_hierarchy = "start"
 
 
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
+@admin.register(LocationResource)
+class LocationResourceAdmin(admin.ModelAdmin):
     fields = [
         "label",
         "description",
@@ -60,7 +60,7 @@ class LocationAdmin(admin.ModelAdmin):
         ("cover", "illustration"),
     ]
     list_display = ["uuid", "label", "coordinate", "city", "country"]
-    form = LocationForm
+    form = LocationResourceForm
 
 
 @admin.register(GeoCoordinate)

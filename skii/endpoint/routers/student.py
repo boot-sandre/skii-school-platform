@@ -1,9 +1,9 @@
 from typing import List
 
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpRequest
-from django.contrib.auth import get_user_model
 
 from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.models.agent import StudentAgent
@@ -15,7 +15,7 @@ UserModel = get_user_model()
 
 
 # Create a django ninja API router dedicated to the student
-sub_route = Router(tags=["skii", "agent", "student"])
+sub_route = Router(tags=["student"])
 
 
 SubRouteModel = StudentAgent
@@ -98,7 +98,9 @@ def create(request: HttpRequest, payload: SubRouteSaveContract):
     user_payload = record_payload.pop("user")
     user_obj = UserModel(**user_payload)
     user_obj.save()
+    user_obj.refresh_from_db()
     record_payload["user"] = user_obj
     record = SubRouteModel(**record_payload)
     record.save()
+    record.refresh_from_db()
     return 200, record

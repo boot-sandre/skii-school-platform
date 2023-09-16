@@ -1,4 +1,5 @@
 import json
+import logging
 from ipaddress import IPv4Address, IPv6Address
 from typing import Type, Mapping, Any, cast, List
 
@@ -17,16 +18,18 @@ from pydantic import BaseModel
 
 from skii.endpoint.routers.student import sub_route as route_student
 from skii.endpoint.routers.teacher import sub_route as route_teacher
-from skii.endpoint.routers.location import route_location
-from skii.endpoint.routers.lesson import route_lesson
-from skii.endpoint.routers.agenda import route_agenda
 
 # Get current package version
 from packaging.version import parse as parse_version
 
 
+logger = logging.getLogger(__name__)
+
+
 current_package_name = __package__.split(".")[0]
 distrib_version = parse_version(__import__(current_package_name).__version__)
+logger.info(f"Package: {current_package_name}")
+logger.info(f"Distribution version: {distrib_version}")
 
 
 class SkiiJSONEncoder(DjangoJSONEncoder):
@@ -77,8 +80,21 @@ api_kwargs = {
     "parser": SkiiParser(),
 }
 
+
+def configure_api_skii() -> NinjaAPI:
+    new_api = NinjaAPI(**api_kwargs)
+    new_api.add_router(prefix="student", router=route_student)
+    new_api.add_router(prefix="teacher", router=route_teacher)
+
+    from .routers import LessonEventRouter, LocationResourceRouter
+    LocationResourceRouter.link_with_api(api=new_api)
+    LessonEventRouter.link_with_api(api=new_api)
+    return new_api
+
+
 # Create skii app dedicated api
-api_skii = NinjaAPI(**api_kwargs)
+api_skii: NinjaAPI = configure_api_skii()
+logger.info(f"Api created: {api_skii.title}")
 
 
 @api_skii.exception_handler(ValidationError)
@@ -98,8 +114,3 @@ def custom_validation_errors(
     return api_skii.create_response(request, data={"detail": exc.errors}, status=418)
 
 
-api_skii.add_router(prefix="student", router=route_student)
-api_skii.add_router(prefix="teacher", router=route_teacher)
-# api_skii.add_router(prefix="location", router=route_location)
-# api_skii.add_router(prefix="lesson", router=route_lesson)
-# api_skii.add_router(prefix="agenda", router=route_agenda)

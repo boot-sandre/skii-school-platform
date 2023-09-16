@@ -15,7 +15,7 @@ UserModel = get_user_model()
 
 
 # Create a django ninja API router dedicated to the teacher
-sub_route = Router(tags=["skii", "agent", "teacher"])
+sub_route = Router(tags=["teacher"])
 
 
 SubRouteModel = TeacherAgent

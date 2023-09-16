@@ -1,7 +1,8 @@
 from django import forms
 
 from skii.platform.entities import mutate_event_state
-from skii.platform.models.event import Lesson, Location
+from skii.platform.models.event import Lesson
+from skii.platform.models.resource import LocationResource
 
 
 class LessonForm(forms.ModelForm):
@@ -20,9 +21,9 @@ class LessonForm(forms.ModelForm):
             return value
 
 
-class LocationForm(forms.ModelForm):
+class LocationResourceForm(forms.ModelForm):
     class Meta:
-        model = Location
+        model = LocationResource
         fields = [
             "label",
             "description",

@@ -1,90 +1,46 @@
-from django.shortcuts import get_object_or_404
-from ninja import Router
-from django.http import HttpRequest
+from typing import List, Any
 
-from apps.base.schemas import FormInvalidResponseContract
-from skii.platform.models.event import Location
-from skii.platform.schemas.event import LocationContract
-from skii.endpoint.schemas.ninja import SkiiRecordContract, SkiiListContract
+from django.db.models import Model
+from ninja import Schema
 
-route_location = Router(tags=["skii", "location"])
-
-
-@route_location.get(
-    path="/fetch/{record_pk}/",
-    response={
-        200: SkiiRecordContract,
-        422: FormInvalidResponseContract,
-    },
-)
-def location_record(request: HttpRequest, record_pk: int | str):
-    obj = get_object_or_404(Location, pk=record_pk)
-    return dict(
-        count=int(bool(obj)),
-        item=obj,
-    )
+from skii.endpoint.routers.abstract import RestRouterProducer
+from skii.endpoint.schemas.ninja import IdentifierContract
+from skii.platform.models.resource import LocationResource
+from skii.platform.schemas.common import CountryContract, GeoCoordinateContract
 
 
-@route_location.get(
-    path="/list/",
-    response={
-        200: SkiiListContract,
-        422: FormInvalidResponseContract,
-    },
-)
-def location_record_list(request: HttpRequest):
-    qs = Location.objects.all()
-    return dict(
-        data=list(qs),
-        count=qs.count(),
-    )
+class AutomatedLocationRouter(RestRouterProducer):
+    class Config(RestRouterProducer.Config):
+        # Model Config
+        model: Model = LocationResource
+        name: str = "location"
+        # Router config
+        operation: List[str] = ["create", "read", "update", "delete", "list"]
+        base_class: Schema = IdentifierContract
+        tags = ["lesson"]
+        # Introspection config
+        depth: int = 1
+        save_depth: int = 0
+        # Fields config/tweak
+        fields: List[str] | None = None
+        save_fields: List[str] | None = None
+        exclude_fields: List[str] | None = ["uuid"]
+        save_exclude_fields: List[str] | None = ["uuid"] + ["created", "last_modified"]
+        custom_fields: List[tuple[Any, Any, Any]] | None = [
+            (
+                "country",
+                CountryContract,
+                CountryContract.parse_obj(dict(flag="", code="", name=""))),
+            (
+                "coordinate",
+                GeoCoordinateContract,
+                GeoCoordinateContract.parse_obj(dict(latitude=25.4536, longitude=70.4457)))
+        ]
+        save_custom_fields: List[tuple[Any, Any, Any]] | None = None
 
 
-@route_location.delete(
-    path="/delete/{record_id}/",
-)
-def record_delete(request: HttpRequest, record_id: int | str):
-    qs = Location.objects.all().get(pk=record_id)
-    qs.delete()
-    return dict(
-        message="Success",
-    )
+LocationResourceRouter = AutomatedLocationRouter()
 
-
-@route_location.post(
-    path="/save/{record_id}/",
-    response={
-        200: SkiiRecordContract,
-        422: FormInvalidResponseContract,
-    },
-)
-def record_save(request: HttpRequest, record_id: int | str, payload: LocationContract):
-    location_payload = payload.dict()
-    location_obj = get_object_or_404(Location, pk=record_id)
-    for attr, value in location_payload.items():
-        setattr(location_obj, attr, value)
-    location_obj.save()
-    location_obj.refresh_from_db()
-    return dict(
-        count=int(bool(location_obj)),
-        model=f"{location_obj._meta.model_name}",
-        item=location_obj,
-    )
-
-
-@route_location.post(
-    path="/create/",
-    response={
-        200: SkiiRecordContract,
-        422: FormInvalidResponseContract,
-    },
-)
-def record_create(request: HttpRequest, payload: LocationContract):
-    record_payload = payload.dict()
-    record_obj = Location(**record_payload)
-    record_obj.save()
-    return dict(
-        count=int(bool(record_obj)),
-        model=f"{record_obj._meta.verbose_name}",
-        item=record_obj,
-    )
+__all__ = [
+    LocationResourceRouter
+]

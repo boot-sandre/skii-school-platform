@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -80,7 +81,116 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "main.wsgi.application"
 
+# Python logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    'formatters': {
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '[{levelname:6}] [{asctime}] {name:30} {message}',
+            'style': '{',
+            'fmt': '%Y-%m-%d %H:%M:%S',
 
+        },
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{status_code:6}] [{asctime}] {name:30} {message}',
+            'style': '{',
+            'fmt': '%Y-%m-%d %H:%M:%S',
+        }
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    "handlers": {
+        "console.debug": {
+            "class": "logging.StreamHandler",
+            'formatter': 'verbose',
+            "filters": ["require_debug_true"]
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            'formatter': 'simple',
+            "filters": ["require_debug_false"]
+        },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        'null': {
+            'class': 'logging.NullHandler',
+        },
+        'django.commands': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'stream': sys.stdout,
+        },
+    },
+    "root": {
+        "handlers": ["console", "console.debug"],
+        "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+    },
+    "loggers": {
+        "skii": {
+            "handlers": ["console", "console.debug"],
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            "propagate": False,
+        },
+        "django": {
+            "handlers": ["console", "console.debug"],
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            "propagate": False,
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['django.server'],
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'django.template': {
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+        'django.db.backends': {
+            "level": 'INFO',
+            'propagate': True,
+        },
+        'django.security': {
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+        'django.utils.autoreload': {
+            'handlers': ['null'],
+            'level': 'NOTSET',
+            'propagate': False,
+        },
+        # Divers python loggers
+        'py.warnings': {
+            'handlers': ['null'],
+            'level': 'NOTSET',
+            'propagate': False,
+        },
+        'parso': {
+            "level": os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': True,
+        },
+    }
+}
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 

@@ -10,17 +10,14 @@ from skii.platform.models.agent import (
     StudentAgent,
     TeacherAgent,
 )
-from skii.platform.models.common import VisualElement
-from skii.platform.models.ressource import (
-    MoneyRessource,
-    TimeRessource,
+from skii.platform.models.common import VisualElement, VisualAlbum, VisualPicture, GeoCoordinate
+from skii.platform.models.resource import (
+    MoneyResource,
+    TimeResource,
+    LocationResource,
 )
 from skii.platform.models.event import (
     Lesson,
-    Location,
-    GeoCoordinate,
-    VisualAlbum,
-    VisualPicture,
 )
 
 
@@ -59,22 +56,22 @@ class TeacherAgentFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
 
-class MoneyRessourceFactory(factory.django.DjangoModelFactory):
+class MoneyResourceFactory(factory.django.DjangoModelFactory):
     """
-    Factory to create instance of a Money ressource.
-    """
-
-    class Meta:
-        model = MoneyRessource
-
-
-class TimeRessourceFactory(factory.django.DjangoModelFactory):
-    """
-    Factory to create instance of a time ressource.
+    Factory to create instance of a Money resource.
     """
 
     class Meta:
-        model = TimeRessource
+        model = MoneyResource
+
+
+class TimeResourceFactory(factory.django.DjangoModelFactory):
+    """
+    Factory to create instance of a time resource.
+    """
+
+    class Meta:
+        model = TimeResource
 
 
 latitude_config = {
@@ -129,13 +126,13 @@ class VisualPictureFactory(factory.django.DjangoModelFactory):
         model = VisualPicture
 
 
-class LocationFactory(factory.django.DjangoModelFactory):
+class LocationResourceFactory(factory.django.DjangoModelFactory):
     """
-    Factory to create instance of a Location .
+    Factory to create instance of a geographic location/place.
     """
 
     class Meta:
-        model = Location
+        model = LocationResource
 
     address1 = factory.Faker("address")
     city = factory.Faker("city")

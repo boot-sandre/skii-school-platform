@@ -10,3 +10,4 @@ django-vitevue
 pytest-django
 docdundee
 ipdb
+devtools

@@ -6,8 +6,9 @@ from ninja import Router
 from django.http import HttpRequest
 
 from apps.base.schemas import FormInvalidResponseContract
+from skii.endpoint.utils import devtools_debug
 from skii.platform.models.agent import StudentAgent
-from skii.platform.schemas.agent import StudentContract, StudentSaveContract
+from skii.platform.schemas.agent import StudentContract, StudentSaveContract, UserSchema
 from skii.endpoint.schemas.ninja import SkiiMsgContract
 
 
@@ -93,14 +94,10 @@ def update(request: HttpRequest, pk: int | str, payload: SubRouteSaveContract):
         422: FormInvalidResponseContract,
     },
 )
+@devtools_debug
 def create(request: HttpRequest, payload: SubRouteSaveContract):
-    record_payload = payload.dict()
-    user_payload = record_payload.pop("user")
-    user_obj = UserModel(**user_payload)
-    user_obj.save()
-    user_obj.refresh_from_db()
-    record_payload["user"] = user_obj
-    record = SubRouteModel(**record_payload)
-    record.save()
-    record.refresh_from_db()
-    return 200, record
+    agent_payload = payload.dict()
+    agent_obj, created = StudentAgent.objects.update_or_create(
+        agent_payload)
+    agent_obj.refresh_from_db()
+    return 200, agent_obj

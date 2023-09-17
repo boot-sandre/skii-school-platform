@@ -10,5 +10,4 @@ factory_boy
 pyjwt
 pytz
 django-stubs
-orjson
-email-validator
+polyfactory

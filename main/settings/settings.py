@@ -13,6 +13,7 @@ import os
 import sys
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 VAR_DIR = BASE_DIR / "var"
@@ -24,7 +25,8 @@ VAR_DIR = BASE_DIR / "var"
 SECRET_KEY = "django-insecure-c5ny1qhpz*3o%@-nchet4ohg=wb4)*)$1y_g4w_8vcuu2#f$ga"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+DJANGO_LOG_LEVEL = "INFO"
 
 ALLOWED_HOSTS = []
 
@@ -60,6 +62,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "main.urls"
+
 
 TEMPLATES = [
     {
@@ -235,7 +238,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -262,3 +264,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
+
+# Custom django User
+# AUTH_USER_MODEL = "platform.SkiiUser"
+
+

@@ -8,15 +8,19 @@ PIP=$(VENV_BIN)/pip
 DJANGO_MANAGE=$(VENV_BIN)/python manage.py
 FLAKE=$(VENV_BIN)/flake8
 BLACK=$(VENV_BIN)/black
+PYTEST=$(VENV_BIN)/pytest
 
 DJANGOPROJECT_DIR=main
 DJANGO_SETTINGS=main.settings.local
+DJANGO_SETTINGS_TEST=main.settings.testing
 STATICFILES_DIR=$(DJANGOPROJECT_DIR)/webapp_statics
 
 # Formatting variables, FORMATRESET is always to be used last to close formatting
 FORMATBLUE:=$(shell tput setab 4)
 FORMATBOLD:=$(shell tput bold)
 FORMATRESET:=$(shell tput sgr0)
+
+NPM=yarn
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -71,6 +75,7 @@ clean-db:
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Cleaning db files <---$(FORMATRESET)\n"
 	@echo ""
 	rm -Rf db.sqlite3
+	rm -Rf skii.test.sqlite3
 .PHONY: clean-db
 
 clean: clean-backend-install clean-db clean-pycache
@@ -159,8 +164,22 @@ test:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Run the tests <---$(FORMATRESET)\n"
 	@echo ""
-	$(PYTHON_BIN) -m pytest --capture=no
+	$(PYTEST) -s -vv --create-db --ds=${DJANGO_SETTINGS_TEST} tests/
 .PHONY: test
+
+test-reuse-db:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Run the tests <---$(FORMATRESET)\n"
+	@echo ""
+	$(PYTEST) -s -vv --reuse-db --ds=${DJANGO_SETTINGS_TEST} tests/
+.PHONY: test-reuse-db
+
+test-reuse-db-lf:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Run the tests <---$(FORMATRESET)\n"
+	@echo ""
+	$(PYTEST) -s -vv --reuse-db --lf --ds=${DJANGO_SETTINGS_TEST}  tests/
+.PHONY: test-reuse-db
 
 check:
 	@echo ""

@@ -1,6 +1,7 @@
 import json
 import logging
 from ipaddress import IPv4Address, IPv6Address
+from pprint import pformat
 from typing import Type, Mapping, Any, cast, List
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -47,6 +48,7 @@ class SkiiJsonRenderer(BaseRenderer):
     json_dumps_params: Mapping[str, Any] = {}
 
     def render(self, request, data, *, response_status):
+        logger.debug(f"SkiiJsonRenderer: {pformat(data)}")
         return json.dumps(data, cls=self.encoder_class, **self.json_dumps_params)
 
 

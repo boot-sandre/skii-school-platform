@@ -8,8 +8,6 @@ from skii.endpoint.schemas.ninja import IdentifierContract
 
 class UserSchema(Schema):
     """DJ user schema used to read record"""
-
-    id: Optional[int]
     first_name: Optional[str]
     last_name: Optional[str]
     username: Optional[str]
@@ -21,7 +19,8 @@ class UserSaveSchema(ModelSchema):
 
     class Config:
         model = get_user_model()
-        model_fields = ["username", "first_name", "last_name"]
+        model_fields = ["email", "username",
+                        "first_name", "last_name"]
 
 
 class StudentContract(IdentifierContract):
@@ -33,8 +32,8 @@ class TeacherContract(IdentifierContract):
 
 
 class StudentSaveContract(IdentifierContract):
-    user: UserSchema
+    user: UserSaveSchema
 
 
 class TeacherSaveContract(IdentifierContract):
-    user: UserSchema
+    user: UserSaveSchema

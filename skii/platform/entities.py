@@ -10,9 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 
 
-User = get_user_model()
-
-
 class RecordIdentityHistory(models.Model):
     """Abstract model to track and store on an object
 
@@ -256,7 +253,7 @@ class AgentEntity(UUIDLabelEntity):
         verbose_name = _("Agent")
         verbose_name_plural = _("Agent(s)")
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self._meta.model_name}: {self.user.get_username()}"

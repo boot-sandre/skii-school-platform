@@ -7,12 +7,16 @@ from skii.endpoint.api import api_skii
 
 class NinjaTestCase(TestCase):
     def create_client_helper(self):
-        """Create test user and log them to dedicated client."""
+        """Create test user and log them to dedicated client.
+
+        """
         self.user = get_user_model().objects.create_user(
-            username="user", password="user"
+            username="user",
+            email="simonandre@emencia.com", password="user"
         )
         self.admin_user = get_user_model().objects.create_superuser(
-            username="admin", password="admin"
+            username="admin",
+            email="simon@emencia.com", password="admin"
         )
         self.user_client = self.client_class()
         self.user_client.force_login(self.user)

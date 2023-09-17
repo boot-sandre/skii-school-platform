@@ -32,6 +32,8 @@ class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Faker("user_name")
     email = factory.Faker("email")
     password = make_password("password")
+    first_name = factory.Faker("name")
+    last_name = factory.Faker("name")
 
 
 class StudentAgentFactory(factory.django.DjangoModelFactory):

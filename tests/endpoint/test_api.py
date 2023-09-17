@@ -36,16 +36,6 @@ class TestApiTeacher(SkiiTestCase):
         )
         assert response.content == b'{"message": "OK"}'
 
-    def test_record_create(self):
-        agent = self.api_factory.create()
-        payload = self.api_save_contract.from_orm(agent).dict()
-        response = self.skii_client.post(
-            path=f"{self.api_route_prefix}/create/",
-            data=payload,
-            content_type="application/json",
-        )
-        self.assertListEqual(list1=list(response.json().keys()), list2=self.fields)
-
     def test_record_update(self):
         agent = self.api_factory.create()
         payload = self.api_save_contract.from_orm(agent).dict()
@@ -56,6 +46,15 @@ class TestApiTeacher(SkiiTestCase):
         )
         self.assertListEqual(list1=list(response.json().keys()), list2=self.fields)
 
+    def test_record_create(self):
+        agent = self.api_factory.build()
+        payload = self.api_save_contract.from_orm(agent).dict()
+        response = self.skii_client.post(
+            path=f"{self.api_route_prefix}/create/",
+            data=payload,
+            content_type="application/json",
+        )
+        self.assertListEqual(list1=list(response.json().keys()), list2=self.fields)
 
 class TestApiStudent(TestApiTeacher):
     """Basic unit testing of Agent models and schema."""
@@ -81,8 +80,9 @@ class TestApiLesson(TestApiTeacher):
     """Basic unit testing of Event models and schema."""
 
     api_factory = LessonFactory
+
     api_save_contract = LocationContract
 
-    api_route_namespace = "location"
-    fields = ['country', 'cover', 'coordinate', 'value']
+    api_route_namespace = "lesson"
+    fields = []
 

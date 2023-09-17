@@ -10,14 +10,19 @@ from skii.platform.models.agent import (
     StudentAgent,
     TeacherAgent,
 )
-from skii.platform.models.common import VisualElement, VisualAlbum, VisualPicture, GeoCoordinate
+from skii.platform.models.common import (
+    VisualElement,
+    VisualAlbum,
+    VisualPicture,
+    GeoCoordinate,
+)
 from skii.platform.models.resource import (
     MoneyResource,
     TimeResource,
     LocationResource,
 )
 from skii.platform.models.event import (
-    Lesson,
+    LessonEvent,
 )
 
 
@@ -149,7 +154,7 @@ class LocationResourceFactory(factory.django.DjangoModelFactory):
 
 class LessonFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Lesson
+        model = LessonEvent
 
     label = factory.Faker("text")
     teacher = factory.SubFactory(TeacherAgentFactory)

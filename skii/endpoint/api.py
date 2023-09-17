@@ -89,6 +89,7 @@ def configure_api_skii() -> NinjaAPI:
     new_api.add_router(prefix="teacher", router=route_teacher)
 
     from .routers import LessonEventRouter, LocationResourceRouter
+
     LocationResourceRouter.link_with_api(api=new_api)
     LessonEventRouter.link_with_api(api=new_api)
     return new_api
@@ -114,5 +115,3 @@ def custom_validation_errors(
         HttpResponse: a Django http response
     """
     return api_skii.create_response(request, data={"detail": exc.errors}, status=418)
-
-

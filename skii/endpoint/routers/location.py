@@ -4,7 +4,7 @@ from django.db.models import Model
 from ninja import Schema
 
 from skii.endpoint.routers.abstract import RestRouterProducer
-from skii.endpoint.schemas.ninja import IdentifierContract
+from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.platform.models.resource import LocationResource
 from skii.platform.schemas.common import CountryContract, GeoCoordinateContract
 
@@ -16,7 +16,7 @@ class AutomatedLocationRouter(RestRouterProducer):
         name: str = "location"
         # Router config
         operation: List[str] = ["create", "read", "update", "delete", "list"]
-        base_class: Schema = IdentifierContract
+        base_class: Schema = IntStrUUID4
         tags = ["lesson"]
         # Introspection config
         depth: int = 1
@@ -30,17 +30,19 @@ class AutomatedLocationRouter(RestRouterProducer):
             (
                 "country",
                 CountryContract,
-                CountryContract.parse_obj(dict(flag="", code="", name=""))),
+                CountryContract.parse_obj(dict(flag="", code="", name="")),
+            ),
             (
                 "coordinate",
                 GeoCoordinateContract,
-                GeoCoordinateContract.parse_obj(dict(latitude=25.4536, longitude=70.4457)))
+                GeoCoordinateContract.parse_obj(
+                    dict(latitude=25.4536, longitude=70.4457)
+                ),
+            ),
         ]
         save_custom_fields: List[tuple[Any, Any, Any]] | None = None
 
 
 LocationResourceRouter = AutomatedLocationRouter()
 
-__all__ = [
-    LocationResourceRouter
-]
+__all__ = [LocationResourceRouter]

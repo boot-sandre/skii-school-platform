@@ -4,7 +4,9 @@ from skii.platform.schemas.agent import TeacherSaveContract, StudentSaveContract
 
 from skii.platform.factories.factories import (
     TeacherAgentFactory,
-    StudentAgentFactory, LocationResourceFactory, LessonFactory,
+    StudentAgentFactory,
+    LocationResourceFactory,
+    LessonFactory,
 )
 
 
@@ -56,6 +58,7 @@ class TestApiTeacher(SkiiTestCase):
         )
         self.assertListEqual(list1=list(response.json().keys()), list2=self.fields)
 
+
 class TestApiStudent(TestApiTeacher):
     """Basic unit testing of Agent models and schema."""
 
@@ -63,7 +66,7 @@ class TestApiStudent(TestApiTeacher):
     api_save_contract = StudentSaveContract
 
     api_route_namespace = "student"
-    fields = ['pk', 'user']
+    fields = ["pk", "user"]
 
 
 class TestApiLocation(TestApiTeacher):
@@ -73,7 +76,7 @@ class TestApiLocation(TestApiTeacher):
     api_save_contract = LocationContract
 
     api_route_namespace = "location"
-    fields = ['country', 'cover', 'coordinate', 'value']
+    fields = ["country", "cover", "coordinate", "value"]
 
 
 class TestApiLesson(TestApiTeacher):
@@ -85,4 +88,3 @@ class TestApiLesson(TestApiTeacher):
 
     api_route_namespace = "lesson"
     fields = []
-

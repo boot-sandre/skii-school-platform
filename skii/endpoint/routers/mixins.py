@@ -6,30 +6,33 @@ from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from ninja import Schema
 from ninja.orm import create_schema
-from pydantic import UUID4
 
-from skii.endpoint.schemas.ninja import FormInvalidResponseContract, SkiiMsgContract, IdentifierContract
-
+from skii.endpoint.schemas.ninja import FormInvalidResponseContract
+from skii.endpoint.schemas.identifier import IntStrUUID4
+from skii.endpoint.schemas.response import SkiiMsgContract
 
 logger = logging.getLogger(__name__)
 
 
 class MixinsRestViewsProducer:
-    """ Produce REST view and route.
+    """Produce REST view and route.
 
-        These routes will be registered on a Ninja api router.
+    These routes will be registered on a Ninja api router.
     """
+
     class Config:
         operation: List[str] = ["create", "read", "update", "delete", "list"]
 
     def __init__(self, *args, **kwargs):
-        if not hasattr(self, "router") :
-            raise ValueError("MixinsRestViewsProducer needs be mixed with "
-                             "skii.endpoint.schema.generator.RestRouterProducer")
+        if not hasattr(self, "router"):
+            raise ValueError(
+                "MixinsRestViewsProducer needs be mixed with "
+                "skii.endpoint.schema.generator.RestRouterProducer"
+            )
         super().__init__(*args, **kwargs)
 
     def populate_view_operation(self):
-        """ Add Create/Read/Update/Delete/List view to have a REST like API."""
+        """Add Create/Read/Update/Delete/List view to have a REST like API."""
         for op in self.Config.operation:
             add_view_func = getattr(self, f"add_view_{op}")
             add_view_func()
@@ -64,7 +67,7 @@ class MixinsRestViewsProducer:
                 422: FormInvalidResponseContract,
             },
         )
-        def record_read(request: HttpRequest, pk: int | str | UUID4):
+        def record_read(request: HttpRequest, pk: IntStrUUID4):
             return 200, get_object_or_404(router_model, pk=pk)
 
     def add_view_update(self):
@@ -79,7 +82,7 @@ class MixinsRestViewsProducer:
                 422: FormInvalidResponseContract,
             },
         )
-        def record_update(request: HttpRequest, pk: int | str, payload: save_contract):
+        def record_update(request: HttpRequest, pk: IntStrUUID4, payload: save_contract):
             record_payload = payload.dict()
             record = get_object_or_404(router_model, pk=pk)
             for attr, value in record_payload.items():
@@ -99,7 +102,7 @@ class MixinsRestViewsProducer:
                 422: FormInvalidResponseContract,
             },
         )
-        def record_delete(request: HttpRequest, pk: int | str | UUID4):
+        def record_delete(request: HttpRequest, pk: IntStrUUID4):
             qs = router_model.objects.all().filter(pk=pk)
             if qs.exists():
                 qs.delete()
@@ -132,7 +135,7 @@ class MixinsRestSchemaProducer:
         # Introspection config
         depth: int = 0
         save_depth: int = 0
-        base_class: Schema = IdentifierContract
+        base_class: Schema = IntStrUUID4
         # Fields config/tweak
         fields: List[str] | None = None
         save_fields: List[str] | None = None
@@ -142,8 +145,7 @@ class MixinsRestSchemaProducer:
         save_custom_fields: List[tuple[Any, Any, Any]] | None = None
 
     def __init__(self, *args, **kwargs):
-        """ Autogenerate contract/schema from django models.
-        """
+        """Autogenerate contract/schema from django models."""
         res = super().__init__(*args, **kwargs)
         self.contract = self.create_contract(
             fields=self.Config.fields,
@@ -160,14 +162,14 @@ class MixinsRestSchemaProducer:
         )
         return res
 
-    def create_contract(self,
-                        fields: List[str] | None = None,
-                        exclude_fields: List[str] | None = None,
-                        custom_fields: List[tuple[Any, Any, Any]] | None = None,
-                        depth: int = 0
-                        ):
-        """ Create read/response contract from dj models.
-        """
+    def create_contract(
+        self,
+        fields: List[str] | None = None,
+        exclude_fields: List[str] | None = None,
+        custom_fields: List[tuple[Any, Any, Any]] | None = None,
+        depth: int = 0,
+    ):
+        """Create read/response contract from dj models."""
         logger.debug(f"{self.Config.name} Contract custom fields {custom_fields}")
         logger.debug(f"{self.Config.name} Contract excluded fields {exclude_fields}")
         logger.debug(f"{self.Config.name} Contract included fields {fields}")
@@ -185,11 +187,17 @@ class MixinsRestSchemaProducer:
 
         contract_schema = contract.schema()
 
-        logger.debug(f"{self.Config.name} Contract have fields {contract_schema['properties'].keys()}")
-        logger.debug(f"{self.Config.name} Contract have required fields  {contract_schema['required']}")
         logger.debug(
-            f"{self.Config.name} Save Contract have fields {contract_schema['properties'].keys()}")
+            f"{self.Config.name} Contract have fields {contract_schema['properties'].keys()}"
+        )
         logger.debug(
-            f"{self.Config.name} Save Contract have required fields {contract_schema['required']}")
+            f"{self.Config.name} Contract have required fields  {contract_schema['required']}"
+        )
+        logger.debug(
+            f"{self.Config.name} Save Contract have fields {contract_schema['properties'].keys()}"
+        )
+        logger.debug(
+            f"{self.Config.name} Save Contract have required fields {contract_schema['required']}"
+        )
 
         return contract

@@ -4,12 +4,12 @@ from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
+from skii.endpoint.schemas.identifier import IntStrUUID4
 
 from apps.base.schemas import FormInvalidResponseContract
-from skii.platform.models.agent import TeacherAgent
+from skii.platform.models.agent import TeacherAgent, StudentAgent
 from skii.platform.schemas.agent import TeacherContract, TeacherSaveContract
-from skii.endpoint.schemas.ninja import SkiiMsgContract
-
+from skii.endpoint.schemas.response import SkiiMsgContract
 
 UserModel = get_user_model()
 
@@ -45,7 +45,7 @@ def list(request: HttpRequest):
         422: FormInvalidResponseContract,
     },
 )
-def fetch(request: HttpRequest, pk: int | str):
+def fetch(request: HttpRequest, pk: IntStrUUID4):
     return 200, get_object_or_404(SubRouteModel, pk=pk)
 
 
@@ -56,7 +56,7 @@ def fetch(request: HttpRequest, pk: int | str):
         422: FormInvalidResponseContract,
     },
 )
-def delete(request: HttpRequest, pk: int | str):
+def delete(request: HttpRequest, pk: IntStrUUID4):
     qs = SubRouteModel.objects.all().filter(pk=pk)
     if qs.exists():
         qs.delete()
@@ -70,20 +70,12 @@ def delete(request: HttpRequest, pk: int | str):
         422: FormInvalidResponseContract,
     },
 )
-def update(request: HttpRequest, pk: int | str, payload: SubRouteSaveContract):
-    payload = payload.dict()
-    user_payload = payload.pop("user")
-    record = get_object_or_404(SubRouteModel, pk=pk)
-    user_obj = get_object_or_404(UserModel, id=user_payload["id"])
-    for attr, value in payload.items():
-        setattr(record, attr, value)
-    record.save()
-    for attr, value in user_payload.items():
-        setattr(user_obj, attr, value)
-    user_obj.save()
-    record.refresh_from_db()
-    record.user.refresh_from_db()
-    return 200, record
+def update(request: HttpRequest, pk: IntStrUUID4, payload: SubRouteSaveContract):
+    record_obj = SubRouteModel.get(pk)
+    record_obj.update(payload.dict())
+    record_obj.save()
+    record_obj.refresh_db()
+    return 200, record_obj
 
 
 @sub_route.post(
@@ -99,6 +91,8 @@ def create(request: HttpRequest, payload: SubRouteSaveContract):
     user_obj = UserModel(**user_payload)
     user_obj.save()
     record_payload["user"] = user_obj
-    record = SubRouteModel(**record_payload)
-    record.save()
-    return 200, record
+    # record_obj.save()
+    record_obj, created = StudentAgent.objects.update_or_create(
+        record_payload, pk=record_payload["pk"]
+    )
+    return 200, record_obj

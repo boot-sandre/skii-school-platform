@@ -16,7 +16,7 @@ from skii.platform.models.resource import (
     LocationResource,
 )
 from skii.platform.models.event import (
-    Lesson,
+    LessonEvent,
 )
 
 from .forms import LessonForm, LocationResourceForm
@@ -42,7 +42,7 @@ class TimeResourceAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Lesson)
+@admin.register(LessonEvent)
 class LessonAdmin(admin.ModelAdmin):
     fields = [("label", "state"), ("start", "stop"), "teacher", "students"]
     form = LessonForm

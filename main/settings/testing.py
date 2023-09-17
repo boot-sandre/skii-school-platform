@@ -24,6 +24,6 @@ DATABASES = {
         "NAME": BASE_DIR / "skii.sqlite3",
         "TEST": {
             "NAME": BASE_DIR / "skii.test.sqlite3",
-        }
+        },
     }
 }

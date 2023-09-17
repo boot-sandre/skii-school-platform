@@ -1,27 +1,6 @@
-from typing import List, Any, Dict, Optional
+from typing import List, Any, Dict
 
 from ninja import Schema
-from pydantic import UUID4
-
-
-class SkiiRecordContract(Schema):
-    data: Any
-
-
-class SkiiListContract(Schema):
-    data: List[Any] = []
-
-
-class SkiiMsgContract(Schema):
-    message: str
-
-
-class IdentifierContract(Schema):
-    pk: Optional[UUID4]
-
-
-class SkiiIdentifierContract(Schema):
-    data: IdentifierContract
 
 
 class FormInvalidResponseContract(Schema):

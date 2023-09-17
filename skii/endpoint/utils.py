@@ -9,4 +9,5 @@ def devtools_debug(func):
         response = func(request, payload=payload)
         debug(response)
         return response
+
     return wrapper

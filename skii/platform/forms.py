@@ -1,13 +1,13 @@
 from django import forms
 
 from skii.platform.entities import mutate_event_state
-from skii.platform.models.event import Lesson
+from skii.platform.models.event import LessonEvent
 from skii.platform.models.resource import LocationResource
 
 
 class LessonForm(forms.ModelForm):
     class Meta:
-        model = Lesson
+        model = LessonEvent
         fields = ["label", "state", "start", "stop", "teacher", "students"]
 
     def clean_state(self):

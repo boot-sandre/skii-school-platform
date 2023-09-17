@@ -28,6 +28,10 @@ class UUIDEntity(RecordIdentityHistory):
 
     UUID can give more flexibility with SaaS deployment, distribued data/db.
     Have impact compare to a typical integer id on database storage and performance.
+
+    17/09/23
+    --------
+     * The best way to manage object identifier looks to use natural FK.
     """
 
     class Meta:
@@ -92,7 +96,7 @@ class LabelEntity(models.Model):
 
 
 class TitleEntity(models.Model):
-    """Abstract model to add a title on a record
+    """Add a title on a record:
 
     Usefull for named content, like cms page, book, documents
     """
@@ -104,7 +108,7 @@ class TitleEntity(models.Model):
 
 
 class ContentEntity(models.Model):
-    """Abstract model to store big text content."""
+    """To big text content."""
 
     class Meta:
         abstract = True
@@ -115,11 +119,18 @@ class ContentEntity(models.Model):
 
 
 class CMSDisplayEntity(TitleEntity, DescribeEntity):
+    """Abstract model to cms element.
+
+    Can be page, illustration, Document
+    """
+
     class Meta:
         abstract = True
 
 
 class NomenclatureEntity(LabelEntity, DescribeEntity):
+    """To reference tags or other."""
+
     class Meta:
         abstract = True
 
@@ -229,7 +240,7 @@ class StateEntity(models.Model):
 
 
 class EventEntity(UUIDLabelEntity):
-    """Abstract class with start/stop time delta repr."""
+    """ EventEntity to follow exchange of Resource between Agent."""
 
     class Meta:
         abstract = True
@@ -246,8 +257,8 @@ class EventEntity(UUIDLabelEntity):
 
 
 class AgentEntity(UUIDLabelEntity):
-    """ An agent can be people or human agencies.
-    """
+    """An agent can be people or human agencies."""
+
     class Meta:
         abstract = True
         verbose_name = _("Agent")
@@ -260,10 +271,11 @@ class AgentEntity(UUIDLabelEntity):
 
 
 class ResourceEntity(UUIDLabelEntity):
-    """ A resource is something you need, and you may use to achieve.
+    """A resource is something you need, and you may use to achieve.
 
     Resource can be reserved or used by and Event.
     """
+
     class Meta:
         abstract = True
 

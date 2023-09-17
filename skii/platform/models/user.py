@@ -48,14 +48,14 @@ class UserSkiiManager(UserManager):
 
 
 class SkiiUser(AbstractBaseUser, PermissionsMixin):
-    """ User customized.
+    """User customized.
 
-         - Use email field as django username. (USERNAME_FIELD)
-         - Email fields have to be unique
-         - Other fields can be change/overwrite
+    - Use email field as django username. (USERNAME_FIELD)
+    - Email fields have to be unique
+    - Other fields can be change/overwrite
     """
 
-    EMAIL_FIELD: str = 'email'
+    EMAIL_FIELD: str = "email"
     USERNAME_FIELD: str = EMAIL_FIELD
     REQUIRED_FIELDS: List[str] = []
 
@@ -64,7 +64,10 @@ class SkiiUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _("Skii platform user")
         verbose_name_plural = _("Skii platform user(s)s")
         constraints = [
-            models.UniqueConstraint(fields=['email'], name='unique_email_constraint', )
+            models.UniqueConstraint(
+                fields=["email"],
+                name="unique_email_constraint",
+            )
         ]
         abstract = False
 
@@ -76,10 +79,14 @@ class SkiiUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(_("last name"), max_length=150, blank=True)
 
     email = models.EmailField(
-        _("Mail"), unique=True, null=False, blank=False,
-        editable=True, error_messages={
+        _("Mail"),
+        unique=True,
+        null=False,
+        blank=False,
+        editable=True,
+        error_messages={
             "unique": _("A user with that username already exists."),
-        }
+        },
     )
 
     # username = models.Field(alias="email")
@@ -99,14 +106,13 @@ class SkiiUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
     def get_absolute_url(self) -> str:
-        """ Return skii api url.
-        """
+        """Return skii api url."""
         return "/skii/user/%i/" % self.pk
 
     def natural_key(self) -> tuple[str]:
-        """ Define a natural primary key.
+        """Define a natural primary key.
 
-                Limit id/uuid exchange between front/back.
+        Limit id/uuid exchange between front/back.
         """
         return (self.get_username(),)
 
@@ -115,17 +121,14 @@ class SkiiUser(AbstractBaseUser, PermissionsMixin):
         self.email = self.__class__.objects.normalize_email(self.get_username())
 
     def get_full_name(self):
-        """ Return the first_name plus the last_name, with a space in between.
-        """
+        """Return the first_name plus the last_name, with a space in between."""
         full_name = "%s %s" % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):
-        """ Return the short/first name for the user.
-        """
+        """Return the short/first name for the user."""
         return self.first_name
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        """ Email this user.
-        """
+        """Email this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)

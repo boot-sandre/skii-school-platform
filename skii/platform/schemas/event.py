@@ -20,4 +20,3 @@ class LessonContract(Schema):
     teacher: TeacherContract
     students: List[StudentContract] = []
     uuid: Optional[UUID] = uuid4
-

@@ -10,7 +10,7 @@ from apps.base.schemas import FormInvalidResponseContract
 from skii.platform.schemas.agent import StudentContract, TeacherContract, UserSchema
 from skii.platform.models.agent import TeacherAgent
 from skii.platform.schemas.event import LessonContract
-from skii.endpoint.schemas.ninja import SkiiListContract
+from skii.endpoint.schemas.response import SkiiListContract
 
 UserModel = get_user_model()
 

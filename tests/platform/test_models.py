@@ -3,7 +3,8 @@ from ..testcase import SkiiTestCase
 
 from skii.platform.factories.factories import (
     TeacherAgentFactory,
-    StudentAgentFactory, LocationResourceFactory,
+    StudentAgentFactory,
+    LocationResourceFactory,
 )
 
 
@@ -27,5 +28,6 @@ class TestAgent(SkiiTestCase):
     def test_resource_location_create(self):
         location = LocationResourceFactory.create()
         location_payload = LocationContract.from_orm(location)
-        self.assertEquals(location_payload.value, 1,
-                          "Default resource value have to be one")
+        self.assertEquals(
+            location_payload.value, 1, "Default resource value have to be one"
+        )

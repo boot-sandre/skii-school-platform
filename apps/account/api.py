@@ -14,7 +14,7 @@ from apps.account.utils.email import email_activation_token
 from apps.base.schemas import (
     FormInvalidResponseContract,
 )
-from skii.endpoint.schemas.ninja import SkiiMsgContract
+from skii.endpoint.schemas.response import SkiiMsgContract
 from apps.account.schemas import (
     LoginFormContract,
     RegisterFormContract,

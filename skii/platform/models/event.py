@@ -14,7 +14,7 @@ from skii.platform.models.agent import (
 )
 
 
-class Lesson(StateEntity, EventEntity):
+class LessonEvent(StateEntity, EventEntity):
     class Meta:
         verbose_name = _("Lesson")
         verbose_name_plural = _("Lesson(s)")
@@ -47,9 +47,8 @@ class Lesson(StateEntity, EventEntity):
     @property
     def gant_config(self):
         from skii.platform.schemas.vuejs import GanttConfigContract
-
         return GanttConfigContract(
-            {
+            **{
                 "start": self.start.strftime(format="%Y-%m-%d %H:%M"),
                 "stop": self.stop.strftime(format="%Y-%m-%d %H:%M"),
                 "ganttBarConfig": {

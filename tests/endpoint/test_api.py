@@ -16,7 +16,7 @@ class TestApiTeacher(SkiiTestCase):
     api_factory = TeacherAgentFactory
     api_save_contract = TeacherSaveContract
     api_route_namespace = "teacher"
-    fields = ["pk", "user"]
+    fields = ["user", "pk"]
 
     def test_record_fetch(self):
         agent = self.api_factory.create()
@@ -66,7 +66,7 @@ class TestApiStudent(TestApiTeacher):
     api_save_contract = StudentSaveContract
 
     api_route_namespace = "student"
-    fields = ["pk", "user"]
+    fields = ["user", "pk"]
 
 
 class TestApiLocation(TestApiTeacher):

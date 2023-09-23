@@ -1,10 +1,11 @@
 from .student import sub_route as route_student
 from .teacher import sub_route as route_teacher
-
-from .location import LocationResourceRouter
-from .lesson import LessonEventRouter
+from .location import router as route_location
+from .lesson import router as route_lesson
 
 __all__ = [
-    LocationResourceRouter,
-    LessonEventRouter,
+    route_location,
+    route_student,
+    route_teacher,
+    route_lesson,
 ]

@@ -1,6 +1,6 @@
 from datetime import datetime
-from typing import List, Optional
-from uuid import UUID, uuid4
+from typing import List
+from skii.endpoint.schemas.identifier import IntStrUUID4
 
 from ninja import Schema
 
@@ -10,13 +10,24 @@ from skii.platform.schemas.vuejs import (
 from skii.platform.schemas.agent import (
     TeacherContract,
     StudentContract,
+    TeacherSaveContract,
 )
 
 
 class LessonContract(Schema):
+    pk: IntStrUUID4
     gant_config: GanttConfigContract
     start: datetime
     stop: datetime
     teacher: TeacherContract
     students: List[StudentContract] = []
-    uuid: Optional[UUID] = uuid4
+    label: str
+    description: str
+
+
+class LessonSaveContract(Schema):
+    label: str
+    description: str
+    start: datetime
+    stop: datetime
+    teacher: TeacherSaveContract

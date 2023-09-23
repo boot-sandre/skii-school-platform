@@ -82,7 +82,9 @@ class MixinsRestViewsProducer:
                 422: FormInvalidResponseContract,
             },
         )
-        def record_update(request: HttpRequest, pk: IntStrUUID4, payload: save_contract):
+        def record_update(
+            request: HttpRequest, pk: IntStrUUID4, payload: save_contract
+        ):
             record_payload = payload.dict()
             record = get_object_or_404(router_model, pk=pk)
             for attr, value in record_payload.items():
@@ -135,7 +137,7 @@ class MixinsRestSchemaProducer:
         # Introspection config
         depth: int = 0
         save_depth: int = 0
-        base_class: Schema = IntStrUUID4
+        base_class: Schema = None
         # Fields config/tweak
         fields: List[str] | None = None
         save_fields: List[str] | None = None
@@ -147,13 +149,16 @@ class MixinsRestSchemaProducer:
     def __init__(self, *args, **kwargs):
         """Autogenerate contract/schema from django models."""
         res = super().__init__(*args, **kwargs)
+        logger.debug("Now we generate standard read contract")
         self.contract = self.create_contract(
             fields=self.Config.fields,
             exclude_fields=self.Config.exclude_fields,
             custom_fields=self.Config.custom_fields,
             depth=self.Config.depth,
         )
+        logger.debug("Now we define List of read contract")
         self.list_contract = List[self.contract]
+        logger.debug("Now we define the save contract")
         self.save_contract = self.create_contract(
             fields=self.Config.save_fields,
             exclude_fields=self.Config.save_exclude_fields,
@@ -178,7 +183,7 @@ class MixinsRestSchemaProducer:
         contract = create_schema(
             model=self.Config.model,
             name=self.Config.name + "-contract",
-            base_class=self.Config.base_class,
+            # base_class=self.Config.base_class,
             depth=depth,
             exclude=exclude_fields,
             custom_fields=custom_fields,
@@ -192,12 +197,6 @@ class MixinsRestSchemaProducer:
         )
         logger.debug(
             f"{self.Config.name} Contract have required fields  {contract_schema['required']}"
-        )
-        logger.debug(
-            f"{self.Config.name} Save Contract have fields {contract_schema['properties'].keys()}"
-        )
-        logger.debug(
-            f"{self.Config.name} Save Contract have required fields {contract_schema['required']}"
         )
 
         return contract

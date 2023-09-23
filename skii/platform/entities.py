@@ -108,7 +108,7 @@ class TitleEntity(models.Model):
 
 
 class ContentEntity(models.Model):
-    """To big text content."""
+    """Main text content."""
 
     class Meta:
         abstract = True
@@ -164,6 +164,9 @@ class VisualEntity(CMSUUIDEntity):
 class GeoCoordinateEntity(models.Model):
     class Meta:
         abstract = True
+        index_together = [
+            ["latitude", "longitude"],
+        ]
 
     latitude = models.DecimalField(
         validators=[
@@ -240,7 +243,7 @@ class StateEntity(models.Model):
 
 
 class EventEntity(UUIDLabelEntity):
-    """ EventEntity to follow exchange of Resource between Agent."""
+    """EventEntity to follow exchange of Resource between Agent."""
 
     class Meta:
         abstract = True

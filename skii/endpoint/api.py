@@ -1,7 +1,6 @@
 import json
 import logging
 from ipaddress import IPv4Address, IPv6Address
-from pprint import pformat
 from typing import Type, Mapping, Any, cast, List
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -17,8 +16,12 @@ from django.utils.translation import gettext_lazy as _
 from ninja.types import DictStrAny
 from pydantic import BaseModel
 
-from skii.endpoint.routers.student import sub_route as route_student
-from skii.endpoint.routers.teacher import sub_route as route_teacher
+from skii.endpoint.routers import (
+    route_student,
+    route_teacher,
+    route_location,
+    route_lesson,
+)
 
 # Get current package version
 from packaging.version import parse as parse_version
@@ -29,6 +32,8 @@ logger = logging.getLogger(__name__)
 
 current_package_name = __package__.split(".")[0]
 distrib_version = parse_version(__import__(current_package_name).__version__)
+
+
 logger.info(f"Package: {current_package_name}")
 logger.info(f"Distribution version: {distrib_version}")
 
@@ -48,7 +53,6 @@ class SkiiJsonRenderer(BaseRenderer):
     json_dumps_params: Mapping[str, Any] = {}
 
     def render(self, request, data, *, response_status):
-        logger.debug(f"SkiiJsonRenderer: {pformat(data)}")
         return json.dumps(data, cls=self.encoder_class, **self.json_dumps_params)
 
 
@@ -87,11 +91,9 @@ def configure_api_skii() -> NinjaAPI:
     new_api = NinjaAPI(**api_kwargs)
     new_api.add_router(prefix="student", router=route_student)
     new_api.add_router(prefix="teacher", router=route_teacher)
+    new_api.add_router(prefix="location", router=route_location)
+    new_api.add_router(prefix="lesson", router=route_lesson)
 
-    from .routers import LessonEventRouter, LocationResourceRouter
-
-    LocationResourceRouter.link_with_api(api=new_api)
-    LessonEventRouter.link_with_api(api=new_api)
     return new_api
 
 

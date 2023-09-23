@@ -1,4 +1,6 @@
+from decimal import Decimal
 from django.db import models
+from django.db.models import Manager
 from django.utils.translation import gettext_lazy as _
 
 from skii.platform.entities import (
@@ -21,6 +23,10 @@ def get_default_album():
 
 
 class VisualElement(VisualEntity):
+    @property
+    def picture_url(self):
+        return self.picture.url
+
     class Meta:
         verbose_name = _("Visual Album Picture")
         verbose_name_plural = _("Visual Album Picture(s)")
@@ -49,11 +55,25 @@ class VisualPicture(VisualEntity):
         ordering = ["-last_modified", "-created", "title"]
 
 
+class GeoCoordinateManager(Manager):
+    def get_by_natural_key(self, latitude: Decimal, longitude: Decimal):
+        return self.get(latitude=latitude, longitude=longitude)
+
+
 class GeoCoordinate(GeoCoordinateEntity):
     class Meta:
         verbose_name = _("Geographic coordinate")
         verbose_name_plural = _("Geographic coordinate(s)")
         ordering = ["latitude", "longitude"]
 
+    objects = GeoCoordinateManager()
+
     def __str__(self):
         return f"{self.latitude} / {self.longitude} "
+
+    def natural_key(self) -> tuple[Decimal, Decimal]:
+        """Define a natural primary key.
+
+        Limit id/uuid exchange between front/back.
+        """
+        return self.latitude, self.longitude

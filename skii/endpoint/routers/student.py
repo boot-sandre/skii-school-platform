@@ -6,10 +6,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from ninja import Router
 from django.http import HttpRequest
-
 from apps.base.schemas import FormInvalidResponseContract
 from skii.endpoint.schemas.identifier import IntStrUUID4
-from skii.endpoint.utils import devtools_debug
 from skii.platform.models.agent import StudentAgent
 from skii.platform.schemas.agent import StudentContract, StudentSaveContract, UserSchema
 from skii.endpoint.schemas.response import SkiiMsgContract
@@ -74,11 +72,21 @@ def delete(request: HttpRequest, pk: IntStrUUID4):
     },
 )
 def update(request: HttpRequest, pk: IntStrUUID4, payload: SubRouteSaveContract):
-    record_obj = StudentAgent.objects.get(pk)
-    record_obj.update(payload.dict())
-    record_obj.save()
-    record_obj.refresh_db()
-    return 200, record_obj
+    record_payload = payload.dict()
+    if "user" in record_payload:
+        user_payload = record_payload["user"]
+        user = UserModel.objects.get(pk=get_object_or_404(StudentAgent, pk=pk).user.pk)
+        for attr, value in user_payload.items():
+            setattr(user, attr, value)
+        user.save()
+        user.refresh_from_db()
+        record_payload["user"] = user
+    record = get_object_or_404(StudentAgent, pk=pk)
+    for attr, value in record_payload.items():
+        setattr(record, attr, value)
+    record.save()
+    record.refresh_from_db()
+    return 200, record
 
 
 @sub_route.post(
@@ -88,13 +96,13 @@ def update(request: HttpRequest, pk: IntStrUUID4, payload: SubRouteSaveContract)
         422: FormInvalidResponseContract,
     },
 )
-@devtools_debug
 def create(request: HttpRequest, payload: SubRouteSaveContract):
     record_payload = payload.dict()
     user_payload = record_payload.pop("user")
     user_obj = UserModel(**user_payload)
     user_obj.save()
-    record_obj = StudentAgent.objects.create(
-        record_payload, pk=record_payload.pk
-    )
-    return 200, record_obj
+    record_payload["user"] = user_obj
+    record = StudentAgent(**record_payload)
+    record.save()
+    record.refresh_from_db()
+    return 200, record

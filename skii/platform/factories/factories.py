@@ -141,6 +141,7 @@ class LocationResourceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LocationResource
 
+
     address1 = factory.Faker("address")
     city = factory.Faker("city")
     country = factory.Faker("country_code")

@@ -50,10 +50,11 @@ class LocationSaveContract(ModelSchema):
             "city",
             "coordinate",
             "value",
+            "country",
         ]
         model_fields_optional = ["description", "address2"]
 
-    coordinate: GeoCoordinateSaveContract | None
-    country: str
+    coordinate: Optional[GeoCoordinateSaveContract]
+    country: str = Field(default="", alias="country.code")
     # cover: VisualPictureContract | None
     value: int = 1

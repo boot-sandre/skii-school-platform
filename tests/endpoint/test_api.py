@@ -20,9 +20,9 @@ class TestApiTeacher(SkiiTestCase):
     fields = ["user", "pk"]
 
     def test_record_fetch(self):
-        agent = self.api_factory.create()
+        record = self.api_factory.create()
         response = self.skii_client.get(
-            path=f"{self.api_route_prefix}/fetch/{agent.pk}/"
+            path=f"{self.api_route_prefix}/fetch/{record.pk}/"
         )
         self.assertListEqual(list(response.json().keys()), self.fields)
 
@@ -33,25 +33,25 @@ class TestApiTeacher(SkiiTestCase):
         self.assertEqual(first=len(response.json()), second=5)
 
     def test_record_delete(self):
-        agent = self.api_factory.create()
+        record = self.api_factory.create()
         response = self.skii_client.delete(
-            path=f"{self.api_route_prefix}/delete/{agent.pk}/"
+            path=f"{self.api_route_prefix}/delete/{record.pk}/"
         )
         assert response.content == b'{"message": "OK"}'
 
     def test_record_update(self):
-        agent = self.api_factory.create()
-        payload = self.api_save_contract.from_orm(agent).dict()
+        record = self.api_factory.create()
+        payload = self.api_save_contract.from_orm(record).dict()
         response = self.skii_client.post(
-            path=f"{self.api_route_prefix}/update/{agent.pk}/",
+            path=f"{self.api_route_prefix}/update/{record.pk}/",
             data=payload,
             content_type="application/json",
         )
         self.assertListEqual(list1=list(response.json().keys()), list2=self.fields)
 
     def test_record_create(self):
-        agent = self.api_factory.build()
-        payload = self.api_save_contract.from_orm(agent).dict()
+        record = self.api_factory.build()
+        payload = self.api_save_contract.from_orm(record).dict()
         response = self.skii_client.post(
             path=f"{self.api_route_prefix}/create/",
             data=payload,
@@ -71,13 +71,25 @@ class TestApiStudent(TestApiTeacher):
 
 
 class TestApiLocation(TestApiTeacher):
-    """Basic unit testing of Agent models and schema."""
+    """Basic unit testing of Resource models and schema."""
 
     api_factory = LocationResourceFactory
     api_save_contract = LocationSaveContract
 
     api_route_namespace = "location"
-    fields = ["country", "cover", "coordinate", "value"]
+    fields = [
+        'description',
+        'label',
+        'address1',
+        'address2',
+        'city',
+        'country',
+        'cover',
+        'illustration',
+        'coordinate',
+        'value',
+        'pk'
+    ]
 
 
 class TestApiLesson(TestApiTeacher):

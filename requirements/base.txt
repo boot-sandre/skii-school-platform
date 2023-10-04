@@ -11,3 +11,6 @@ pyjwt
 pytz
 django-stubs
 polyfactory
+django-hijack
+django-import-export
+email-validator

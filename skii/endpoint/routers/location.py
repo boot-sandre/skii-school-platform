@@ -22,37 +22,40 @@ RouterModel = LocationResource
 RouterListContract = List[RouterContract]
 
 
-@router.post(
-    path="/create/",
+@router.get(
+    path="/list/",
     response={
-        200: RouterContract,
+        200: RouterListContract,
         422: FormInvalidResponseContract,
     },
 )
-def record_create(request: HttpRequest, payload: RouterSaveContract):
-    record_payload = payload.dict()
-    if "coordinate" in record_payload:
-        geo_coordinate = record_payload["coordinate"]
-        del record_payload["coordinate"]
-        geo_coordinate_obj, created = GeoCoordinate.objects.update_or_create(
-            geo_coordinate, **geo_coordinate
-        )
-        record_payload["coordinate"] = geo_coordinate_obj
-    record = RouterModel(**record_payload)
-    record.save()
-    record.refresh_from_db()
-    return 200, record
+def list(request: HttpRequest):
+    return 200, RouterModel.objects.all()
 
 
 @router.get(
-    path="/read/{pk}/",
+    path="/fetch/{pk}/",
     response={
         200: RouterContract,
         422: FormInvalidResponseContract,
     },
 )
-def record_read(request: HttpRequest, pk: IntStrUUID4):
+def fetch(request: HttpRequest, pk: IntStrUUID4):
     return 200, get_object_or_404(RouterModel, pk=pk)
+
+
+@router.delete(
+    path="/delete/{pk}/",
+    response={
+        200: SkiiMsgContract,
+        422: FormInvalidResponseContract,
+    },
+)
+def record_delete(request: HttpRequest, pk: IntStrUUID4):
+    qs = RouterModel.objects.all().filter(pk=pk)
+    if qs.exists():
+        qs.delete()
+    return 200, SkiiMsgContract(message="OK")
 
 
 @router.post(
@@ -79,29 +82,23 @@ def record_update(request: HttpRequest, pk: IntStrUUID4, payload: RouterSaveCont
     return 200, record
 
 
-@router.get(
-    path="/delete/{pk}/",
+@router.post(
+    path="/create/",
     response={
-        200: SkiiMsgContract,
+        200: RouterContract,
         422: FormInvalidResponseContract,
     },
 )
-def record_delete(request: HttpRequest, pk: IntStrUUID4):
-    qs = RouterModel.objects.all().filter(pk=pk)
-    if qs.exists():
-        qs.delete()
-    return 200, SkiiMsgContract(message="Record deleted")
-
-
-@router.get(
-    path="/list/",
-    response={
-        200: RouterListContract,
-        422: FormInvalidResponseContract,
-    },
-)
-def record_list(request: HttpRequest):
-    return 200, RouterModel.objects.all()
-
-
-__all__ = [router]
+def create(request: HttpRequest, payload: RouterSaveContract):
+    record_payload = payload.dict()
+    if "coordinate" in record_payload:
+        geo_coordinate = record_payload["coordinate"]
+        del record_payload["coordinate"]
+        geo_coordinate_obj, created = GeoCoordinate.objects.update_or_create(
+            geo_coordinate, **geo_coordinate
+        )
+        record_payload["coordinate"] = geo_coordinate_obj
+    record = RouterModel(**record_payload)
+    record.save()
+    record.refresh_from_db()
+    return 200, record

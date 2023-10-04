@@ -19,7 +19,7 @@ class VisualAlbum(CMSUUIDEntity):
 
 def get_default_album():
     """Provide the first Album to link VisualElement."""
-    return VisualAlbum.objects.first().uuid
+    return VisualAlbum.objects.first().guid
 
 
 class VisualElement(VisualEntity):
@@ -41,7 +41,7 @@ class VisualElement(VisualEntity):
     )
 
     def __str__(self):
-        return f"[{self.uuid}] {self.title[:30]} from album {self.album.title[:30]}"
+        return f"[{self.guid}] {self.title[:30]} from album {self.album.title[:30]}"
 
 
 class VisualPicture(VisualEntity):
@@ -74,6 +74,6 @@ class GeoCoordinate(GeoCoordinateEntity):
     def natural_key(self) -> tuple[Decimal, Decimal]:
         """Define a natural primary key.
 
-        Limit id/uuid exchange between front/back.
+        Limit id/guid exchange between front/back.
         """
         return self.latitude, self.longitude

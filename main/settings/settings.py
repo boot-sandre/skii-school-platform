@@ -85,6 +85,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "main.wsgi.application"
 
 # Python logging
+DJANGO_LOG_LEVEL = "DEBUG"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -141,31 +142,31 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console", "console.debug"],
-        "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        "level": DJANGO_LOG_LEVEL,
     },
     "loggers": {
         "skii": {
             "handlers": ["console", "console.debug"],
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": DJANGO_LOG_LEVEL,
             "propagate": False,
         },
         "django": {
             "handlers": ["console", "console.debug"],
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": DJANGO_LOG_LEVEL,
             "propagate": False,
         },
         "django.server": {
             "handlers": ["django.server"],
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": DJANGO_LOG_LEVEL,
             "propagate": False,
         },
         "django.request": {
             "handlers": ["django.server"],
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": DJANGO_LOG_LEVEL,
             "propagate": False,
         },
         "django.template": {
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": DJANGO_LOG_LEVEL,
             "propagate": True,
         },
         "django.db.backends": {
@@ -173,7 +174,7 @@ LOGGING = {
             "propagate": True,
         },
         "django.security": {
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": DJANGO_LOG_LEVEL,
             "propagate": True,
         },
         "django.utils.autoreload": {
@@ -188,7 +189,7 @@ LOGGING = {
             "propagate": False,
         },
         "parso": {
-            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "level": "INFO",
             "propagate": True,
         },
     },

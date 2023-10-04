@@ -144,8 +144,8 @@ class LocationResourceFactory(factory.django.DjangoModelFactory):
     address1 = factory.Faker("address")
     city = factory.Faker("city")
     country = factory.Faker("country_code")
-    label = factory.Faker("text")
-    description = factory.Faker("text")
+    label = factory.Faker("text", max_nb_chars=80)
+    description = factory.Faker("text", max_nb_chars=255)
 
     coordinate = factory.SubFactory(GeoCoordinateFactory)
     illustration = factory.SubFactory(VisualAlbumFactory)

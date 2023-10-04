@@ -29,6 +29,7 @@ class LocationContract(ModelSchema):
             "coordinate",
             "value",
         ]
+        model_fields_optional = ["description", "address2"]
 
     pk: IntStrUUID4
     country: CountryContract
@@ -52,7 +53,7 @@ class LocationSaveContract(ModelSchema):
         ]
         model_fields_optional = ["description", "address2"]
 
-    coordinate: GeoCoordinateContract | None
-    country: str = Field(None, alias="country.code")
+    coordinate: GeoCoordinateSaveContract | None
+    country: str
     # cover: VisualPictureContract | None
     value: int = 1

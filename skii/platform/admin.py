@@ -59,7 +59,7 @@ class LocationResourceAdmin(admin.ModelAdmin):
         "coordinate",
         ("cover", "illustration"),
     ]
-    list_display = ["uuid", "label", "coordinate", "city", "country"]
+    list_display = ["guid", "label", "coordinate", "city", "country"]
     form = LocationResourceForm
 
 

@@ -1,6 +1,7 @@
-from skii.platform.schemas.resource import LocationContract
+from skii.platform.schemas.resource import LocationSaveContract
 from ..testcase import SkiiTestCase
 from skii.platform.schemas.agent import TeacherSaveContract, StudentSaveContract
+from skii.platform.schemas.event import LessonSaveContract
 
 from skii.platform.factories.factories import (
     TeacherAgentFactory,
@@ -73,7 +74,7 @@ class TestApiLocation(TestApiTeacher):
     """Basic unit testing of Agent models and schema."""
 
     api_factory = LocationResourceFactory
-    api_save_contract = LocationContract
+    api_save_contract = LocationSaveContract
 
     api_route_namespace = "location"
     fields = ["country", "cover", "coordinate", "value"]
@@ -84,7 +85,7 @@ class TestApiLesson(TestApiTeacher):
 
     api_factory = LessonFactory
 
-    api_save_contract = LocationContract
+    api_save_contract = LessonSaveContract
 
     api_route_namespace = "lesson"
     fields = []

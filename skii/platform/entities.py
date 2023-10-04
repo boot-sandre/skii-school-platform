@@ -37,19 +37,18 @@ class UUIDEntity(RecordIdentityHistory):
     class Meta:
         abstract = True
 
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     @property
-    def short_prefix_uuid(self):
+    def short_prefix_guid(self):
         """Usefull for have short uuid preview."""
-        return f"{str(self.uuid)[:8]}..."
+        return f"{str(self.guid)[:8]}..."
 
 
 class DescribeEntity(models.Model):
     """Abstract model to add short description fields
 
     Give the capacity to a models to store a short record description about it.
-
     """
 
     class Meta:

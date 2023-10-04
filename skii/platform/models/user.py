@@ -112,7 +112,7 @@ class SkiiUser(AbstractBaseUser, PermissionsMixin):
     def natural_key(self) -> tuple[str]:
         """Define a natural primary key.
 
-        Limit id/uuid exchange between front/back.
+        Limit id/guid exchange between front/back.
         """
         return (self.get_username(),)
 

@@ -1,11 +1,9 @@
 # flake8: noqa F403
 
-from .settings import *
-from .dev import *  # Share things on dev and version them
+from .dev import *
 
 INSTALLED_APPS += [
     "django_extensions",
 ]
 
 DEBUG = True
-DJANGO_LOG_LEVEL = "DEBUG"

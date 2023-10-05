@@ -38,7 +38,7 @@ def record_create(request: HttpRequest, payload: RouterSaveContract):
 
 
 @router.get(
-    path="/read/{pk}/",
+    path="/fetch/{pk}/",
     response={
         200: RouterContract,
         422: FormInvalidResponseContract,
@@ -57,13 +57,7 @@ def record_read(request: HttpRequest, pk: IntStrUUID4):
 )
 def record_update(request: HttpRequest, pk: IntStrUUID4, payload: RouterSaveContract):
     record_payload = payload.dict()
-    if "coordinate" in record_payload:
-        geo_coordinate = record_payload["coordinate"]
-        del record_payload["coordinate"]
-        geo_coordinate_obj, created = GeoCoordinate.objects.update_or_create(
-            geo_coordinate, **geo_coordinate
-        )
-        record_payload["coordinate"] = geo_coordinate_obj
+
     record = get_object_or_404(RouterModel, pk=pk)
     for attr, value in record_payload.items():
         setattr(record, attr, value)
@@ -72,7 +66,7 @@ def record_update(request: HttpRequest, pk: IntStrUUID4, payload: RouterSaveCont
     return 200, record
 
 
-@router.get(
+@router.delete(
     path="/delete/{pk}/",
     response={
         200: SkiiMsgContract,
@@ -83,7 +77,7 @@ def record_delete(request: HttpRequest, pk: IntStrUUID4):
     qs = RouterModel.objects.all().filter(pk=pk)
     if qs.exists():
         qs.delete()
-    return 200, SkiiMsgContract(message="Record deleted")
+    return 200, SkiiMsgContract(message="OK")
 
 
 @router.get(
@@ -95,6 +89,3 @@ def record_delete(request: HttpRequest, pk: IntStrUUID4):
 )
 def record_list(request: HttpRequest):
     return 200, RouterModel.objects.all()
-
-
-__all__ = [router]

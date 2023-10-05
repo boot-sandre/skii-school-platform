@@ -100,4 +100,14 @@ class TestApiLesson(TestApiTeacher):
     api_save_contract = LessonSaveContract
 
     api_route_namespace = "lesson"
-    fields = []
+    fields = [
+        'pk',
+        'gant_config',
+        'start',
+        'stop',
+        'teacher',
+        'students',
+        'label',
+        'description'
+    ]
+

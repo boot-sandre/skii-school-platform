@@ -1,0 +1,8 @@
+shell_plus:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Open a Django shell plus <---$(FORMATRESET)\n"
+	@echo ""
+	$(DJANGO_MANAGE) shell_plus  --settings=${DJANGO_SETTINGS}
+.PHONY: shell_plus
+
+

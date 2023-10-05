@@ -11,7 +11,7 @@ BLACK=$(VENV_BIN)/black
 PYTEST=$(VENV_BIN)/pytest
 
 DJANGOPROJECT_DIR=main
-DJANGO_SETTINGS=main.settings.local
+DJANGO_SETTINGS=main.settings.dev
 DJANGO_SETTINGS_TEST=main.settings.testing
 STATICFILES_DIR=$(DJANGOPROJECT_DIR)/webapp_statics
 
@@ -90,6 +90,7 @@ clean-pycheck:
 	rm -Rf yarn.lock
 	rm -Rf package.json
 	rm -Rf node_modules
+.PHONY: clean-pycheck
 
 install-pycheck:
 	@echo ""
@@ -97,6 +98,7 @@ install-pycheck:
 	@echo ""
 	$(NPM) global add @pycheck/cli
 	$(NPM) global add @pycheck/ui
+.PHONY: install-pycheck
 
 venv:
 	@echo ""
@@ -122,35 +124,35 @@ shell:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Open a Django shell <---$(FORMATRESET)\n"
 	@echo ""
-	$(DJANGO_MANAGE) shell
+	$(DJANGO_MANAGE) shell --settings=${DJANGO_SETTINGS}
 .PHONY: shell
 
 check-migrations:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Checking for pending project applications models migrations <---$(FORMATRESET)\n"
 	@echo ""
-	$(DJANGO_MANAGE) makemigrations --check --dry-run -v 3
+	$(DJANGO_MANAGE) makemigrations --settings=${DJANGO_SETTINGS} --check --dry-run -v 3
 .PHONY: check-migrations
 
 migrations:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Apply pending migrations <---$(FORMATRESET)\n"
 	@echo ""
-	$(DJANGO_MANAGE) makemigrations
+	$(DJANGO_MANAGE) makemigrations --settings=${DJANGO_SETTINGS}
 .PHONY: migrations
 
 migrate:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Apply pending migrations <---$(FORMATRESET)\n"
 	@echo ""
-	$(DJANGO_MANAGE) migrate
+	$(DJANGO_MANAGE) migrate  --settings=${DJANGO_SETTINGS}
 .PHONY: migrate
 
 superuser:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Create a new superuser <---$(FORMATRESET)\n"
 	@echo ""
-	$(DJANGO_MANAGE) createsuperuser
+	$(DJANGO_MANAGE) createsuperuser --settings=${DJANGO_SETTINGS}
 .PHONY: superuser
 
 run:
@@ -219,3 +221,4 @@ doc:
 	$(DJANGO_MANAGE) build_doc
 .PHONY: doc
 
+include Makefile_devtools

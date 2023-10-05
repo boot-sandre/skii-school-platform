@@ -100,6 +100,9 @@ class TestApiLesson(TestApiTeacher):
     api_save_contract = LessonSaveContract
 
     api_route_namespace = "lesson"
+
+    fixtures = ["profiles.yaml"]
+
     fields = [
         'pk',
         'gant_config',
@@ -110,4 +113,3 @@ class TestApiLesson(TestApiTeacher):
         'label',
         'description'
     ]
-

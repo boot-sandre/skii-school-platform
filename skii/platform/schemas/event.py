@@ -30,4 +30,4 @@ class LessonSaveContract(Schema):
     description: str
     start: datetime
     stop: datetime
-    teacher: TeacherSaveContract
+    teacher_id: int

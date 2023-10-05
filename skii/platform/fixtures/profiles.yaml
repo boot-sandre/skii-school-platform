@@ -1,0 +1,1074 @@
+- model: auth.permission
+  pk: 1
+  fields:
+    name: Can add log entry
+    content_type: 1
+    codename: add_logentry
+- model: auth.permission
+  pk: 2
+  fields:
+    name: Can change log entry
+    content_type: 1
+    codename: change_logentry
+- model: auth.permission
+  pk: 3
+  fields:
+    name: Can delete log entry
+    content_type: 1
+    codename: delete_logentry
+- model: auth.permission
+  pk: 4
+  fields:
+    name: Can view log entry
+    content_type: 1
+    codename: view_logentry
+- model: auth.permission
+  pk: 5
+  fields:
+    name: Can add permission
+    content_type: 2
+    codename: add_permission
+- model: auth.permission
+  pk: 6
+  fields:
+    name: Can change permission
+    content_type: 2
+    codename: change_permission
+- model: auth.permission
+  pk: 7
+  fields:
+    name: Can delete permission
+    content_type: 2
+    codename: delete_permission
+- model: auth.permission
+  pk: 8
+  fields:
+    name: Can view permission
+    content_type: 2
+    codename: view_permission
+- model: auth.permission
+  pk: 9
+  fields:
+    name: Can add group
+    content_type: 3
+    codename: add_group
+- model: auth.permission
+  pk: 10
+  fields:
+    name: Can change group
+    content_type: 3
+    codename: change_group
+- model: auth.permission
+  pk: 11
+  fields:
+    name: Can delete group
+    content_type: 3
+    codename: delete_group
+- model: auth.permission
+  pk: 12
+  fields:
+    name: Can view group
+    content_type: 3
+    codename: view_group
+- model: auth.permission
+  pk: 13
+  fields:
+    name: Can add user
+    content_type: 4
+    codename: add_user
+- model: auth.permission
+  pk: 14
+  fields:
+    name: Can change user
+    content_type: 4
+    codename: change_user
+- model: auth.permission
+  pk: 15
+  fields:
+    name: Can delete user
+    content_type: 4
+    codename: delete_user
+- model: auth.permission
+  pk: 16
+  fields:
+    name: Can view user
+    content_type: 4
+    codename: view_user
+- model: auth.permission
+  pk: 17
+  fields:
+    name: Can add content type
+    content_type: 5
+    codename: add_contenttype
+- model: auth.permission
+  pk: 18
+  fields:
+    name: Can change content type
+    content_type: 5
+    codename: change_contenttype
+- model: auth.permission
+  pk: 19
+  fields:
+    name: Can delete content type
+    content_type: 5
+    codename: delete_contenttype
+- model: auth.permission
+  pk: 20
+  fields:
+    name: Can view content type
+    content_type: 5
+    codename: view_contenttype
+- model: auth.permission
+  pk: 21
+  fields:
+    name: Can add session
+    content_type: 6
+    codename: add_session
+- model: auth.permission
+  pk: 22
+  fields:
+    name: Can change session
+    content_type: 6
+    codename: change_session
+- model: auth.permission
+  pk: 23
+  fields:
+    name: Can delete session
+    content_type: 6
+    codename: delete_session
+- model: auth.permission
+  pk: 24
+  fields:
+    name: Can view session
+    content_type: 6
+    codename: view_session
+- model: auth.permission
+  pk: 25
+  fields:
+    name: Can add Geographic coordinate
+    content_type: 7
+    codename: add_geocoordinate
+- model: auth.permission
+  pk: 26
+  fields:
+    name: Can change Geographic coordinate
+    content_type: 7
+    codename: change_geocoordinate
+- model: auth.permission
+  pk: 27
+  fields:
+    name: Can delete Geographic coordinate
+    content_type: 7
+    codename: delete_geocoordinate
+- model: auth.permission
+  pk: 28
+  fields:
+    name: Can view Geographic coordinate
+    content_type: 7
+    codename: view_geocoordinate
+- model: auth.permission
+  pk: 29
+  fields:
+    name: Can add Money
+    content_type: 8
+    codename: add_moneyresource
+- model: auth.permission
+  pk: 30
+  fields:
+    name: Can change Money
+    content_type: 8
+    codename: change_moneyresource
+- model: auth.permission
+  pk: 31
+  fields:
+    name: Can delete Money
+    content_type: 8
+    codename: delete_moneyresource
+- model: auth.permission
+  pk: 32
+  fields:
+    name: Can view Money
+    content_type: 8
+    codename: view_moneyresource
+- model: auth.permission
+  pk: 33
+  fields:
+    name: Can add Time
+    content_type: 9
+    codename: add_timeresource
+- model: auth.permission
+  pk: 34
+  fields:
+    name: Can change Time
+    content_type: 9
+    codename: change_timeresource
+- model: auth.permission
+  pk: 35
+  fields:
+    name: Can delete Time
+    content_type: 9
+    codename: delete_timeresource
+- model: auth.permission
+  pk: 36
+  fields:
+    name: Can view Time
+    content_type: 9
+    codename: view_timeresource
+- model: auth.permission
+  pk: 37
+  fields:
+    name: Can add Visual Album
+    content_type: 10
+    codename: add_visualalbum
+- model: auth.permission
+  pk: 38
+  fields:
+    name: Can change Visual Album
+    content_type: 10
+    codename: change_visualalbum
+- model: auth.permission
+  pk: 39
+  fields:
+    name: Can delete Visual Album
+    content_type: 10
+    codename: delete_visualalbum
+- model: auth.permission
+  pk: 40
+  fields:
+    name: Can view Visual Album
+    content_type: 10
+    codename: view_visualalbum
+- model: auth.permission
+  pk: 41
+  fields:
+    name: Can add Visual Picture
+    content_type: 11
+    codename: add_visualpicture
+- model: auth.permission
+  pk: 42
+  fields:
+    name: Can change Visual Picture
+    content_type: 11
+    codename: change_visualpicture
+- model: auth.permission
+  pk: 43
+  fields:
+    name: Can delete Visual Picture
+    content_type: 11
+    codename: delete_visualpicture
+- model: auth.permission
+  pk: 44
+  fields:
+    name: Can view Visual Picture
+    content_type: 11
+    codename: view_visualpicture
+- model: auth.permission
+  pk: 45
+  fields:
+    name: Can add Visual Album Picture
+    content_type: 12
+    codename: add_visualelement
+- model: auth.permission
+  pk: 46
+  fields:
+    name: Can change Visual Album Picture
+    content_type: 12
+    codename: change_visualelement
+- model: auth.permission
+  pk: 47
+  fields:
+    name: Can delete Visual Album Picture
+    content_type: 12
+    codename: delete_visualelement
+- model: auth.permission
+  pk: 48
+  fields:
+    name: Can view Visual Album Picture
+    content_type: 12
+    codename: view_visualelement
+- model: auth.permission
+  pk: 49
+  fields:
+    name: Can add Teacher
+    content_type: 13
+    codename: add_teacheragent
+- model: auth.permission
+  pk: 50
+  fields:
+    name: Can change Teacher
+    content_type: 13
+    codename: change_teacheragent
+- model: auth.permission
+  pk: 51
+  fields:
+    name: Can delete Teacher
+    content_type: 13
+    codename: delete_teacheragent
+- model: auth.permission
+  pk: 52
+  fields:
+    name: Can view Teacher
+    content_type: 13
+    codename: view_teacheragent
+- model: auth.permission
+  pk: 53
+  fields:
+    name: Can add Student
+    content_type: 14
+    codename: add_studentagent
+- model: auth.permission
+  pk: 54
+  fields:
+    name: Can change Student
+    content_type: 14
+    codename: change_studentagent
+- model: auth.permission
+  pk: 55
+  fields:
+    name: Can delete Student
+    content_type: 14
+    codename: delete_studentagent
+- model: auth.permission
+  pk: 56
+  fields:
+    name: Can view Student
+    content_type: 14
+    codename: view_studentagent
+- model: auth.permission
+  pk: 57
+  fields:
+    name: Can add Location
+    content_type: 15
+    codename: add_locationresource
+- model: auth.permission
+  pk: 58
+  fields:
+    name: Can change Location
+    content_type: 15
+    codename: change_locationresource
+- model: auth.permission
+  pk: 59
+  fields:
+    name: Can delete Location
+    content_type: 15
+    codename: delete_locationresource
+- model: auth.permission
+  pk: 60
+  fields:
+    name: Can view Location
+    content_type: 15
+    codename: view_locationresource
+- model: auth.permission
+  pk: 61
+  fields:
+    name: Can add Lesson
+    content_type: 16
+    codename: add_lessonevent
+- model: auth.permission
+  pk: 62
+  fields:
+    name: Can change Lesson
+    content_type: 16
+    codename: change_lessonevent
+- model: auth.permission
+  pk: 63
+  fields:
+    name: Can delete Lesson
+    content_type: 16
+    codename: delete_lessonevent
+- model: auth.permission
+  pk: 64
+  fields:
+    name: Can view Lesson
+    content_type: 16
+    codename: view_lessonevent
+- model: auth.user
+  pk: 1
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: justincrawford
+    first_name: Lisa Meyer
+    last_name: Richard Mckinney
+    email: ashley75@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:53:51.163103+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 2
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: pearsonsarah
+    first_name: Jenna Henry
+    last_name: Mary Rivera
+    email: derek67@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:53:51.203629+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 3
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: jason17
+    first_name: Tammy Roberts
+    last_name: Kara Jackson
+    email: tlewis@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:53:51.254098+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 4
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: crystalruiz
+    first_name: Gregg Moore
+    last_name: Hannah Hernandez
+    email: amyrobertson@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:53:51.300212+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 5
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: aimeemills
+    first_name: Heather Mccoy
+    last_name: Frank Tanner
+    email: amandabaxter@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:53:51.344277+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 6
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: lisa31
+    first_name: Daniel Lee
+    last_name: Christine Rogers
+    email: blackdanielle@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.246604+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 7
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: lisabrown
+    first_name: Taylor Petty
+    last_name: Amanda Steele
+    email: montoyamark@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.266920+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 8
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: djones
+    first_name: Raymond Carroll
+    last_name: Theresa Sanford
+    email: heather41@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.309932+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 9
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: karensanders
+    first_name: Jennifer Howard
+    last_name: Kristen Matthews
+    email: sararuiz@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.326362+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 10
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: ericosborne
+    first_name: Elizabeth Stewart
+    last_name: Jason Hernandez
+    email: irwinjanet@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.367986+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 11
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: bdorsey
+    first_name: Maria Jackson
+    last_name: Nicole Vazquez
+    email: nicolesmith@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.410917+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 12
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: kevinhughes
+    first_name: Charles Wilson
+    last_name: David Johnson
+    email: stanleyramirez@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.420742+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 13
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: kevin11
+    first_name: Matthew Dorsey
+    last_name: Laurie Lawrence
+    email: heather79@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.457750+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 14
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: jeffrey04
+    first_name: Lauren Butler
+    last_name: Christopher Hunt
+    email: patricia81@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.474474+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 15
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: angela39
+    first_name: Gabriella Rodriguez
+    last_name: Autumn Porter
+    email: andrewowens@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.518348+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 16
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: shannonterrell
+    first_name: Connor Thomas
+    last_name: Todd Kim
+    email: jason82@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.528549+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 17
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: samueljordan
+    first_name: Jennifer Kelley
+    last_name: Teresa Brown
+    email: adavis@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.569752+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 18
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: ortizmadeline
+    first_name: Stephen Fernandez
+    last_name: Michael Ortiz
+    email: ssmith@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.587273+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 19
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: tammy48
+    first_name: Mikayla Boyd
+    last_name: Elaine Miller
+    email: sandramiller@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.636438+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 20
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: whitneydouglas
+    first_name: Julie Reyes
+    last_name: Lauren Gill
+    email: garnereric@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.660500+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 21
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: wesley04
+    first_name: David Griffin
+    last_name: Allison Daniel
+    email: douglaswatkins@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.702809+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 22
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: ilewis
+    first_name: Brittany Anderson
+    last_name: Bryan Estes
+    email: nguyensteven@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.755503+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 23
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: ofox
+    first_name: Allen Wells
+    last_name: Joanna Liu
+    email: oliverdavid@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.807846+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 24
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: megan75
+    first_name: Ryan Miller
+    last_name: Dr. Andrea Escobar DVM
+    email: nrobinson@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.822249+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 25
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: fscott
+    first_name: Robert Mckay
+    last_name: Traci Wilson
+    email: pearsonchristopher@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.865899+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 26
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: brownjoel
+    first_name: Kayla Farley
+    last_name: Christopher Moody
+    email: sean36@example.org
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.916287+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 27
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: howardsamantha
+    first_name: Robert Reeves
+    last_name: Katherine Young
+    email: iholmes@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:22.957634+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 28
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: thomas27
+    first_name: Tabitha Reynolds
+    last_name: Brianna Webster
+    email: bryan94@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:23.004360+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 29
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: ilynch
+    first_name: James Castillo
+    last_name: Timothy Buck
+    email: adamsdaniel@example.com
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:23.050599+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 30
+  fields:
+    password: pbkdf2_sha256$600000$woyCpGXz5SYrpQp6StgXiP$7CgGiLDNhsaiyYWR2rujMnlWq/5p/W5mUrigbnGc6XY=
+    last_login: null
+    is_superuser: false
+    username: carloscook
+    first_name: Sean Shea
+    last_name: Michael Welch
+    email: dbrown@example.net
+    is_staff: false
+    is_active: true
+    date_joined: 2023-10-05 22:56:23.063264+00:00
+    groups: []
+    user_permissions: []
+- model: platform.studentagent
+  pk: 03928883-1a7d-45d2-af6d-d35b011d3e15
+  fields:
+    created: 2023-10-05 22:56:22.259413+00:00
+    last_modified: 2023-10-05 22:56:22.259451+00:00
+    description: null
+    label: ''
+    user: 6
+- model: platform.studentagent
+  pk: 128cd249-9a29-4b64-a089-93c8ea321330
+  fields:
+    created: 2023-10-05 22:56:22.627390+00:00
+    last_modified: 2023-10-05 22:56:22.627454+00:00
+    description: null
+    label: ''
+    user: 18
+- model: platform.studentagent
+  pk: 165a80cd-8ae6-4a6a-9fda-76549bf177e1
+  fields:
+    created: 2023-10-05 22:56:22.951252+00:00
+    last_modified: 2023-10-05 22:56:22.951282+00:00
+    description: null
+    label: ''
+    user: 26
+- model: platform.studentagent
+  pk: 1b046a32-7c20-4930-ac4a-4106ed57e362
+  fields:
+    created: 2023-10-05 22:56:22.642901+00:00
+    last_modified: 2023-10-05 22:56:22.642937+00:00
+    description: null
+    label: ''
+    user: 19
+- model: platform.studentagent
+  pk: 343e7fd6-a066-4ed0-9305-fd2ed98549f3
+  fields:
+    created: 2023-10-05 22:56:23.096297+00:00
+    last_modified: 2023-10-05 22:56:23.096327+00:00
+    description: null
+    label: ''
+    user: 30
+- model: platform.studentagent
+  pk: 386fd0ab-c9da-4331-a63d-a58aa13df328
+  fields:
+    created: 2023-10-05 22:56:22.904445+00:00
+    last_modified: 2023-10-05 22:56:22.904494+00:00
+    description: null
+    label: ''
+    user: 25
+- model: platform.studentagent
+  pk: 44b88292-2f2e-44e3-9e7b-fe1b4bb44da4
+  fields:
+    created: 2023-10-05 22:56:22.302067+00:00
+    last_modified: 2023-10-05 22:56:22.302131+00:00
+    description: null
+    label: ''
+    user: 7
+- model: platform.studentagent
+  pk: 4efe8bd8-6cd5-4aaa-8057-3b5575339dc5
+  fields:
+    created: 2023-10-05 22:56:22.425347+00:00
+    last_modified: 2023-10-05 22:56:22.425380+00:00
+    description: null
+    label: ''
+    user: 12
+- model: platform.studentagent
+  pk: 5d8f5517-c329-4563-b659-da861076a091
+  fields:
+    created: 2023-10-05 22:56:23.057055+00:00
+    last_modified: 2023-10-05 22:56:23.057095+00:00
+    description: null
+    label: ''
+    user: 29
+- model: platform.studentagent
+  pk: 642eb23a-3840-4096-8bde-0506ac6581a5
+  fields:
+    created: 2023-10-05 22:56:22.316966+00:00
+    last_modified: 2023-10-05 22:56:22.317031+00:00
+    description: null
+    label: ''
+    user: 8
+- model: platform.studentagent
+  pk: 70a878af-cb4a-4a17-a5ab-7d69778d07a4
+  fields:
+    created: 2023-10-05 22:56:22.696076+00:00
+    last_modified: 2023-10-05 22:56:22.696162+00:00
+    description: null
+    label: ''
+    user: 20
+- model: platform.studentagent
+  pk: 73ad626c-2140-41b2-b13e-c07c4444aae7
+  fields:
+    created: 2023-10-05 22:56:22.964592+00:00
+    last_modified: 2023-10-05 22:56:22.964646+00:00
+    description: null
+    label: ''
+    user: 27
+- model: platform.studentagent
+  pk: 755b7b0a-888f-4aad-b100-6142beba57a5
+  fields:
+    created: 2023-10-05 22:56:22.577091+00:00
+    last_modified: 2023-10-05 22:56:22.577172+00:00
+    description: null
+    label: ''
+    user: 17
+- model: platform.studentagent
+  pk: 7ab6da0a-7bee-426e-8fd4-219224c73225
+  fields:
+    created: 2023-10-05 22:56:22.482482+00:00
+    last_modified: 2023-10-05 22:56:22.482558+00:00
+    description: null
+    label: ''
+    user: 14
+- model: platform.studentagent
+  pk: 7b02ae2e-4b8c-4e3b-acd9-de363e7978ca
+  fields:
+    created: 2023-10-05 22:56:22.707483+00:00
+    last_modified: 2023-10-05 22:56:22.707519+00:00
+    description: null
+    label: ''
+    user: 21
+- model: platform.studentagent
+  pk: 9d1a8cfb-10d0-4de0-9cfd-429bf0dd0e8f
+  fields:
+    created: 2023-10-05 22:56:22.462951+00:00
+    last_modified: 2023-10-05 22:56:22.462982+00:00
+    description: null
+    label: ''
+    user: 13
+- model: platform.studentagent
+  pk: a36b1882-141d-4df2-85e9-7574a9459efd
+  fields:
+    created: 2023-10-05 22:56:22.857853+00:00
+    last_modified: 2023-10-05 22:56:22.857894+00:00
+    description: null
+    label: ''
+    user: 24
+- model: platform.studentagent
+  pk: bdfdbf3f-ef8f-4acc-a938-61c78ad58523
+  fields:
+    created: 2023-10-05 22:56:22.815412+00:00
+    last_modified: 2023-10-05 22:56:22.815441+00:00
+    description: null
+    label: ''
+    user: 23
+- model: platform.studentagent
+  pk: c158a8d0-7fa2-4329-8714-67b7a27d3d0e
+  fields:
+    created: 2023-10-05 22:56:22.360492+00:00
+    last_modified: 2023-10-05 22:56:22.360541+00:00
+    description: null
+    label: ''
+    user: 9
+- model: platform.studentagent
+  pk: c4c074d8-b4cf-4ed8-ba89-ca5bec7fdaf7
+  fields:
+    created: 2023-10-05 22:56:22.562215+00:00
+    last_modified: 2023-10-05 22:56:22.562269+00:00
+    description: null
+    label: ''
+    user: 16
+- model: platform.studentagent
+  pk: cea0f23f-14cf-46c0-baee-71bb10782ef7
+  fields:
+    created: 2023-10-05 22:56:22.415701+00:00
+    last_modified: 2023-10-05 22:56:22.415731+00:00
+    description: null
+    label: ''
+    user: 11
+- model: platform.studentagent
+  pk: f259d539-42b1-4077-9c1f-0d9103e5af22
+  fields:
+    created: 2023-10-05 22:56:22.764571+00:00
+    last_modified: 2023-10-05 22:56:22.764647+00:00
+    description: null
+    label: ''
+    user: 22
+- model: platform.studentagent
+  pk: f288a1b1-f15a-4e0b-9ffe-5aafefd62f39
+  fields:
+    created: 2023-10-05 22:56:22.375975+00:00
+    last_modified: 2023-10-05 22:56:22.376056+00:00
+    description: null
+    label: ''
+    user: 10
+- model: platform.studentagent
+  pk: fa6c9b62-02e0-4d72-a891-73edead00076
+  fields:
+    created: 2023-10-05 22:56:23.012712+00:00
+    last_modified: 2023-10-05 22:56:23.012755+00:00
+    description: null
+    label: ''
+    user: 28
+- model: platform.studentagent
+  pk: ff61c618-ff1c-4ce2-a609-12170796bebb
+  fields:
+    created: 2023-10-05 22:56:22.523197+00:00
+    last_modified: 2023-10-05 22:56:22.523239+00:00
+    description: null
+    label: ''
+    user: 15
+- model: platform.teacheragent
+  pk: 7d2ef27e-e32d-4d1c-b692-673acee33c87
+  fields:
+    created: 2023-10-05 22:53:51.243608+00:00
+    last_modified: 2023-10-05 22:53:51.243696+00:00
+    description: null
+    label: ''
+    user: 2
+- model: platform.teacheragent
+  pk: b258d3f3-8528-4ca4-996e-6f564590980b
+  fields:
+    created: 2023-10-05 22:53:51.351464+00:00
+    last_modified: 2023-10-05 22:53:51.351515+00:00
+    description: null
+    label: ''
+    user: 5
+- model: platform.teacheragent
+  pk: b5205fcd-4471-4282-ae2d-de6d91e1a1bb
+  fields:
+    created: 2023-10-05 22:53:51.305906+00:00
+    last_modified: 2023-10-05 22:53:51.305951+00:00
+    description: null
+    label: ''
+    user: 4
+- model: platform.teacheragent
+  pk: e431afaf-ca6a-4886-8d92-4abbfca9157e
+  fields:
+    created: 2023-10-05 22:53:51.197634+00:00
+    last_modified: 2023-10-05 22:53:51.197679+00:00
+    description: null
+    label: ''
+    user: 1
+- model: platform.teacheragent
+  pk: e5472523-672f-45cf-a915-6477bd9da762
+  fields:
+    created: 2023-10-05 22:53:51.291402+00:00
+    last_modified: 2023-10-05 22:53:51.291436+00:00
+    description: null
+    label: ''
+    user: 3

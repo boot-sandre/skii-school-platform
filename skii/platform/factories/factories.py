@@ -159,7 +159,7 @@ class LessonFactory(factory.django.DjangoModelFactory):
 
     label = factory.Faker("text", max_nb_chars=80)
     description = factory.Faker("text", max_nb_chars=255)
-    teacher = factory.SubFactory(TeacherAgentFactory)
+    teacher = factory.Iterator(TeacherAgent.objects.all())
     start = fuzzy.FuzzyDateTime(
         start_dt=datetime.now(tz=UTC) - timedelta(hours=2),
         end_dt=datetime.now(tz=UTC),

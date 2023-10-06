@@ -1,13 +1,13 @@
-const libName = "django-spaninja";
-const libTitle = "Django Spaninja";
-const repoUrl = "https://github.com/synw/django-spaninja";
+const libName = "skii-school-platform";
+const libTitle = "Skii Platform";
+const repoUrl = "https://github.com/boot-sandre/skii-school-platform";
 
 const links: Array<{ href: string; name: string }> = [
   // { href: "/python", name: "Python api" },
 ];
 
 // python runtime
-const mylib = new URL(`/apps-0.2.0-py3-none-any.whl`, import.meta.url).href;
+const mylib = new URL(`/skii-school-platform-0.0.4-py3-none-any.whl`, import.meta.url).href;
 const pipPackages = ["sqlite3", "django", "django-ninja", mylib];
 const pyodidePackages = [];
 const examplesExtension = "py";

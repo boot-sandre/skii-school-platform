@@ -29,7 +29,7 @@ RouterListContract = List[RouterContract]
         422: FormInvalidResponseContract,
     },
 )
-def list(request: HttpRequest):
+def location_list(request: HttpRequest):
     return 200, RouterModel.objects.all()
 
 
@@ -40,7 +40,7 @@ def list(request: HttpRequest):
         422: FormInvalidResponseContract,
     },
 )
-def fetch(request: HttpRequest, pk: IntStrUUID4):
+def location_fetch(request: HttpRequest, pk: IntStrUUID4):
     return 200, get_object_or_404(RouterModel, pk=pk)
 
 
@@ -51,7 +51,7 @@ def fetch(request: HttpRequest, pk: IntStrUUID4):
         422: FormInvalidResponseContract,
     },
 )
-def record_delete(request: HttpRequest, pk: IntStrUUID4):
+def location_delete(request: HttpRequest, pk: IntStrUUID4):
     qs = RouterModel.objects.all().filter(pk=pk)
     if qs.exists():
         qs.delete()
@@ -65,7 +65,7 @@ def record_delete(request: HttpRequest, pk: IntStrUUID4):
         422: FormInvalidResponseContract,
     },
 )
-def record_update(request: HttpRequest, pk: IntStrUUID4, payload: RouterSaveContract):
+def location_update(request: HttpRequest, pk: IntStrUUID4, payload: RouterSaveContract):
     record_payload = payload.dict()
     if "coordinate" in record_payload:
         geo_coordinate = record_payload["coordinate"]
@@ -89,7 +89,7 @@ def record_update(request: HttpRequest, pk: IntStrUUID4, payload: RouterSaveCont
         422: FormInvalidResponseContract,
     },
 )
-def create(request: HttpRequest, payload: RouterSaveContract):
+def location_create(request: HttpRequest, payload: RouterSaveContract):
     record_payload = payload.dict()
     if "coordinate" in record_payload:
         geo_coordinate = record_payload["coordinate"]

@@ -71,7 +71,7 @@ class TestApiStudent(TestApiTeacher):
 
 
 class TestApiLocation(TestApiTeacher):
-    """Basic unit testing of Resource models and schema."""
+    """Basic unit testing of Location models and schema."""
 
     api_factory = LocationResourceFactory
     api_save_contract = LocationSaveContract
@@ -93,7 +93,7 @@ class TestApiLocation(TestApiTeacher):
 
 
 class TestApiLesson(TestApiTeacher):
-    """Basic unit testing of Event models and schema."""
+    """Basic unit testing of Lesson models and schema."""
 
     api_factory = LessonFactory
 

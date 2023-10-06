@@ -1,8 +1,8 @@
 from datetime import timedelta, datetime, UTC
 
 import factory
+from django.contrib.auth import get_user_model
 from factory import fuzzy
-from django.conf import settings
 
 from django.contrib.auth.hashers import make_password
 
@@ -28,17 +28,28 @@ from skii.platform.models.event import (
 
 class UserFactory(factory.django.DjangoModelFactory):
     """
-    Create a fake dj user with Faker.
+    Create a fake standard dj user
     """
 
     class Meta:
-        model = settings.AUTH_USER_MODEL
+        model = get_user_model()
 
+    # Business fields
     username = factory.Faker("user_name")
     email = factory.Faker("email")
     password = make_password("password")
     first_name = factory.Faker("name")
     last_name = factory.Faker("name")
+    # Technical fields
+    is_active: bool = True
+    is_staff: bool = False
+    is_superuser: bool = False
+
+
+class UserStaffFactory(UserFactory):
+    class Meta:
+        model = get_user_model()
+    is_staff: bool = True
 
 
 class StudentAgentFactory(factory.django.DjangoModelFactory):
@@ -53,14 +64,16 @@ class StudentAgentFactory(factory.django.DjangoModelFactory):
 
 
 class TeacherAgentFactory(factory.django.DjangoModelFactory):
-    """
-    Factory to create instance of a Teacher agent.
+    """ Factory to create instance of a Teacher agent.
+
+    Teacher agent have to be staff in order to access at the django
+    administration and skii api docs.
     """
 
     class Meta:
         model = TeacherAgent
 
-    user = factory.SubFactory(UserFactory)
+    user = factory.SubFactory(UserStaffFactory)
 
 
 class MoneyResourceFactory(factory.django.DjangoModelFactory):
@@ -106,8 +119,8 @@ class GeoCoordinateFactory(factory.django.DjangoModelFactory):
 
 
 class VisualAlbumFactory(factory.django.DjangoModelFactory):
-    title = factory.Faker("text")
-    description = factory.Faker("text")
+    title = factory.Faker("text", max_nb_chars=20)
+    description = factory.Faker("text", max_nb_chars=255)
 
     class Meta:
         model = VisualAlbum
@@ -116,8 +129,8 @@ class VisualAlbumFactory(factory.django.DjangoModelFactory):
 class VisualElementFactory(factory.django.DjangoModelFactory):
     album = factory.SubFactory(VisualAlbumFactory)
 
-    title = factory.Faker("text")
-    description = factory.Faker("text")
+    title = factory.Faker("text", max_nb_chars=20)
+    description = factory.Faker("text", max_nb_chars=255)
     picture = factory.django.ImageField()
 
     class Meta:
@@ -126,7 +139,7 @@ class VisualElementFactory(factory.django.DjangoModelFactory):
 
 class VisualPictureFactory(factory.django.DjangoModelFactory):
     title = factory.Faker("text", max_nb_chars=20)
-    description = factory.Faker("text")
+    description = factory.Faker("text", max_nb_chars=255)
     picture = factory.django.ImageField()
 
     class Meta:
@@ -134,13 +147,11 @@ class VisualPictureFactory(factory.django.DjangoModelFactory):
 
 
 class LocationResourceFactory(factory.django.DjangoModelFactory):
-    """
-    Factory to create instance of a geographic location/place.
+    """ Factory to create instance of a geographic location/place.
     """
 
     class Meta:
         model = LocationResource
-
 
     address1 = factory.Faker("address")
     city = factory.Faker("city")

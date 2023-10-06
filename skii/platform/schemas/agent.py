@@ -8,6 +8,7 @@ from skii.endpoint.schemas.identifier import IntStrUUID4
 
 class UserSchema(Schema):
     """DJ user schema used to read record."""
+
     pk: IntStrUUID4
     first_name: Optional[str]
     last_name: Optional[str]

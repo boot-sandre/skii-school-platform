@@ -78,17 +78,17 @@ class TestApiLocation(TestApiTeacher):
 
     api_route_namespace = "location"
     fields = [
-        'description',
-        'label',
-        'address1',
-        'address2',
-        'city',
-        'country',
-        'cover',
-        'illustration',
-        'coordinate',
-        'value',
-        'pk'
+        "description",
+        "label",
+        "address1",
+        "address2",
+        "city",
+        "country",
+        "cover",
+        "illustration",
+        "coordinate",
+        "value",
+        "pk",
     ]
 
 
@@ -104,12 +104,12 @@ class TestApiLesson(TestApiTeacher):
     fixtures = ["profiles.yaml"]
 
     fields = [
-        'pk',
-        'gant_config',
-        'start',
-        'stop',
-        'teacher',
-        'students',
-        'label',
-        'description'
+        "pk",
+        "gant_config",
+        "start",
+        "stop",
+        "teacher",
+        "students",
+        "label",
+        "description",
     ]

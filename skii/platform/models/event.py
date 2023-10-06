@@ -21,9 +21,7 @@ class LessonEvent(StateEntity, EventEntity):
         ordering = ["state", "-created", "-start", "-stop", "label"]
         constraints = [
             CheckConstraint(
-                check=(
-                    Q(start__lt=F("stop"))
-                ),
+                check=(Q(start__lt=F("stop"))),
                 name="check_no_overlap",
             ),
         ]

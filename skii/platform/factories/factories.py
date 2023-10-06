@@ -49,6 +49,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 class UserStaffFactory(UserFactory):
     class Meta:
         model = get_user_model()
+
     is_staff: bool = True
 
 
@@ -64,7 +65,7 @@ class StudentAgentFactory(factory.django.DjangoModelFactory):
 
 
 class TeacherAgentFactory(factory.django.DjangoModelFactory):
-    """ Factory to create instance of a Teacher agent.
+    """Factory to create instance of a Teacher agent.
 
     Teacher agent have to be staff in order to access at the django
     administration and skii api docs.
@@ -147,8 +148,7 @@ class VisualPictureFactory(factory.django.DjangoModelFactory):
 
 
 class LocationResourceFactory(factory.django.DjangoModelFactory):
-    """ Factory to create instance of a geographic location/place.
-    """
+    """Factory to create instance of a geographic location/place."""
 
     class Meta:
         model = LocationResource

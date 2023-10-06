@@ -9,5 +9,3 @@ EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 INSTALLED_APPS += [
     "django_extensions",
 ]
-
-

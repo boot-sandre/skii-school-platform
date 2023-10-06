@@ -1,25 +1,23 @@
-from typing import Literal, Dict, List, Iterable
+from typing import Literal, Dict, Iterable
 
-from django.contrib.auth.models import AnonymousUser
-from django.db.models import Model
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
 
 from main.api import api as api_main
 from skii.endpoint.api import api_skii
 
-from django.test import Client
-from django.urls import reverse, reverse_lazy
 
 from skii.platform.entities import AgentEntity
 from skii.platform.models.agent import StudentAgent, TeacherAgent
 
 
 class SkiiTestClient(Client):
-    """ Custom api client dedicated to skii api."""
+    """Custom api client dedicated to skii api."""
+
     def request(self, **request):
-        """ Always use application/json encoding"""
-        request.setdefault('content_type', 'application/json')
+        """Always use application/json encoding"""
+        request.setdefault("content_type", "application/json")
         return super().request(**request)
 
     def get(self, route_name, *args, **kwargs):
@@ -27,15 +25,18 @@ class SkiiTestClient(Client):
         return super().get(url, *args, **kwargs)
 
     def post(
-            self,
-            route_name,
-            data=None,
-            content_type='application/json',
-            *args,
-            headers=None,
-            **extra):
+        self,
+        route_name,
+        data=None,
+        content_type="application/json",
+        *args,
+        headers=None,
+        **extra,
+    ):
         url = reverse_lazy(route_name)
-        return super().post(url, data=data, content_type=content_type, *args, headers=headers, **extra)
+        return super().post(
+            url, data=data, content_type=content_type, *args, headers=headers, **extra
+        )
 
     def delete(self, route_name, *args, **kwargs):
         url = reverse_lazy(route_name, args=args, kwargs=kwargs)
@@ -43,7 +44,6 @@ class SkiiTestClient(Client):
 
 
 class NinjaTestCase(TestCase):
-
     def create_client_helper(self):
         """Create test user and log them to dedicated client."""
         self.user = get_user_model().objects.create_user(
@@ -101,7 +101,7 @@ class SkiiServiceTestCase(TestCase):
     User = get_user_model()
 
     def api_auth_user(self, user: User) -> None:
-        """ .
+        """.
 
         Safest way to get a client with credentials.
 
@@ -114,12 +114,13 @@ class SkiiServiceTestCase(TestCase):
 
     @property
     def client_superuser(self):
-        """ Return the skii superuser client logged."""
+        """Return the skii superuser client logged."""
         if self._client_admin is not None:
             return self._client_admin
         self._client_admin = self.client_class()
         self._client_admin.force_login(
-            get_user_model().objects.get(username="superuser"))
+            get_user_model().objects.get(username="superuser")
+        )
         return self._client_admin
 
     @classmethod
@@ -144,8 +145,6 @@ class SkiiServiceTestCase(TestCase):
         "teacher": [],
     }
 
-    def get_agent_registry(
-            self, profile: Literal["student", "teacher"] = "student"):
-        """ Helper to fetch teacher/student profile."""
+    def get_agent_registry(self, profile: Literal["student", "teacher"] = "student"):
+        """Helper to fetch teacher/student profile."""
         yield from self.profile_to_model[profile]
-

@@ -20,8 +20,8 @@ class SkiiServiceTest(SkiiServiceTestCase):
 
     def test_skii_service_user_client(self):
         """Can use the method self.client_user(student)."""
-        student = next(self.get_agent_registry("student"))
-        self.api_auth_user(student.user)
+        student = self.get_factory_instance("student")
+        self.client_auth(student.user)
         session = self.client.session.items()
         self.assertListEqual(
             list(dict(session).keys()),
@@ -35,9 +35,11 @@ class SkiiServiceTest(SkiiServiceTestCase):
 
     def test_skii_client_forbid_get_docs_is_active(self):
         """Cannot fetch api docs with client.get method as activate user."""
-        student = next(self.get_agent_registry("student"))
-        self.api_auth_user(student.user)
-        user = self.User.objects.get(pk=int(self.client.session.get("_auth_user_id")))
+        student = self.get_factory_instance("student")
+        self.client_auth(student.user)
+        user = self.user_model.objects.get(
+            pk=int(self.client.session.get("_auth_user_id"))
+        )
         assert user.is_active
         assert not user.is_staff
         assert not user.is_superuser
@@ -46,9 +48,11 @@ class SkiiServiceTest(SkiiServiceTestCase):
 
     def test_skii_client_get_docs_is_staff(self):
         """Can fetch api docs with client.get method as staff member."""
-        teacher = next(self.get_agent_registry("teacher"))
-        self.api_auth_user(teacher.user)
-        user = self.User.objects.get(pk=int(self.client.session.get("_auth_user_id")))
+        teacher = self.get_factory_instance("teacher")
+        self.client_auth(teacher.user)
+        user = self.user_model.objects.get(
+            pk=int(self.client.session.get("_auth_user_id"))
+        )
         assert user.is_active
         assert user.is_staff
         assert not user.is_superuser
@@ -67,8 +71,8 @@ class SkiiServiceTest(SkiiServiceTestCase):
 
     def test_skii_api_post(self):
         """Skii client have to trigger a POST HTTP request."""
-        teacher = next(self.get_agent_registry("teacher"))
-        self.api_auth_user(teacher.user)
+        teacher = self.get_factory_instance("teacher")
+        self.client_auth(teacher.user)
         payload = LocationSaveContract.from_orm(LocationResourceFactory.build()).dict(
             exclude_none=True
         )

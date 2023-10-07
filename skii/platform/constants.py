@@ -1,4 +1,3 @@
-
 latitude_config = {
     "left_digits": 3,
     "right_digits": 4,

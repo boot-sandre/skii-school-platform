@@ -1,5 +1,7 @@
-from typing import Literal, Dict, Iterable
+from typing import Literal
 
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.db.models import Model
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
@@ -8,8 +10,13 @@ from main.api import api as api_main
 from skii.endpoint.api import api_skii
 
 
-from skii.platform.entities import AgentEntity
-from skii.platform.models.agent import StudentAgent, TeacherAgent
+from skii.platform.factories import (
+    StudentAgentFactory,
+    TeacherAgentFactory,
+    LocationResourceFactory,
+    LessonFactory,
+    SuperUserFactory,
+)
 
 
 class SkiiTestClient(Client):
@@ -95,33 +102,46 @@ class SkiiTestCase(NinjaTestCase):
 
 
 class SkiiServiceTestCase(TestCase):
-    fixtures = ["profiles.yaml"]
+    # fixtures = ["profiles.yaml"]
     client_class = SkiiTestClient
 
-    User = get_user_model()
+    user_model: AbstractBaseUser = get_user_model()
 
-    def api_auth_user(self, user: User) -> None:
-        """.
-
-        Safest way to get a client with credentials.
+    def client_auth(self, user: AbstractBaseUser) -> None:
+        """Safest way to get a client with session registered.
 
         Args:
             user: Django user model instance
         """
         self.client.force_login(user)
 
-    _client_admin: SkiiTestClient = None
+    _superuser: AbstractBaseUser = None
 
     @property
-    def client_superuser(self):
-        """Return the skii superuser client logged."""
-        if self._client_admin is not None:
-            return self._client_admin
-        self._client_admin = self.client_class()
-        self._client_admin.force_login(
-            get_user_model().objects.get(username="superuser")
-        )
-        return self._client_admin
+    def superuser(self) -> AbstractBaseUser:
+        """If superuser is None, create one use dedicated factory.
+
+        In the other case return the superuser stored on self._superuser.
+        """
+        if self._superuser is not None:
+            return self._superuser
+        self._superuser = self.get_factory_instance("superuser")
+        return self._superuser
+
+    _client_superuser: SkiiTestClient = None
+
+    @property
+    def client_superuser(self) -> SkiiTestClient:
+        """Return the skii superuser client logged with a superuser.
+
+        If we already have a client, reuse it.
+        Else need to ask django login.
+        """
+        if self._client_superuser is not None:
+            return self._client_superuser
+        self._client_superuser = self.client_class()
+        self._client_superuser.force_login(self.superuser)
+        return self._client_superuser
 
     @classmethod
     def _link_api(cls):
@@ -135,16 +155,21 @@ class SkiiServiceTestCase(TestCase):
         cls._link_api()
         return super().setUpTestData()
 
-    def setUp(self) -> None:
-        super().setUp()
-        self.profile_to_model["student"] = StudentAgent.objects.all()
-        self.profile_to_model["teacher"] = TeacherAgent.objects.all()
-
-    profile_to_model: Dict[str, Iterable[AgentEntity]] = {
-        "student": [],
-        "teacher": [],
+    _factory_registry = {
+        "student": StudentAgentFactory,
+        "teacher": TeacherAgentFactory,
+        "location": LocationResourceFactory,
+        "lesson": LessonFactory,
+        "superuser": SuperUserFactory,
     }
 
-    def get_agent_registry(self, profile: Literal["student", "teacher"] = "student"):
-        """Helper to fetch teacher/student profile."""
-        yield from self.profile_to_model[profile]
+    def get_factory_instance(
+        self,
+        registry: Literal[
+            "student", "teacher", "location", "lesson", "superuser"
+        ] = "student",
+        action: Literal["build", "create"] = "create",
+    ) -> Model:
+        """Helper to generate demodata with most used projects factories."""
+        factory = self._factory_registry.get(registry)
+        return getattr(factory, action)()

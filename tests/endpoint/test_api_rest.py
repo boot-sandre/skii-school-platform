@@ -3,7 +3,7 @@ from ..testcase import SkiiTestCase
 from skii.platform.schemas.agent import TeacherSaveContract, StudentSaveContract
 from skii.platform.schemas.event import LessonSaveContract
 
-from skii.platform.factories.factories import (
+from skii.platform.factories import (
     TeacherAgentFactory,
     StudentAgentFactory,
     LocationResourceFactory,

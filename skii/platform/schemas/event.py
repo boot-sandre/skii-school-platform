@@ -10,7 +10,6 @@ from skii.platform.schemas.vuejs import (
 from skii.platform.schemas.agent import (
     TeacherContract,
     StudentContract,
-    TeacherSaveContract,
 )
 
 

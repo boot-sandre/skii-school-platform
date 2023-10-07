@@ -1,7 +1,6 @@
-from decimal import Decimal
 from typing import Optional
 
-from ninja import Schema, ModelSchema, Field
+from ninja import ModelSchema, Field
 
 from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.platform.models.resource import LocationResource

@@ -1,6 +1,6 @@
 from django.urls import reverse_lazy
 
-from skii.platform.factories.factories import LocationResourceFactory
+from skii.platform.factories import LocationResourceFactory
 from skii.platform.schemas.resource import LocationSaveContract
 from tests.testcase import SkiiServiceTestCase
 

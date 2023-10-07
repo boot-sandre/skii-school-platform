@@ -101,7 +101,9 @@ class SkiiTestCase(NinjaTestCase):
         self.api_route_prefix = f"{self.root_path}{self.api_route_namespace}"
 
 
-class SkiiServiceTestCase(TestCase):
+class SkiiControllerTestCase(TestCase):
+    """ TestCase ninja api dedicated to skii platform.
+    """
     # fixtures = ["profiles.yaml"]
     client_class = SkiiTestClient
 

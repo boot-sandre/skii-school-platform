@@ -7,7 +7,6 @@ from ninja import Router
 from apps.base.schemas import FormInvalidResponseContract
 from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.endpoint.schemas.response import SkiiMsgContract
-from skii.platform.models.common import GeoCoordinate
 from skii.platform.models.event import LessonEvent
 from skii.platform.schemas.event import LessonContract, LessonSaveContract
 

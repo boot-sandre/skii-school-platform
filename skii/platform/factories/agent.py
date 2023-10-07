@@ -7,9 +7,7 @@ from skii.platform.models.agent import StudentAgent, TeacherAgent
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-    """
-    Create a fake standard dj user
-    """
+    """Create a fake standard dj user"""
 
     class Meta:
         model = get_user_model()
@@ -33,10 +31,19 @@ class UserStaffFactory(UserFactory):
     is_staff: bool = True
 
 
+class SuperUserFactory(UserStaffFactory):
+    class Meta:
+        model = get_user_model()
+
+    username = "superuser"
+    email = "contact@emencia.com"
+
+    is_staff: bool = True
+    is_superuser: bool = True
+
+
 class StudentAgentFactory(factory.django.DjangoModelFactory):
-    """
-    Factory to create instance of a student agent.
-    """
+    """Factory to create instance of a student agent."""
 
     class Meta:
         model = StudentAgent

@@ -1,18 +1,28 @@
 from skii.platform.factories.agent import (
-    UserFactory, UserStaffFactory, StudentAgentFactory, TeacherAgentFactory,
+    SuperUserFactory,
+    UserFactory,
+    UserStaffFactory,
+    StudentAgentFactory,
+    TeacherAgentFactory,
 )
 from skii.platform.factories.resource import (
-    MoneyResourceFactory, TimeResourceFactory, LocationResourceFactory,
+    MoneyResourceFactory,
+    TimeResourceFactory,
+    LocationResourceFactory,
 )
 from skii.platform.factories.event import LessonFactory
 from skii.platform.factories.common import (
-    GeoCoordinateFactory, VisualAlbumFactory, VisualPictureFactory, VisualElementFactory
+    GeoCoordinateFactory,
+    VisualAlbumFactory,
+    VisualPictureFactory,
+    VisualElementFactory,
 )
 
 __all__ = [
     # auth.user
     UserFactory,
     UserStaffFactory,
+    SuperUserFactory,
     # AgentEntity
     StudentAgentFactory,
     TeacherAgentFactory,
@@ -26,5 +36,5 @@ __all__ = [
     GeoCoordinateFactory,
     VisualAlbumFactory,
     VisualPictureFactory,
-    VisualElementFactory
+    VisualElementFactory,
 ]

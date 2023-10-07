@@ -7,15 +7,15 @@ from skii.platform.models.event import LessonEvent
 from skii.platform.models.agent import StudentAgent, TeacherAgent
 
 
-class AgendaInterface:
+class AgendaController:
     @classmethod
     def list_student_lesson(
         cls,
-        agent: TeacherAgent,
+        agent: StudentAgent,
         date_range_start: datetime | None = None,
         date_range_stop: datetime | None = None,
     ) -> QuerySet[LessonEvent]:
-        lesson_qs = LessonEvent.objects.all().filter(students=agent.id)
+        lesson_qs = LessonEvent.objects.all().filter(students__id=agent.id)
         if date_range_start is not None:
             lesson_qs = lesson_qs.filter(
                 start__gt=date_range_start,
@@ -33,7 +33,7 @@ class AgendaInterface:
         date_range_start: datetime | None = None,
         date_range_stop: datetime | None = None,
     ) -> QuerySet[LessonEvent]:
-        lesson_qs = LessonEvent.objects.all().filter(teacher=agent.id)
+        lesson_qs = LessonEvent.objects.all().filter(teacher=agent)
         if date_range_start is not None:
             lesson_qs = lesson_qs.filter(
                 start__gt=date_range_start,
@@ -85,7 +85,7 @@ class AgendaInterface:
         return lesson
 
     @classmethod
-    def add_agents(
+    def add_students(
         cls, lesson: LessonEvent, students: Iterable[StudentAgent]
     ) -> LessonEvent:
         lesson.students.add(*students)

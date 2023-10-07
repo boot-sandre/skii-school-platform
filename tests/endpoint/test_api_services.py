@@ -2,10 +2,10 @@ from django.urls import reverse_lazy
 
 from skii.platform.factories import LocationResourceFactory
 from skii.platform.schemas.resource import LocationSaveContract
-from tests.testcase import SkiiServiceTestCase
+from tests.testcase import SkiiControllerTestCase
 
 
-class SkiiServiceTest(SkiiServiceTestCase):
+class SkiiControllerTest(SkiiControllerTestCase):
     def test_skii_service_client_superuser_session(self):
         """Can use self.client and self.client_superuser."""
 

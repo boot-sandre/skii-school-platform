@@ -1,7 +1,7 @@
 from skii.platform.schemas.resource import LocationContract
 from ..testcase import SkiiTestCase
 
-from skii.platform.factories.factories import (
+from skii.platform.factories import (
     TeacherAgentFactory,
     StudentAgentFactory,
     LocationResourceFactory,

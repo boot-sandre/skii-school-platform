@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from typing import Optional, List
 from ninja import Schema, ModelSchema
 
-from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.platform.models.common import GeoCoordinate
 
 

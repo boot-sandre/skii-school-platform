@@ -34,7 +34,8 @@ class LessonEvent(StateEntity, EventEntity):
     def __str__(self) -> str:
         start_datetime = self.start.strftime("%Y-%m-%d %H:%M")
         stop_datetime = self.stop.strftime("%Y-%m-%d %H:%M")
-        return f"[{self.state}] {self.teacher.user.username}: {start_datetime} / {stop_datetime} "
+        return f"[{self.state}] {self.teacher.user.username}" \
+            f": {start_datetime} / {stop_datetime} "
 
     @property
     def gant_config(self):

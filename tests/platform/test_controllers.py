@@ -1,5 +1,5 @@
-from tests.testcase import SkiiServiceTestCase
+from tests.testcase import SkiiControllerTestCase
 
 
-class TestAgendaController(SkiiServiceTestCase):
+class TestAgendaController(SkiiControllerTestCase):
     pass

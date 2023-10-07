@@ -10,6 +10,7 @@ from main.api import api as api_main
 from skii.endpoint.api import api_skii
 
 
+from skii.platform.entities import AgentEntity
 from skii.platform.factories import (
     StudentAgentFactory,
     TeacherAgentFactory,

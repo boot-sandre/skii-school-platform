@@ -1,5 +1,6 @@
 from typing import List
 
+from django.db.models import Model
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from ninja import Router
@@ -18,7 +19,7 @@ router = Router(tags=["location"])
 
 RouterContract = LocationContract
 RouterSaveContract = LocationSaveContract
-RouterModel = LocationResource
+RouterModel: Model = LocationResource
 RouterListContract = List[RouterContract]
 
 

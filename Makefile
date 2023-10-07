@@ -41,6 +41,7 @@ help:
 	@echo "  migrations                    -- to create database migrations"
 	@echo "  superuser                     -- to create a superuser for Django admin"
 	@echo "  shell                         -- to open a Django shell"
+	@echo "  shell_plus                    -- to open a Django shell improved"
 	@echo
 	@echo "  test                          -- run the unit tests"
 	@echo

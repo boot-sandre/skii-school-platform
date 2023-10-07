@@ -1,14 +1,14 @@
 from django.urls import reverse_lazy
 
-from skii.platform.factories import LocationResourceFactory
 from skii.platform.schemas.resource import LocationSaveContract
 from tests.testcase import SkiiControllerTestCase
 
 
-class SkiiControllerTest(SkiiControllerTestCase):
+class TestSkiiTestClient(SkiiControllerTestCase):
+    """SkiiControllerTestCase needs to provide api client logged."""
+
     def test_skii_service_client_superuser_session(self):
         """Can use self.client and self.client_superuser."""
-
         anonyme_session = self.client.session.items()
         admin_session = self.client_superuser.session.items()
 
@@ -23,6 +23,7 @@ class SkiiControllerTest(SkiiControllerTestCase):
         student = self.get_factory_instance("student")
         self.client_auth(student.user)
         session = self.client.session.items()
+
         self.assertListEqual(
             list(dict(session).keys()),
             ["_auth_user_id", "_auth_user_backend", "_auth_user_hash"],
@@ -31,6 +32,7 @@ class SkiiControllerTest(SkiiControllerTestCase):
     def test_skii_client_forbid_get_docs_anonyme(self):
         """Cannot fetch api docs with client.get method as anonyme user."""
         response = self.client.get("skii:openapi-view")
+
         self.assertEqual(response.status_code, 302)
 
     def test_skii_client_forbid_get_docs_is_active(self):
@@ -44,6 +46,7 @@ class SkiiControllerTest(SkiiControllerTestCase):
         assert not user.is_staff
         assert not user.is_superuser
         response = self.client.get("skii:openapi-view")
+
         self.assertEqual(response.status_code, 302)
 
     def test_skii_client_get_docs_is_staff(self):
@@ -57,29 +60,38 @@ class SkiiControllerTest(SkiiControllerTestCase):
         assert user.is_staff
         assert not user.is_superuser
         response = self.client.get("skii:openapi-view")
+
         self.assertEqual(response.status_code, 200)
 
     def test_skii_client_get_docs_is_superuser(self):
         """Can fetch api docs with client.get method as superuser/admin."""
         response = self.client_superuser.get("skii:openapi-view")
+
         self.assertEqual(response.status_code, 200)
 
     def test_skii_api_reverse_urls(self):
         """SkiiClient have to reverse api routes names in urls."""
         urls_reversed = reverse_lazy("skii:openapi-view")
+
         self.assertURLEqual(urls_reversed, "/skii/docs")
 
-    def test_skii_api_post(self):
-        """Skii client have to trigger a POST HTTP request."""
+    def test_skii_api_post_location(self):
+        """Skii client can send a POST HTTP request.
+
+        We use location custom projects models.
+        TODO: May test post requests with an api view
+            on  common standard django models.
+        """
         teacher = self.get_factory_instance("teacher")
         self.client_auth(teacher.user)
-        payload = LocationSaveContract.from_orm(LocationResourceFactory.build()).dict(
-            exclude_none=True
-        )
+        payload = LocationSaveContract.from_orm(
+            self.get_factory_instance("location", "build")
+        ).dict(exclude_none=True)
         response = self.client.post(
             "skii:location_create",
             payload,
         )
+
         assert response.status_code == 200
         assert list(response.json().keys()) == [
             "description",

@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Dict
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db.models import Model
@@ -6,11 +6,12 @@ from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 
+from factory.django import DjangoModelFactory
+
 from main.api import api as api_main
 from skii.endpoint.api import api_skii
 
 
-from skii.platform.entities import AgentEntity
 from skii.platform.factories import (
     StudentAgentFactory,
     TeacherAgentFactory,
@@ -18,6 +19,12 @@ from skii.platform.factories import (
     LessonFactory,
     SuperUserFactory,
 )
+
+
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class SkiiTestClient(Client):
@@ -102,11 +109,13 @@ class SkiiTestCase(NinjaTestCase):
         self.api_route_prefix = f"{self.root_path}{self.api_route_namespace}"
 
 
+RegistryType: Literal = Literal["student", "teacher", "location", "lesson", "superuser"]
+
+
 class SkiiControllerTestCase(TestCase):
-    """ TestCase ninja api dedicated to skii platform.
-    """
-    # fixtures = ["profiles.yaml"]
-    client_class = SkiiTestClient
+    """TestCase ninja api dedicated to skii platform."""
+
+    client_class: Client = SkiiTestClient
 
     user_model: AbstractBaseUser = get_user_model()
 
@@ -117,6 +126,7 @@ class SkiiControllerTestCase(TestCase):
             user: Django user model instance
         """
         self.client.force_login(user)
+        logger.info(f"Testcase.client is authenticated as user {user}")
 
     _superuser: AbstractBaseUser = None
 
@@ -129,6 +139,7 @@ class SkiiControllerTestCase(TestCase):
         if self._superuser is not None:
             return self._superuser
         self._superuser = self.get_factory_instance("superuser")
+        logger.info(f"Testcase superuser is created {self._superuser}")
         return self._superuser
 
     _client_superuser: SkiiTestClient = None
@@ -144,21 +155,31 @@ class SkiiControllerTestCase(TestCase):
             return self._client_superuser
         self._client_superuser = self.client_class()
         self._client_superuser.force_login(self.superuser)
+        logger.info(
+            f"Testcase.client_superuser is authenticated as superuser {self.superuser}"
+        )
         return self._client_superuser
 
     @classmethod
-    def _link_api(cls):
+    def _link_api(cls) -> None:
         """Override original method to link Skii API"""
         cls.api = api_skii
         cls.root_path = cls.api.root_path
         cls.docs_url = cls.api.docs_url
+        logger.info(f"Api {cls.api.title} is linked to testcase")
 
     @classmethod
     def setUpTestData(cls):
+        """Link api to the testcase at class level.
+
+        CAUTION: All unittest of a testcase will share same api instance.
+                 If one unitest mutate the api instance,
+                 it will be mutated for all next test
+        """
         cls._link_api()
         return super().setUpTestData()
 
-    _factory_registry = {
+    _factory_registry: Dict[str, RegistryType] = {
         "student": StudentAgentFactory,
         "teacher": TeacherAgentFactory,
         "location": LocationResourceFactory,
@@ -166,13 +187,22 @@ class SkiiControllerTestCase(TestCase):
         "superuser": SuperUserFactory,
     }
 
+    def get_factory(
+        self,
+        registry: RegistryType = "superuser",
+    ) -> DjangoModelFactory:
+        """Get most used projects factories stored on self._factory_registry."""
+        logger.debug(f"Get factory from registry with key {registry}")
+        return self._factory_registry.get(registry)
+
     def get_factory_instance(
         self,
-        registry: Literal[
-            "student", "teacher", "location", "lesson", "superuser"
-        ] = "student",
+        registry: RegistryType = "superuser",
         action: Literal["build", "create"] = "create",
     ) -> Model:
-        """Helper to generate demodata with most used projects factories."""
-        factory = self._factory_registry.get(registry)
+        """Get a builded or created demodata instance with most used factories."""
+        factory: DjangoModelFactory = self._factory_registry.get(registry)
+        logger.debug(
+            f"Use factory from registry with key {registry} and action {action}"
+        )
         return getattr(factory, action)()

@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("platform", "0002_rename_uuid_lessonevent_guid_and_more"),
     ]

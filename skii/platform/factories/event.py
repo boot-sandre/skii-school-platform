@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime, UTC
 
+from django.db.models import Model
 import factory
 from factory import fuzzy
 
@@ -30,7 +31,7 @@ class LessonFactory(factory.django.DjangoModelFactory):
     )
 
     @factory.post_generation
-    def students(self, create, extracted, **kwargs):
+    def students(self, create, extracted):
         """Permit to transmit students to link with lesson.
 
         Example:
@@ -44,3 +45,9 @@ class LessonFactory(factory.django.DjangoModelFactory):
         if not create or not extracted:
             return None
         self.students.add(*extracted)
+
+    @classmethod
+    def _after_postgeneration(cls, instance: Model, create, results=None):
+        """Save again the instance if creating and at least one hook ran."""
+        if create and results and not cls._meta.skip_postgeneration_save:
+            instance.save()

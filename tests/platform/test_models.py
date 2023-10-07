@@ -28,6 +28,6 @@ class TestAgent(SkiiTestCase):
     def test_resource_location_create(self):
         location = LocationResourceFactory.create()
         location_payload = LocationContract.from_orm(location)
-        self.assertEquals(
+        self.assertEqual(
             location_payload.value, 1, "Default resource value have to be one"
         )

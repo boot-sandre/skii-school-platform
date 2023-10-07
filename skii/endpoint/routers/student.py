@@ -2,6 +2,7 @@
 """
 from typing import List
 
+from django.db.models import Model
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from ninja import Router
@@ -19,7 +20,7 @@ UserModel = get_user_model()
 sub_route = Router(tags=["student"])
 
 
-SubRouteModel = StudentAgent
+SubRouteModel: Model = StudentAgent
 SubRouteContract = StudentContract
 SubRouteSaveContract = StudentSaveContract
 

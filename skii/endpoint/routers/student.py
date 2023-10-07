@@ -9,7 +9,7 @@ from django.http import HttpRequest
 from apps.base.schemas import FormInvalidResponseContract
 from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.platform.models.agent import StudentAgent
-from skii.platform.schemas.agent import StudentContract, StudentSaveContract, UserSchema
+from skii.platform.schemas.agent import StudentContract, StudentSaveContract
 from skii.endpoint.schemas.response import SkiiMsgContract
 
 UserModel = get_user_model()

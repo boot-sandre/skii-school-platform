@@ -193,10 +193,12 @@ class MixinsRestSchemaProducer:
         contract_schema = contract.schema()
 
         logger.debug(
-            f"{self.Config.name} Contract have fields {contract_schema['properties'].keys()}"
+            f"{self.Config.name} Contract have fields "
+            f"{contract_schema['properties'].keys()}"
         )
         logger.debug(
-            f"{self.Config.name} Contract have required fields  {contract_schema['required']}"
+            f"{self.Config.name} Contract have required fields "
+            f"{contract_schema['required']}"
         )
 
         return contract

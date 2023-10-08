@@ -217,7 +217,7 @@ quality: check check-migrations pycheck
 	@echo ""
 .PHONY: quality
 
-ci: install quality test
+ci: clean install quality test
 	@echo ""
 	@echo "Running install (venv+pip+migrate) + quality (check/check-migrations/pycheck(flake8/black/pycheck) + unittest to reproduce a usual continuous integration builder process"
 	@echo ""

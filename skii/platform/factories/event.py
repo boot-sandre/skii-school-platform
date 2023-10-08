@@ -20,14 +20,14 @@ class LessonFactory(factory.django.DjangoModelFactory):
         end_dt=datetime.now(tz=UTC),
         force_year=2023,
         force_month=7,
-        # force_day=13,
+        force_day=13,
     )
     stop = fuzzy.FuzzyDateTime(
         start_dt=datetime.now(tz=UTC),
         end_dt=datetime.now(tz=UTC) + timedelta(hours=4),
         force_year=2023,
         force_month=7,
-        # force_day=13,
+        force_day=13,
     )
 
     @factory.post_generation

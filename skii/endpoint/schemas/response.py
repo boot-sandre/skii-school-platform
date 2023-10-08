@@ -15,7 +15,8 @@ class SkiiMsgContract(Schema):
 
 
 class TeacherLessonContract(TeacherContract):
-    """ Return Teachers agents with lessons related."""
+    """Return Teachers agents with lessons related."""
+
     lessons: List[LessonContract] = Field(alias="lessonevent_set")
 
 

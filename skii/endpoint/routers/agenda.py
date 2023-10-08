@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
@@ -28,7 +27,9 @@ RouterModel = LessonEvent
     },
 )
 def teacher_lessons(
-    request: HttpRequest, teacher_pk: IntStrUUID4, filters: LessonFilterSchema = Query(...)
+    request: HttpRequest,
+    teacher_pk: IntStrUUID4,
+    filters: LessonFilterSchema = Query(...),
 ):
     lessons = LessonEvent.objects.all()
     lessons = filters.filter(lessons)

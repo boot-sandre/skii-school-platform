@@ -112,10 +112,6 @@ logger.info(f"Api openapi extra: {api_skii.openapi_extra}")
 logger.info(f"Api description: {api_skii.description}")
 
 
-
-
-
-
 @api_skii.exception_handler(ValidationError)
 def custom_validation_errors(
     request: HttpRequest, exc: ValidationError

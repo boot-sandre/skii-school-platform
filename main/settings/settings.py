@@ -120,7 +120,6 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
-            "filters": ["require_debug_true"],
         },
         "django.server": {
             "level": "INFO",
@@ -146,6 +145,9 @@ LOGGING = {
             "level": DJANGO_LOG_LEVEL,
         },
         "django": {
+            "level": DJANGO_LOG_LEVEL,
+        },
+        "tests": {
             "level": DJANGO_LOG_LEVEL,
         },
         "django.server": {

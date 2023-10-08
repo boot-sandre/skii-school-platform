@@ -98,7 +98,7 @@ LOGGING = {
             "style": "{",
         },
         "verbose": {
-            "format": "[{levelname:6}] [{asctime}] {name:30} {message}",
+            "format": "[{levelname:6}] {name:30} {message}",
             "style": "{",
             "fmt": "%Y-%m-%d %H:%M:%S",
         },

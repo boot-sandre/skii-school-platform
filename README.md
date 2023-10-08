@@ -1,39 +1,35 @@
-# Django api server + single page app template
+# Skii platform
 
 - **Api server** using [Django Ninja](https://github.com/vitalik/django-ninja)
 - **Vitejs frontend** using [Vuejs](https://vuejs.org/)
 
 ## Features
 
-- Auth and csrf protected api by default
-- Auto generated api docs
-- Django forms support
-- Login and logout
-- User registration with email confimation
-- Responsive frontend with dark mode support
+- User management with profile (student/teacher)
+- Planning management with schedule lesson
+- Location promote and location
+- Lesson level and certification
 
 <details>
-<summary>:books: Read the <a href="https://synw.github.io/django-spaninja">documentation</a></summary>
+<summary>:books: Read the <a href="https://boot-sandre.github.io/skii-school-platform">documentation</a></summary>
 
- - [Get started](https://synw.github.io/django-spaninja/get_started)
-    - [Install and run](https://synw.github.io/django-spaninja/get_started/install_and_run)
-    - [Write endpoints](https://synw.github.io/django-spaninja/get_started/write_endpoints)
-    - [Build](https://synw.github.io/django-spaninja/get_started/build)
- - [Base app](https://synw.github.io/django-spaninja/base_app)
-     - [Forms](https://synw.github.io/django-spaninja/base_app/forms)
-        - [Usage](https://synw.github.io/django-spaninja/base_app/forms/usage)
-     - [Schemas](https://synw.github.io/django-spaninja/base_app/schemas)
- - [Account app](https://synw.github.io/django-spaninja/account_app)
-     - [Endpoints](https://synw.github.io/django-spaninja/account_app/endpoints)
-     - [Schemas](https://synw.github.io/django-spaninja/account_app/schemas)
-     - [Utilities](https://synw.github.io/django-spaninja/account_app/utilities)
-         - [Email](https://synw.github.io/django-spaninja/account_app/utilities/email)
-         - [Token](https://synw.github.io/django-spaninja/account_app/utilities/token)
+ - [Get started](https://boot-sandre.github.io/django-spaninja/get_started)
+    - [Install and run](https://boot-sandre.github.io/django-spaninja/get_started/install_and_run)
+ - [Base app](https://boot-sandre.github.io/django-spaninja/base_app)
+     - [Forms](https://boot-sandre.github.io/django-spaninja/base_app/forms)
+        - [Usage](https://boot-sandre.github.io/django-spaninja/base_app/forms/usage)
+     - [Schemas](https://boot-sandre.github.io/django-spaninja/base_app/schemas)
+ - [Account app](https://boot-sandre.github.io/django-spaninja/account_app)
+     - [Endpoints](https://boot-sandre.github.io/django-spaninja/account_app/endpoints)
+     - [Schemas](https://boot-sandre.github.io/django-spaninja/account_app/schemas)
+     - [Utilities](https://boot-sandre.github.io/django-spaninja/account_app/utilities)
+         - [Email](https://boot-sandre.github.io/django-spaninja/account_app/utilities/email)
+         - [Token](https://boot-sandre.github.io/django-spaninja/account_app/utilities/token)
 
 </details>
 
 <div align="center">
-<img src="docsite/public/poneyninja.png" alt="" />
+<img src="docsite/public/skiiplatform.png" alt="Skii Platform Logo" />
 </div>
 
 ## Development 
@@ -71,4 +67,3 @@ To do a quick check in the command line (not recorded in history):
 ```bash
 pycheck
 ```
-

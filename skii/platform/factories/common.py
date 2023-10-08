@@ -1,6 +1,6 @@
 import factory
 
-from skii.platform.constants import latitude_config, longitude_config
+from skii.platform.constants import LATITUDE_RANGE_CONFIG, LONGITUDE_RANGE_CONFIG
 from skii.platform.models.common import (
     VisualElement,
     VisualAlbum,
@@ -10,8 +10,8 @@ from skii.platform.models.common import (
 
 
 class GeoCoordinateFactory(factory.django.DjangoModelFactory):
-    latitude = factory.Faker("pydecimal", **latitude_config)
-    longitude = factory.Faker("pydecimal", **longitude_config)
+    latitude = factory.Faker("pydecimal", **LATITUDE_RANGE_CONFIG)
+    longitude = factory.Faker("pydecimal", **LONGITUDE_RANGE_CONFIG)
 
     class Meta:
         model = GeoCoordinate

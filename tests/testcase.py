@@ -1,4 +1,4 @@
-from typing import Literal, Dict
+from typing import Literal, Dict, List
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db.models import Model
@@ -139,7 +139,8 @@ class SkiiControllerTestCase(TestCase):
         if self._superuser is not None:
             return self._superuser
         self._superuser = self.get_factory_instance("superuser")
-        logger.info(f"Testcase superuser is created {self._superuser}")
+        logger.info(f"Testcase.superuser is created."
+                    f"(username: {self.superuser})")
         return self._superuser
 
     _client_superuser: SkiiTestClient = None
@@ -156,7 +157,8 @@ class SkiiControllerTestCase(TestCase):
         self._client_superuser = self.client_class()
         self._client_superuser.force_login(self.superuser)
         logger.info(
-            f"Testcase.client_superuser is authenticated as superuser {self.superuser}"
+            f"Testcase.client_superuser is authenticated as superuser "
+            f"(username: {self.superuser})"
         )
         return self._client_superuser
 
@@ -199,10 +201,31 @@ class SkiiControllerTestCase(TestCase):
         self,
         registry: RegistryType = "superuser",
         action: Literal["build", "create"] = "create",
+        **kwargs
     ) -> Model:
         """Get a builded or created demodata instance with most used factories."""
         factory: DjangoModelFactory = self._factory_registry.get(registry)
         logger.debug(
-            f"Use factory from registry with key {registry} and action {action}"
+            f"Use factory from registry with key {registry} and action {action}",
+            extra=kwargs
         )
-        return getattr(factory, action)()
+        return getattr(factory, action)(**kwargs)
+
+    def assertDictKeys(self, dict_obj: Dict, keys: List[str], msg: str = None):
+        """ Check if dict keys are in a dict.
+
+        Args:
+            dict_obj: Asserted object
+            keys: List of dict keys needs to be in dict_obj
+            msg: Error message
+        """
+        self.assertIsInstance(
+            dict_obj, dict,
+            msg="First argument is not a dictionary")
+        self.assertIsInstance(
+            keys, list,
+            msg="Second argument is not a list of keys or dict_keys")
+        dict_keys = dict_obj.keys()
+        self.assertCountEqual(dict_keys, keys, "Needs have all dictionary keys")
+        for key in keys:
+            self.assertIn(key, dict_keys, msg=msg)

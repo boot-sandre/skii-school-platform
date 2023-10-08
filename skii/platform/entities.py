@@ -1,5 +1,8 @@
 import uuid
+from dataclasses import dataclass
+from datetime import datetime, timedelta
 from decimal import Decimal as Deci
+from typing import Iterator
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.timezone import now
@@ -241,14 +244,89 @@ class StateEntity(models.Model):
     )
 
 
-class EventEntity(UUIDLabelEntity):
-    """EventEntity to follow exchange of Resource between Agent."""
+@dataclass(frozen=True)
+class DateRange:
+    start: datetime
+    end: datetime
 
+    def __post_init__(self) -> None:
+        if self.start >= self.end:
+            raise ValueError("Can not end before starting.")
+
+    def __str__(self) -> str:
+        return f"DateRange({self.start} - {self.end})"
+
+    def __add__(self, other: timedelta) -> "DateRange":
+        if isinstance(other, timedelta):
+            return DateRange(self.start + other, self.end + other)
+
+        raise TypeError()
+
+    def hour_later(self) -> "DateRange":
+        return self + timedelta(hours=1)
+
+    @property
+    def duration(self) -> timedelta:
+        return self.end - self.start
+
+    def overlaps(self, date_range: "DateRange") -> bool:
+        return (self.start <= date_range.end
+            and self.end >= date_range.start)
+
+    def starts_before(self, date_range: "DateRange") -> bool:
+        return self.start < date_range.start
+
+    def range(self, step: timedelta) -> Iterator[datetime]:
+        current_datetime = self.start
+        while current_datetime <= self.end:
+            yield current_datetime
+            current_datetime = current_datetime + step
+
+
+class TimeRangeQueryset(models.QuerySet):
+
+    def filter(self, *args, **kwargs):
+        date_range = kwargs.get("date_range")
+
+        if date_range and isinstance(date_range, DateRange):
+            kwargs["start"] = date_range.start
+            kwargs["end"] = date_range.end
+
+        return super().filter(*args, **kwargs)
+
+
+class TimeRangeManager(models.Manager):
+    def get_queryset(self):
+        return TimeRangeQueryset(self.model, using=self._db)
+
+    def in_range(self, date_range: DateRange):
+        return self.get_queryset().filter(
+            start__gt=date_range.start,
+            end__lt=date_range.end
+         )
+
+
+class TimeRangeEntity(models.Model):
     class Meta:
         abstract = True
 
     start = models.DateTimeField(verbose_name=_("Start time"), default=now)
     stop = models.DateTimeField(verbose_name=_("Stop time"), default=now)
+
+    objects = TimeRangeManager()
+
+    @property
+    def date_range(self) -> DateRange:
+        return DateRange(self.start, self.stop)
+
+    @date_range.setter
+    def date_range(self, value: DateRange) -> None:
+        self.start = value.start
+        self.stop = value.end
+
+    @classmethod
+    def new_in_date_range(cls, date_range: DateRange):
+        return cls(start=date_range.start, stop=date_range.end)
 
     @property
     def time_delta(self):
@@ -256,6 +334,13 @@ class EventEntity(UUIDLabelEntity):
         delta = self.stop - self.start
         minutes_count = round(delta.total_seconds() / 60, 2)
         return minutes_count
+
+
+class EventEntity(UUIDLabelEntity, TimeRangeEntity):
+    """EventEntity to follow exchange of Resource between Agent."""
+
+    class Meta:
+        abstract = True
 
 
 class AgentEntity(UUIDLabelEntity):

@@ -21,6 +21,7 @@ from skii.endpoint.routers import (
     route_teacher,
     route_location,
     route_lesson,
+    route_agenda,
 )
 
 # Get current package version
@@ -93,6 +94,7 @@ def configure_api_skii() -> NinjaAPI:
     new_api.add_router(prefix="teacher", router=route_teacher)
     new_api.add_router(prefix="location", router=route_location)
     new_api.add_router(prefix="lesson", router=route_lesson)
+    new_api.add_router(prefix="agenda", router=route_agenda)
 
     return new_api
 

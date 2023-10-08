@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 import sys
 from pathlib import Path
 
@@ -84,7 +85,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "main.wsgi.application"
 
 # Python logging
-DJANGO_LOG_LEVEL = "DEBUG"
+DJANGO_LOG_LEVEL = os.environ.get(
+    "DJANGO_LOG_LEVEL",
+    default="DEBUG" if DEBUG else "INFO"
+)
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -114,15 +118,10 @@ LOGGING = {
         },
     },
     "handlers": {
-        "console.debug": {
+        "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
             "filters": ["require_debug_true"],
-        },
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-            "filters": ["require_debug_false"],
         },
         "django.server": {
             "level": "INFO",
@@ -140,19 +139,15 @@ LOGGING = {
         },
     },
     "root": {
-        "handlers": ["console", "console.debug"],
+        "handlers": ["console"],
         "level": DJANGO_LOG_LEVEL,
     },
     "loggers": {
         "skii": {
-            "handlers": ["console", "console.debug"],
             "level": DJANGO_LOG_LEVEL,
-            "propagate": False,
         },
         "django": {
-            "handlers": ["console", "console.debug"],
             "level": DJANGO_LOG_LEVEL,
-            "propagate": False,
         },
         "django.server": {
             "handlers": ["django.server"],
@@ -190,6 +185,14 @@ LOGGING = {
         "parso": {
             "level": "INFO",
             "propagate": True,
+        },
+        "faker.factory": {
+            "level": "INFO",
+            "propagate": True
+        },
+        "factory.generate": {
+            "level": "INFO",
+            "propagate": True
         },
     },
 }
@@ -263,6 +266,3 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
-
-# Custom django User
-# AUTH_USER_MODEL = "platform.SkiiUser"

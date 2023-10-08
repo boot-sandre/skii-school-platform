@@ -47,10 +47,11 @@ help:
 	@echo
 	@echo "  check                         -- to run the check management command"
 	@echo "  flake                         -- to launch Flake8 checking"
-	@echo "  format                        -- to launch Black formating"
-	@echo "  dryformat                     -- to launch Black formating in dry mode"
+	@echo "  black                         -- to launch Black formating"
+	@echo "  dryblack                      -- to launch Black formating in dry mode"
 	@echo "  pycheck                       -- to launch Pycheck code checks"
 	@echo "  quality                       -- to launch all quality checks"
+	@echo "  ci                            -- to launch all ci checks"
 	@echo
 	@echo "  doc                            -- to build the documentation from docstrings"
 	@echo
@@ -191,13 +192,13 @@ check:
 	$(DJANGO_MANAGE) check
 .PHONY: check
 
-format:
+black:
 	$(BLACK) --extend-exclude='/*/migrations/*|setup.py' .
-.PHONY: format
+.PHONY: black
 
-dryformat:
+dryblack:
 	$(BLACK) --extend-exclude='/*/migrations/*|setup.py' --check .
-.PHONY: dryformat
+.PHONY: dryblack
 
 pycheck:
 	pycheck --django
@@ -210,11 +211,17 @@ flake:
 	$(FLAKE) --statistics --show-source $(DJANGOPROJECT_DIR) apps/
 .PHONY: flake
 
-quality: check-migrations pycheck
+quality: check check-migrations pycheck
 	@echo ""
 	@echo "Running quality checks"
 	@echo ""
 .PHONY: quality
+
+ci: install quality test
+	@echo ""
+	@echo "Running install (venv+pip+migrate) + quality (check/check-migrations/pycheck(flake8/black/pycheck) + unittest to reproduce a usual continuous integration builder process"
+	@echo ""
+.PHONY: ci
 
 doc:
 	@echo ""

@@ -83,25 +83,6 @@ clean-db:
 clean: clean-backend-install clean-db clean-pycache
 .PHONY: clean
 
-clean-pycheck:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Cleaning Pycheck installation <---$(FORMATRESET)\n"
-	@echo ""
-	$(NPM) global remove @pycheck/cli
-	$(NPM) global remove @pycheck/ui
-	rm -Rf yarn.lock
-	rm -Rf package.json
-	rm -Rf node_modules
-.PHONY: clean-pycheck
-
-install-pycheck:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Installing Pycheck <---$(FORMATRESET)\n"
-	@echo ""
-	$(NPM) global add @pycheck/cli
-	$(NPM) global add @pycheck/ui
-.PHONY: install-pycheck
-
 venv:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Install virtual environment <---$(FORMATRESET)\n"
@@ -184,44 +165,6 @@ test-reuse-db-lf:
 	@echo ""
 	$(PYTEST) -s -vv --reuse-db --lf --ds=${DJANGO_SETTINGS_TEST}  tests/
 .PHONY: test-reuse-db
-
-check:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Run the manage check command <---$(FORMATRESET)\n"
-	@echo ""
-	$(DJANGO_MANAGE) check
-.PHONY: check
-
-black:
-	$(BLACK) --extend-exclude='/*/migrations/*|setup.py' .
-.PHONY: black
-
-dryblack:
-	$(BLACK) --extend-exclude='/*/migrations/*|setup.py' --check .
-.PHONY: dryblack
-
-pycheck:
-	pycheck --django
-.PHONY: pycheck
-
-flake:
-	@echo ""
-	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Flake <---$(FORMATRESET)\n"
-	@echo ""
-	$(FLAKE) --statistics --show-source $(DJANGOPROJECT_DIR) apps/
-.PHONY: flake
-
-quality: check check-migrations pycheck
-	@echo ""
-	@echo "Running quality checks"
-	@echo ""
-.PHONY: quality
-
-ci: clean install quality test
-	@echo ""
-	@echo "Running install (venv+pip+migrate) + quality (check/check-migrations/pycheck(flake8/black/pycheck) + unittest to reproduce a usual continuous integration builder process"
-	@echo ""
-.PHONY: ci
 
 doc:
 	@echo ""

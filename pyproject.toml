@@ -1,10 +1,9 @@
 [project]
 name = "skii"
-version = "0.3.0"
+version = "0.4.1"
 description = "Skii Platform"
 license = {file = "LICENSE"}
-requires-python = ">=3.9"
-optional-dependencies = {front = ["yarn"]}
+requires-python = ">=3.11"
 
 [options]
 include_package_data = true

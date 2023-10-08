@@ -1,7 +1,7 @@
 # flake8: noqa
 from .settings import *
 
-DEBUG = False
+DEBUG = True
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
@@ -43,6 +43,9 @@ LOGGING.update(
                 "level": DJANGO_LOG_LEVEL,
             },
             "django": {
+                "level": DJANGO_LOG_LEVEL,
+            },
+            "tests": {
                 "level": DJANGO_LOG_LEVEL,
             },
             "django.server": {

@@ -522,6 +522,13 @@ class DatetimeRangeEntity(models.Model):
         """
         return cls(start=date_range.start, stop=date_range.stop)
 
+    def __str__(self) -> str:
+        start_datetime = self.start.strftime("%Y-%m-%d %H:%M")
+        stop_datetime = self.stop.strftime("%Y-%m-%d %H:%M")
+        return (
+            f"{self.start_datetime} to {self.stop_datetime}"
+        )
+
     @property
     def time_delta_minutes(self):
         """Get event time delta (minutes)."""

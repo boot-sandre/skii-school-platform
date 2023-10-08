@@ -2,9 +2,10 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpRequest
 from django.contrib.auth import get_user_model
 
-from ninja import Router
+from ninja import Router, Query
 
 from apps.base.schemas import FormInvalidResponseContract
+from skii.endpoint.filters import LessonFilterSchema
 
 from skii.platform.models.agent import TeacherAgent
 from skii.endpoint.schemas.response import TeacherLessonContract
@@ -27,7 +28,10 @@ RouterModel = TeacherAgent
     },
 )
 def teacher_lessons(
-    request: HttpRequest, record_pk: IntStrUUID4
+    request: HttpRequest, record_pk: IntStrUUID4, filters: LessonFilterSchema = Query(...)
 ):
     agent = get_object_or_404(RouterModel, pk=record_pk)
+    lessons = agent.lessonevent_set.all()
+    lessons = filters.filter(lessons)
+    agent.lessons = lessons
     return 200, agent

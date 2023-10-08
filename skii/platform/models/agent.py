@@ -8,7 +8,8 @@ from skii.platform.entities import (
 
 
 class StudentAgent(AgentEntity):
-    """ Student needs to be related to an active user."""
+    """Student needs to be related to an active user."""
+
     class Meta:
         verbose_name = _("Student")
         verbose_name_plural = _("Student(s)")
@@ -16,10 +17,13 @@ class StudentAgent(AgentEntity):
 
 
 class TeacherAgent(AgentEntity):
-    """ Teacher needs to be related to a staff user."""
+    """Teacher needs to be related to a staff user."""
+
     user = models.OneToOneField(
-        get_user_model(), on_delete=models.CASCADE,
-        limit_choices_to={"is_active": True, "is_staff": True})
+        get_user_model(),
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True, "is_staff": True},
+    )
 
     class Meta:
         verbose_name = _("Teacher")

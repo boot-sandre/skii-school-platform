@@ -102,6 +102,18 @@ def configure_api_skii() -> NinjaAPI:
 # Create skii app dedicated api
 api_skii: NinjaAPI = configure_api_skii()
 logger.info(f"Api created: {api_skii.title}")
+logger.info(f"Api version: {api_skii.version}")
+logger.info(f"Api urlnamespace: {api_skii.urls_namespace}/")
+logger.info(f"Api auth: {api_skii.auth}")
+# logger.info(f"Api root path: {api_skii.root_path}")
+logger.info(f"Api docs url: {api_skii.docs_url}")
+logger.info(f"Api openapi url: {api_skii.openapi_url}")
+logger.info(f"Api openapi extra: {api_skii.openapi_extra}")
+logger.info(f"Api description: {api_skii.description}")
+
+
+
+
 
 
 @api_skii.exception_handler(ValidationError)

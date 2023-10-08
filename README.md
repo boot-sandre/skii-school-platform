@@ -29,7 +29,7 @@
 </details>
 
 <div align="center">
-<img src="docsite/public/poneyninja.png" alt="" />
+<img src="docsite/public/skiiplatform.png" alt="Skii Platform Logo" />
 </div>
 
 ## Development 

@@ -86,8 +86,7 @@ WSGI_APPLICATION = "main.wsgi.application"
 
 # Python logging
 DJANGO_LOG_LEVEL = os.environ.get(
-    "DJANGO_LOG_LEVEL",
-    default="DEBUG" if DEBUG else "INFO"
+    "DJANGO_LOG_LEVEL", default="DEBUG" if DEBUG else "INFO"
 )
 LOGGING = {
     "version": 1,
@@ -186,14 +185,8 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        "faker.factory": {
-            "level": "INFO",
-            "propagate": True
-        },
-        "factory.generate": {
-            "level": "INFO",
-            "propagate": True
-        },
+        "faker.factory": {"level": "INFO", "propagate": True},
+        "factory.generate": {"level": "INFO", "propagate": True},
     },
 }
 # Database

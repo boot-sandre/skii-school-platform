@@ -1,12 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.db.models import Q
-from ninja import FilterSchema, Field
-from typing import Optional, TypeVar, TypeVarTuple, TypedDict
-
-from pydantic import Required
-
-from skii.endpoint.schemas.identifier import IntStrUUID4
+from ninja import FilterSchema
+from typing import Optional, TypeVarTuple, TypedDict
 
 
 R = TypeVarTuple("R")
@@ -18,9 +14,10 @@ class RangeTimeLesson(TypedDict):
 
 
 class LessonFilterSchema(FilterSchema):
-    # time_range: R[datetime, datetime] = (datetime.now(), datetime.now() + timedelta(hours=12))
-    # time_range: RangeTimeLesson = dict(start=datetime.now(), stop=datetime.now() + timedelta(hours=12))
-    # teacher_pk: IntStrUUID4 = 0
+    # time_range: R[datetime, datetime] = (
+    #         datetime.now(), datetime.now() + timedelta(hours=12))
+    # time_range: RangeTimeLesson = dict(
+    #         start=datetime.now(), stop=datetime.now() + timedelta(hours=12))
     start: Optional[datetime] = None
     stop: Optional[datetime] = None
 

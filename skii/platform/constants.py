@@ -1,4 +1,5 @@
 import copy
+
 LATITUDE_RANGE_CONFIG = {
     "left_digits": 3,
     "right_digits": 4,

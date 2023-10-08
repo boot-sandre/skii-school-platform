@@ -41,7 +41,7 @@ flake:
 	@echo ""
 	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Flake <---$(FORMATRESET)\n"
 	@echo ""
-	$(FLAKE) --statistics --show-source $(DJANGOPROJECT_DIR) apps/
+	$(FLAKE) --statistics --show-source $(DJANGOPROJECT_DIR) apps/ skii/ tests/
 .PHONY: flake
 
 quality: check check-migrations pycheck

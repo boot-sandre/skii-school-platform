@@ -1,6 +1,6 @@
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from decimal import Decimal as Deci
 from typing import Iterator
 
@@ -359,6 +359,184 @@ class DateRange:
         while current_datetime < self.stop:
             yield current_datetime
             current_datetime = current_datetime + step
+
+    def is_contained_or_equal(self, other: "DateRange") -> bool:
+        """
+        Check if this DateRange is contained within or equal to another DateRange.
+
+        Args:
+            other (DateRange): The other DateRange to compare with.
+
+        Returns:
+            bool: True if this DateRange is contained within or equal to the other DateRange,
+                  False otherwise.
+        """
+        return self.start >= other.start and self.stop <= other.stop
+
+    def is_contained_or_equal_daytime(self, other: "TimeRange") -> bool:
+        """
+        Check if this DateRange is contained within or equal to a TimeRange.
+
+        Args:
+            other (DateRange): The other DateRange to compare with.
+
+        Returns:
+            bool: True if this DateRange is contained within or equal to the other DateRange,
+                  False otherwise.
+        """
+        return self.start >= other.start and self.stop <= other.stop
+
+    @classmethod
+    def to_date_time(cls, date_range: "DateRange") -> "TimeRange":
+        """
+        Create a TimeRange from a DateRange.
+
+        Args:
+            date_range (DateRange): The DateRange to convert.
+
+        Returns:
+            TimeRange: The equivalent TimeRange with start and stop times.
+        """
+        start_time = date_range.start.time()
+        stop_time = date_range.stop.time()
+
+        return cls(start_time, stop_time)
+
+
+@dataclass(frozen=True)
+class TimeRange:
+    """
+    Represents a time range with a start and stop time.
+
+    Args:
+        start (time): The start time of the range.
+        stop (time): The stop time of the range.
+
+    Raises:
+        ValueError: If the stop time is not later than the start time.
+
+    Attributes:
+        start (time): The start time of the range.
+        stop (time): The stop time of the range.
+    """
+
+    start: time
+    stop: time
+
+    def __post_init__(self) -> None:
+        """
+        Validates that the stop time is later than the start time.
+
+        Raises:
+            ValueError: If the stop time is not later than the start time.
+        """
+        if self.start >= self.stop:
+            raise ValueError("Can not stop before starting.")
+
+    def __str__(self) -> str:
+        """
+        Returns a string representation of the TimeRange.
+
+        Returns:
+            str: A string representation of the TimeRange.
+        """
+        return f"TimeRange({self.start} - {self.stop})"
+
+    def __add__(self, other: int) -> "TimeRange":
+        """
+        Adds a specified number of minutes to both start and stop times.
+
+        Args:
+            other (int): The number of minutes to add to the TimeRange.
+
+        Returns:
+            TimeRange: A new TimeRange with adjusted start and stop times.
+
+        Raises:
+            TypeError: If the provided argument is not an integer.
+        """
+        if isinstance(other, int):
+            new_start = self.start.replace(minute=self.start.minute + other)
+            new_stop = self.stop.replace(minute=self.stop.minute + other)
+            return TimeRange(new_start, new_stop)
+
+        raise TypeError()
+
+    @property
+    def duration(self) -> int:
+        """
+        Calculates the duration of the TimeRange in minutes.
+
+        Returns:
+            int: The duration between the start and stop times in minutes.
+        """
+        start_minutes = self.start.hour * 60 + self.start.minute
+        stop_minutes = self.stop.hour * 60 + self.stop.minute
+        return stop_minutes - start_minutes
+
+    def overlaps(self, time_range: "TimeRange") -> bool:
+        """
+        Checks if the TimeRange overlaps with another TimeRange.
+
+        Args:
+            time_range (TimeRange): The TimeRange to check for overlap with.
+
+        Returns:
+            bool: True if there is overlap, False otherwise.
+        """
+        return self.start <= time_range.stop and self.stop >= time_range.start
+
+    def starts_before(self, time_range: "TimeRange") -> bool:
+        """
+        Checks if the TimeRange starts before another TimeRange.
+
+        Args:
+            time_range (TimeRange): The TimeRange to compare with.
+
+        Returns:
+            bool: True if the TimeRange starts before the other TimeRange,
+                  False otherwise.
+        """
+        return self.start < time_range.start
+
+    def time_range(self) -> "TimeRange":
+        """
+        Returns the TimeRange as is.
+
+        Returns:
+            TimeRange: The TimeRange itself.
+        """
+        return self
+
+    def is_contained_or_equal(self, other: "TimeRange") -> bool:
+        """
+        Check if this TimeRange is completely contained within or equal to another TimeRange.
+
+        Args:
+            other (TimeRange): The other TimeRange to compare with.
+
+        Returns:
+            bool: True if this TimeRange is completely contained within or equal to the other TimeRange,
+                  False otherwise.
+        """
+        return self.start >= other.start and self.stop <= other.stop
+
+    @classmethod
+    def from_date_range(cls, date_range: DateRange) -> "TimeRange":
+        """
+        Create a TimeRange from a DateRange.
+
+        Args:
+            date_range (DateRange): The DateRange to convert.
+
+        Returns:
+            TimeRange: The equivalent TimeRange with start and stop times.
+        """
+        # Extract the time components (hours and minutes) from the start and stop datetimes
+        start_time = date_range.start.time()
+        stop_time = date_range.stop.time()
+
+        return cls(start_time, stop_time)
 
 
 class TimeRangeQueryset(models.QuerySet):

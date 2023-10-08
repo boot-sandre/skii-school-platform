@@ -111,7 +111,7 @@ class TestDateRange(unittest.TestCase):
 class TestTimeRangeEntity(unittest.TestCase):
     """We want to unittest DatetimeRangeEntiry but it's an abstract model.
 
-    So we need to use a child class of DatetimeRangeEntiry like LessonEvent.
+    So we need to use a child class of DatetimeRangeEntity like LessonEvent.
     """
 
     _model_class: DatetimeRangeEntity = LessonEvent
@@ -199,3 +199,4 @@ class TestTimeRangeManager(SkiiControllerTestCase):
         self.assertEqual(len(filtered_objects), 2)
         self.assertIn(filter_range.start, [obj.start for obj in filtered_objects])
         self.assertIn(filter_range.start, [obj.start for obj in filtered_objects])
+

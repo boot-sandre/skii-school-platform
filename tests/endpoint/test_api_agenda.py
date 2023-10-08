@@ -50,7 +50,7 @@ class TestAgendaController(SkiiControllerTestCase):
         self.client_auth(self._teacher.user)
         res = self.client.get(
             route_name="skii:teacher_lessons",
-            record_pk=self._teacher.pk
+            teacher_pk=self._teacher.pk
         )
         result = res.json()
         self.assertDictKeys(result, ['user', 'pk', 'lessons'])
@@ -62,7 +62,7 @@ class TestAgendaController(SkiiControllerTestCase):
         self.client_auth(self._teacher.user)
         res = self.client.get(
             route_name="skii:teacher_lessons",
-            record_pk=self._teacher.pk
+            teacher_pk=self._teacher.pk
         )
         result = res.json()
 
@@ -80,7 +80,7 @@ class TestAgendaController(SkiiControllerTestCase):
         self.client_auth(self._teacher_other.user)
         res = self.client.get(
             route_name="skii:teacher_lessons",
-            record_pk=self._teacher_other.pk)
+            teacher_pk=self._teacher_other.pk)
         result = res.json()
 
         self.assertEqual(
@@ -97,7 +97,7 @@ class TestAgendaController(SkiiControllerTestCase):
         # We fetch lessons of self._teacher
         res = self.client.get(
             route_name="skii:teacher_lessons",
-            record_pk=self._teacher.pk)
+            teacher_pk=self._teacher.pk)
         result = res.json()
 
         self.assertEqual(
@@ -105,4 +105,20 @@ class TestAgendaController(SkiiControllerTestCase):
             3,
             msg="Needs fetch the three lesson related of other "
                 f"teacher {self._teacher_other}"
+        )
+
+    def test_teacher_lesson_range_start_to_stop(self):
+        """ Can fetch teacher lesson with range start/stop filter."""
+        self.client_auth(self._teacher)
+        lesson_ref: LessonEvent = LessonEvent.objects.filter(teacher=self._teacher).first()
+        res = self.client.get(
+            "skii:teacher_lessons",
+            dict(start=lesson_ref.start, stop=lesson_ref.stop),
+            teacher_pk=str(self._teacher.pk),
+            )
+        result = res.json()
+        self.assertEqual(
+            len(result["lessons"]),
+            3,
+            msg=f"Needs fetch lesson after {lesson_ref.start}"
         )

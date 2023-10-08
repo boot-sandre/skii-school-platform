@@ -1,4 +1,4 @@
-from typing import Literal, Dict, List
+from typing import Literal, Dict, List, Mapping, Iterable, Any
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db.models import Model
@@ -10,7 +10,7 @@ from factory.django import DjangoModelFactory
 
 from main.api import api as api_main
 from skii.endpoint.api import api_skii
-
+from skii.platform.entities import AgentEntity
 
 from skii.platform.factories import (
     StudentAgentFactory,
@@ -35,9 +35,22 @@ class SkiiTestClient(Client):
         request.setdefault("content_type", "application/json")
         return super().request(**request)
 
-    def get(self, route_name, *args, **kwargs):
-        url = reverse_lazy(route_name, args=args, kwargs=kwargs)
-        return super().get(url, *args, **kwargs)
+    def get(self,
+            route_name: str,
+            data: Any = None,
+            **extra: Any):
+        """ Do a get request on api server.
+
+        Args:
+            route_name: The route name to use to resolve/reverse url
+                with format: api_name:route_name
+            data: Put a dict with your filter arguments if the view
+                implements ninja Filters
+            **extra: All keyword arguments will be used to resolve and integrate
+            in url reversed.
+        """
+        url = reverse_lazy(route_name, kwargs=extra)
+        return super().get(url, data=data, **extra)
 
     def post(
         self,
@@ -119,12 +132,14 @@ class SkiiControllerTestCase(TestCase):
 
     user_model: AbstractBaseUser = get_user_model()
 
-    def client_auth(self, user: AbstractBaseUser) -> None:
+    def client_auth(self, user: AbstractBaseUser | AgentEntity) -> None:
         """Safest way to get a client with session registered.
 
         Args:
             user: Django user model instance
         """
+        if isinstance(user, AgentEntity):
+            user = user.user
         self.client.force_login(user)
         logger.info(f"Testcase.client is authenticated as user {user}")
 

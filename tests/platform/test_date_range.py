@@ -2,7 +2,7 @@ import unittest
 
 from skii.platform.models.agent import TeacherAgent
 from skii.platform.models.event import LessonEvent
-from skii.platform.entities import DatetimeRangeEntity, DateRange
+from skii.platform.entities import DatetimeRangeEntity, DatetimeRange
 from datetime import datetime, timedelta, UTC
 
 from tests.testcase import SkiiControllerTestCase
@@ -10,31 +10,31 @@ from tests.testcase import SkiiControllerTestCase
 
 class TestDateRange(unittest.TestCase):
     def test_valid_date_range(self):
-        start = datetime(2023, 1, 1, 8, 0)
-        stop = datetime(2023, 1, 1, 12, 0)
-        date_range = DateRange(start, stop)
+        start = datetime(2023, 1, 1, 8, 0, tzinfo=UTC)
+        stop = datetime(2023, 1, 1, 12, 0, tzinfo=UTC)
+        date_range = DatetimeRange(start, stop)
 
         self.assertEqual(date_range.start, start)
         self.assertEqual(date_range.stop, stop)
 
     def test_invalid_date_range(self):
         start = datetime(2023, 1, 1, 12, 0)
-        stop = datetime(2023, 1, 1, 8, 0)  # End before start, should raise ValueError
+        stop = datetime(2023, 1, 1, 8, 0)
         with self.assertRaises(ValueError):
-            DateRange(start, stop)
+            DatetimeRange(start, stop)
 
     def test_str_representation(self):
         start = datetime(2023, 1, 1, 8, 0)
         stop = datetime(2023, 1, 1, 12, 0)
-        date_range = DateRange(start, stop)
+        date_range = DatetimeRange(start, stop)
 
         expected_str = f"DateRange({start} - {stop})"
         self.assertEqual(str(date_range), expected_str)
 
     def test_add_timedelta(self):
-        start = datetime(2023, 1, 1, 8, 0)
+        start = datetime(2023, 1, 1, 8, 0, tzinfo=UTC)
         stop = datetime(2023, 1, 1, 12, 0)
-        date_range = DateRange(start, stop)
+        date_range = DatetimeRange(start, stop)
 
         added_date_range = date_range + timedelta(hours=1)
 
@@ -47,7 +47,7 @@ class TestDateRange(unittest.TestCase):
     def test_hour_later(self):
         start = datetime(2023, 1, 1, 8, 0)
         stop = datetime(2023, 1, 1, 12, 0)
-        date_range = DateRange(start, stop)
+        date_range = DatetimeRange(start, stop)
 
         later_date_range = date_range.hour_later()
 
@@ -60,18 +60,18 @@ class TestDateRange(unittest.TestCase):
     def test_duration(self):
         start = datetime(2023, 1, 1, 8, 0)
         stop = datetime(2023, 1, 1, 12, 30)
-        date_range = DateRange(start, stop)
+        date_range = DatetimeRange(start, stop)
 
         expected_duration = timedelta(hours=4, minutes=30)
 
         self.assertEqual(date_range.duration, expected_duration)
 
     def test_overlaps(self):
-        date_range1 = DateRange(datetime(2023, 1, 1, 8, 0), datetime(2023, 1, 1, 12, 0))
-        date_range2 = DateRange(
+        date_range1 = DatetimeRange(datetime(2023, 1, 1, 8, 0), datetime(2023, 1, 1, 12, 0))
+        date_range2 = DatetimeRange(
             datetime(2023, 1, 1, 10, 0), datetime(2023, 1, 1, 14, 0)
         )
-        date_range3 = DateRange(
+        date_range3 = DatetimeRange(
             datetime(2023, 1, 1, 14, 0), datetime(2023, 1, 1, 16, 0)
         )
 
@@ -79,11 +79,11 @@ class TestDateRange(unittest.TestCase):
         self.assertFalse(date_range1.overlaps(date_range3))
 
     def test_starts_before(self):
-        date_range1 = DateRange(datetime(2023, 1, 1, 8, 0), datetime(2023, 1, 1, 12, 0))
-        date_range2 = DateRange(
+        date_range1 = DatetimeRange(datetime(2023, 1, 1, 8, 0), datetime(2023, 1, 1, 12, 0))
+        date_range2 = DatetimeRange(
             datetime(2023, 1, 1, 10, 0), datetime(2023, 1, 1, 14, 0)
         )
-        date_range3 = DateRange(
+        date_range3 = DatetimeRange(
             datetime(2023, 1, 1, 12, 0), datetime(2023, 1, 1, 16, 0)
         )
 
@@ -93,7 +93,7 @@ class TestDateRange(unittest.TestCase):
     def test_range_generation(self):
         start = datetime(2023, 1, 1, 8, 0)
         stop = datetime(2023, 1, 1, 9, 0)
-        date_range = DateRange(start, stop)
+        date_range = DatetimeRange(start, stop)
 
         step = timedelta(minutes=15)
         expected_datetimes = [
@@ -122,8 +122,8 @@ class TestTimeRangeEntity(unittest.TestCase):
         stop_time = datetime(2023, 1, 1, 12, 0)
         time_range_entity = self._model_class(start=start_time, stop=stop_time)
 
-        # Check if the date_range property correctly creates a DateRange instance.
-        expected_date_range = DateRange(start=start_time, stop=stop_time)
+        # Check if the date_range property correctly creates a DatetimeRange instance.
+        expected_date_range = DatetimeRange(start=start_time, stop=stop_time)
         self.assertEqual(time_range_entity.date_range, expected_date_range)
 
     def test_date_range_property_setter(self):
@@ -132,8 +132,8 @@ class TestTimeRangeEntity(unittest.TestCase):
         stop_time = datetime(2023, 1, 1, 12, 0)
         time_range_entity = self._model_class(start=start_time, stop=stop_time)
 
-        # Update the date_range property using a DateRange instance.
-        new_date_range = DateRange(
+        # Update the date_range property using a DatetimeRange instance.
+        new_date_range = DatetimeRange(
             start=datetime(2023, 1, 1, 9, 0), stop=datetime(2023, 1, 1, 13, 0)
         )
         time_range_entity.date_range = new_date_range
@@ -143,15 +143,18 @@ class TestTimeRangeEntity(unittest.TestCase):
         self.assertEqual(time_range_entity.stop, new_date_range.stop)
 
     def test_new_in_date_range_method(self):
-        # Create a DateRange instance.
-        date_range = DateRange(
-            start=datetime(2023, 1, 1, 8, 0), stop=datetime(2023, 1, 1, 12, 0)
+        # Create a DatetimeRange instance.
+        date_range = DatetimeRange(
+            start=datetime(
+                2023, 1, 1, 8, 0, tzinfo=UTC),
+            stop=datetime(
+                2023, 1, 1, 12, 0, tzinfo=UTC)
         )
 
         # Create a new DatetimeRangeEntity instance using the new_in_date_range method.
         time_range_entity = self._model_class.new_in_date_range(date_range)
 
-        # Check if the start and stop times of the new instance match the DateRange.
+        # Check if the start and stop times of the new instance match the DatetimeRange.
         self.assertEqual(time_range_entity.start, date_range.start)
         self.assertEqual(time_range_entity.stop, date_range.stop)
 
@@ -163,13 +166,13 @@ class TestTimeRangeManager(SkiiControllerTestCase):
     def setUp(self) -> None:
         self._teacher = self.get_factory_instance("teacher", "create")
         # Create test objects with time ranges
-        self.date_range1 = DateRange(
+        self.date_range1 = DatetimeRange(
             start=datetime(2023, 1, 1, 8, 0), stop=datetime(2023, 1, 1, 12, 0)
         )
-        self.date_range2 = DateRange(
+        self.date_range2 = DatetimeRange(
             start=datetime(2023, 1, 1, 10, 0), stop=datetime(2023, 1, 1, 14, 0)
         )
-        self.date_range3 = DateRange(
+        self.date_range3 = DatetimeRange(
             start=datetime(2023, 1, 1, 14, 0), stop=datetime(2023, 1, 1, 16, 0)
         )
 
@@ -190,8 +193,8 @@ class TestTimeRangeManager(SkiiControllerTestCase):
         )
 
     def test_in_range(self):
-        # Test filtering objects within a DateRange
-        filter_range = DateRange(
+        # Test filtering objects within a DatetimeRange
+        filter_range = DatetimeRange(
             start=datetime(2023, 1, 1, 8, 0, tzinfo=UTC),
             stop=datetime(2023, 1, 1, 14, 0, tzinfo=UTC),
         )

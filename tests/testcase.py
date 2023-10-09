@@ -1,5 +1,4 @@
-from datetime import datetime, timedelta, time, UTC
-from pprint import pformat
+from datetime import datetime, timedelta, time, UTC, date
 from typing import Dict, List, Literal, Any
 
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -12,7 +11,7 @@ from factory.django import DjangoModelFactory
 
 from main.api import api as api_main
 from skii.endpoint.api import api_skii
-from skii.platform.entities import AgentEntity, DateRange, TimeRange
+from skii.platform.entities import AgentEntity, DatetimeRange, TimeRange
 
 from skii.platform.factories import (
     StudentAgentFactory,
@@ -125,7 +124,7 @@ RegistryType: Literal = Literal["student", "teacher", "location", "lesson", "sup
 
 
 class SkiiDateLessonDemo:
-    _skii_lesson_ranges: List[DateRange] = []
+    _skii_lesson_ranges: List[DatetimeRange] = []
 
     @classmethod
     def generate_skii_lesson_ranges(cls) -> None:
@@ -139,15 +138,16 @@ class SkiiDateLessonDemo:
         if cls._skii_lesson_ranges:
             return
         logger.info("Start daterange generation on project custom testcase")
-        # Define the start date of December 2023
-        start_date = datetime(2023, 12, 1)
 
-        # Define the end date of December 2023
-        stop_date = datetime(2023, 12, 31)
+        # Define the start/stop date of December 2023
+        start_date = date(2023, 12, 1)
+        stop_date = date(2023, 12, 31)
 
         # Start and end times for ski lessons
         start_time = time(9, 00, 0, 0, UTC)  # 9:00 AM
         stop_time = time(15, 00, 0, 0, UTC)  # 3:00 PM
+
+        # Store with dedicated dataclass
         day_time_range = TimeRange(
             start_time,
             stop_time
@@ -159,14 +159,14 @@ class SkiiDateLessonDemo:
         # Loop to generate ski lesson dates for the entire month of December
         current_date = start_date
         while current_date <= stop_date:
-            # Create a DateRange object for the current ski lesson
-            lesson_start = current_date
-            lesson_date_range = DateRange(
+            # Create a DatetimeRange object for the current ski lesson
+            lesson_start: date = current_date
+            lesson_date_range = DatetimeRange(
                 start=lesson_start,
                 stop=lesson_start + time_interval
             )
             lesson_time_range = TimeRange.from_date_range(lesson_date_range)
-            # Check if the DateRange is on the hours of lesson
+            # Check if the DatetimeRange is on the hours of lesson
             if lesson_time_range.is_contained_or_equal(day_time_range):
                 # Add the lesson start datetime to the list of ski lesson dates
                 cls._skii_lesson_ranges.append(lesson_date_range)
@@ -174,8 +174,7 @@ class SkiiDateLessonDemo:
             # Move to the next date by adding the time interval
             current_date += time_interval
 
-
-    def test_generate_ski_lesson_dates(self):
+    def test_generate_ski_lesson_dates(self) -> None:
         # Generate ski lesson dates
         self.generate_skii_lesson_ranges()
 

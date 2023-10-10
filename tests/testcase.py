@@ -11,7 +11,12 @@ from factory.django import DjangoModelFactory
 
 from main.api import api as api_main
 from skii.endpoint.api import api_skii
-from skii.platform.entities import AgentEntity, DatetimeRange, TimeRange, time_to_timedelta
+from skii.platform.entities import (
+    AgentEntity,
+    DatetimeRange,
+    TimeRange,
+    time_to_timedelta,
+)
 
 from skii.platform.factories import (
     StudentAgentFactory,
@@ -128,8 +133,10 @@ class SkiiDateLessonDemo:
 
     @classmethod
     def generate_skii_lesson_ranges(cls) -> None:
-        """
-        Generate a list of DatetimeRange objects representing ski lesson dates for the month of December 2023.
+        """ Generate a list of DatetimeRange objects
+
+            The datetime object epresenting ski lesson dates for the month
+            of December 2023.
 
         Returns:
             list: A list of DatetimeRange objects representing ski lesson dates.
@@ -145,8 +152,8 @@ class SkiiDateLessonDemo:
 
         # Stores opening hours for business days
         day_time_range = TimeRange(
-            time(9, 00, 0, 0, UTC),     # 9:00 AM
-            time(15, 00, 0, 0, UTC),    # 3:00 PM
+            time(9, 00, 0, 0, UTC),  # 9:00 AM
+            time(15, 00, 0, 0, UTC),  # 3:00 PM
         )
 
         # Time interval between ski lessons (e.g., 1 lesson every 2 hours)
@@ -161,10 +168,7 @@ class SkiiDateLessonDemo:
             # Create a DatetimeRange object for the current ski lesson
             lesson_start: datetime = index_datetime
             lesson_stop: datetime = index_datetime + time_interval
-            lesson_datetime_range = DatetimeRange(
-                start=lesson_start,
-                stop=lesson_stop
-            )
+            lesson_datetime_range = DatetimeRange(start=lesson_start, stop=lesson_stop)
             lesson_time_range = TimeRange.from_datetime_range(lesson_datetime_range)
 
             # Check if the DatetimeRange is on the hours of lesson

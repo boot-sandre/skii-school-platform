@@ -12,17 +12,17 @@ class AgendaController:
     def list_student_lesson(
         cls,
         agent: StudentAgent,
-        date_range_start: datetime | None = None,
-        date_range_stop: datetime | None = None,
+        datetime_range_start: datetime | None = None,
+        datetime_range_stop: datetime | None = None,
     ) -> QuerySet[LessonEvent]:
         lesson_qs = LessonEvent.objects.all().filter(students__id=agent.id)
-        if date_range_start is not None:
+        if datetime_range_start is not None:
             lesson_qs = lesson_qs.filter(
-                start__gt=date_range_start,
+                start__gt=datetime_range_start,
             )
-        if date_range_stop is not None:
+        if datetime_range_stop is not None:
             lesson_qs = lesson_qs.filter(
-                start__lt=date_range_stop,
+                start__lt=datetime_range_stop,
             )
         return lesson_qs
 
@@ -30,17 +30,17 @@ class AgendaController:
     def list_teacher_lesson(
         cls,
         agent: TeacherAgent,
-        date_range_start: datetime | None = None,
-        date_range_stop: datetime | None = None,
+        datetime_range_start: datetime | None = None,
+        datetime_range_stop: datetime | None = None,
     ) -> QuerySet[LessonEvent]:
         lesson_qs = LessonEvent.objects.all().filter(teacher=agent)
-        if date_range_start is not None:
+        if datetime_range_start is not None:
             lesson_qs = lesson_qs.filter(
-                start__gt=date_range_start,
+                start__gt=datetime_range_start,
             )
-        if date_range_stop is not None:
+        if datetime_range_stop is not None:
             lesson_qs = lesson_qs.filter(
-                start__lt=date_range_stop,
+                start__lt=datetime_range_stop,
             )
         return lesson_qs
 
@@ -48,13 +48,13 @@ class AgendaController:
     def create_lesson(
         cls,
         agent: TeacherAgent,
-        date_range_start: datetime,
-        date_range_stop: datetime,
+        datetime_range_start: datetime,
+        datetime_range_stop: datetime,
         **kwargs,
     ) -> LessonEvent:
         payload = {
-            "start": date_range_start,
-            "stop": date_range_stop,
+            "start": datetime_range_start,
+            "stop": datetime_range_stop,
             "teacher": agent,
         }
         payload.update(kwargs)
@@ -65,13 +65,13 @@ class AgendaController:
     def get_or_create_lesson(
         cls,
         agent: TeacherAgent,
-        date_range_start: datetime,
-        date_range_stop: datetime,
+        datetime_range_start: datetime,
+        datetime_range_stop: datetime,
         **defaults,
     ) -> LessonEvent:
         payload = {
-            "start": date_range_start,
-            "stop": date_range_stop,
+            "start": datetime_range_start,
+            "stop": datetime_range_stop,
             "teacher": agent,
         }
         lesson = LessonEvent.objects.get_or_create(**payload, defaults=defaults)

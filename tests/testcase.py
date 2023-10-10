@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, time, UTC, date
-from typing import Dict, List, Literal, Any
+from typing import Dict, List, Literal, Any, Optional
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db.models import Model
@@ -42,32 +42,70 @@ class SkiiTestClient(Client):
         return super().request(**request)
 
     def get(self, route_name: str, data: Any = None, **extra: Any):
-        """Do a get request on api server.
+        """
+        Perform a GET request to the API server.
 
         Args:
-            route_name: The route name to use to resolve/reverse url
-                with format: api_name:route_name
-            data: Put a dict with your filter arguments if the view
-                implements ninja Filters
-            **extra: All keyword arguments will be used to resolve and integrate
-            in url reversed.
+            route_name (str): The route name to use for resolving/reversing the URL.
+                The format should be "api_name:route_name".
+            data (Optional[dict]): A dictionary containing filter arguments if the API view
+                implements Ninja Filters.
+            **extra: Additional keyword arguments that will be used to resolve and
+                integrate into the reversed URL.
+
+        Returns:
+            HttpResponse: The HTTP response from the GET request.
+
+        Examples:
+            >>> client = SkiiTestClient()
+            >>> response = client.get("api:v1:event-detail", event_id=1)
+            >>> response.status_code
+            200
+
+            Using Ninja Filters and event_id passed as kwargs:
+            >>> client = SkiiTestClient()
+            >>> filters = {"start_date": "2023-12-01", "end_date": "2023-12-15"}
+            >>> response = client.get("api:v1:event-list", data=filters, event_id=1)
+            >>> response.status_code
+            200
         """
         url = reverse_lazy(route_name, kwargs=extra)
         return super().get(url, data=data, **extra)
 
     def post(
-        self,
-        route_name,
-        data=None,
-        content_type="application/json",
-        *args,
-        headers=None,
-        **extra,
+            self,
+            route_name: str,
+            data: Any = None,
+            content_type: str = "application/json",
+            *args: Any,
+            headers: Optional[Dict[str, str]] = None,
+            **extra: Any,
     ):
-        url = reverse_lazy(route_name)
-        return super().post(
-            url, data=data, content_type=content_type, *args, headers=headers, **extra
-        )
+        """
+        Perform a POST request to the API server.
+
+        Args:
+            route_name (str): The route name to use for resolving/reversing the URL.
+                The format should be "api_name:route_name".
+            data (Optional[dict]): A dictionary containing the data to include in the request body.
+            content_type (str): The content type of the request (default is "application/json").
+            *args: Additional positional arguments.
+            headers (Optional[dict]): A dictionary containing custom HTTP headers to include in the request.
+            **extra: Additional keyword arguments that will be used to resolve and
+                integrate into the reversed URL.
+
+        Returns:
+            HttpResponse: The HTTP response from the POST request.
+
+        Example:
+            >>> client = SkiiTestClient()
+            >>> data = {"name": "Ski Event", "location": "Ski Resort"}
+            >>> response = client.post("api:v1:event-create", data=data)
+            >>> response.status_code
+            201
+        """
+        url = reverse_lazy(route_name, kwargs=extra)
+        return super().post(url, data=data, content_type=content_type, *args, headers=headers, **extra)
 
     def delete(self, route_name, *args, **kwargs):
         url = reverse_lazy(route_name, args=args, kwargs=kwargs)

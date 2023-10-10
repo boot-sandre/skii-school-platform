@@ -27,6 +27,9 @@ LOGGING.update({
         "django": {
             "level": DJANGO_LOG_LEVEL,
         },
+	"tests": {
+            "level": DJANGO_LOG_LEVEL,
+        },
         "django.server": {
             "handlers": ["console"],
             "level": DJANGO_LOG_LEVEL,

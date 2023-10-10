@@ -11,7 +11,7 @@ from factory.django import DjangoModelFactory
 
 from main.api import api as api_main
 from skii.endpoint.api import api_skii
-from skii.platform.entities import AgentEntity, DatetimeRange, TimeRange
+from skii.platform.entities import AgentEntity, DatetimeRange, TimeRange, time_to_timedelta
 
 from skii.platform.factories import (
     StudentAgentFactory,
@@ -129,50 +129,54 @@ class SkiiDateLessonDemo:
     @classmethod
     def generate_skii_lesson_ranges(cls) -> None:
         """
-        Generate a list of daterange objects representing ski lesson dates for the month of December 2023.
+        Generate a list of DatetimeRange objects representing ski lesson dates for the month of December 2023.
 
         Returns:
-            list: A list of daterange objects representing ski lesson dates.
+            list: A list of DatetimeRange objects representing ski lesson dates.
         """
-        # Early break if we already create the list of dateranges
+        # Early break if we already create the list of DatetimeRanges
         if cls._skii_lesson_ranges:
             return
-        logger.info("Start daterange generation on project custom testcase")
+        logger.info("Start DatetimeRange generation on project custom testcase")
 
         # Define the start/stop date of December 2023
         start_date = date(2023, 12, 1)
         stop_date = date(2023, 12, 31)
 
-        # Start and end times for ski lessons
-        start_time = time(9, 00, 0, 0, UTC)  # 9:00 AM
-        stop_time = time(15, 00, 0, 0, UTC)  # 3:00 PM
-
-        # Store with dedicated dataclass
+        # Stores opening hours for business days
         day_time_range = TimeRange(
-            start_time,
-            stop_time
+            time(9, 00, 0, 0, UTC),     # 9:00 AM
+            time(15, 00, 0, 0, UTC),    # 3:00 PM
         )
 
         # Time interval between ski lessons (e.g., 1 lesson every 2 hours)
         time_interval = timedelta(hours=2)
+        offtime_interval = time_to_timedelta(day_time_range.stop, day_time_range.start)
 
+        # Loops variable
+        stop_datetime = datetime.combine(stop_date, day_time_range.stop, tzinfo=UTC)
+        index_datetime = datetime.combine(start_date, day_time_range.start, tzinfo=UTC)
         # Loop to generate ski lesson dates for the entire month of December
-        current_date = start_date
-        while current_date <= stop_date:
+        while index_datetime <= stop_datetime:
             # Create a DatetimeRange object for the current ski lesson
-            lesson_start: date = current_date
-            lesson_date_range = DatetimeRange(
+            lesson_start: datetime = index_datetime
+            lesson_stop: datetime = index_datetime + time_interval
+            lesson_datetime_range = DatetimeRange(
                 start=lesson_start,
-                stop=lesson_start + time_interval
+                stop=lesson_stop
             )
-            lesson_time_range = TimeRange.from_date_range(lesson_date_range)
+            lesson_time_range = TimeRange.from_datetime_range(lesson_datetime_range)
+
             # Check if the DatetimeRange is on the hours of lesson
             if lesson_time_range.is_contained_or_equal(day_time_range):
+                logger.debug(f"{str(lesson_datetime_range)}")
                 # Add the lesson start datetime to the list of ski lesson dates
-                cls._skii_lesson_ranges.append(lesson_date_range)
+                cls._skii_lesson_ranges.append(lesson_datetime_range)
+            else:
+                index_datetime += offtime_interval
 
             # Move to the next date by adding the time interval
-            current_date += time_interval
+            index_datetime += time_interval
 
     def test_generate_ski_lesson_dates(self) -> None:
         # Generate ski lesson dates
@@ -182,8 +186,8 @@ class SkiiDateLessonDemo:
         self.assertNotEqual(len(self._skii_lesson_ranges), 0)
 
         # Print the generated ski lesson dates
-        for date_range in self._skii_lesson_ranges:
-            logger.debug(str(date_range))
+        for datetime_range in self._skii_lesson_ranges:
+            logger.debug(str(datetime_range))
 
 
 class SkiiControllerTestCase(TestCase, SkiiDateLessonDemo):
@@ -194,7 +198,7 @@ class SkiiControllerTestCase(TestCase, SkiiDateLessonDemo):
     user_model: AbstractBaseUser = get_user_model()
 
     def client_auth(self, user: AbstractBaseUser | AgentEntity) -> None:
-        """Safest way to get a client with session registered.
+        """Safest way to authenticate the "self.client" with new session.
 
         Args:
             user: Django user model instance

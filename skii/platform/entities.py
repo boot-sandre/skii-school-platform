@@ -2,6 +2,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta, time
 from decimal import Decimal as Deci
+from numbers import Number
 from typing import Iterator
 
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -299,13 +300,13 @@ class DatetimeRange:
 
     def __add__(self, other: timedelta) -> "DatetimeRange":
         """
-        Adds a timedelta to the start and stop dates of the DateRange.
+        Adds a timedelta to the start and stop dates of the DatetimeRange.
 
         Args:
-            other (timedelta): The timedelta to add to the DateRange.
+            other (timedelta): The timedelta to add to the DatetimeRange.
 
         Returns:
-            DatetimeRange: A new DateRange with adjusted start and stop dates.
+            DatetimeRange: A new DatetimeRange with adjusted start and stop dates.
 
         Raises:
             TypeError: If the provided argument is not a timedelta.
@@ -317,47 +318,51 @@ class DatetimeRange:
 
     def hour_later(self) -> "DatetimeRange":
         """
-        Returns DateRange with both start and stop dates shifted by one hour later.
+        Returns DatetimeRange with both start and stop dates shifted by one hour later.
 
         Returns:
-            DatetimeRange: A new DateRange with adjusted start and stop dates.
+            DatetimeRange: A new DatetimeRange with adjusted start and stop dates.
         """
         return self + timedelta(hours=1)
 
     @property
-    def duration(self) -> timedelta:
+    def delta(self) -> timedelta:
+        return self.stop - self.start
+
+    @property
+    def duration(self) -> int:
         """
         Calculates the duration of the DatetimeRange.
 
         Returns:
             timedelta: The duration between the start and stop dates.
         """
-        return self.stop - self.start
+        return round((self.stop - self.start).seconds / 60)
 
-    def overlaps(self, date_range: "DatetimeRange") -> bool:
+    def overlaps(self, datetime_range: "DatetimeRange") -> bool:
         """
-        Checks if the DateRange overlaps with another DateRange.
+        Checks if the DatetimeRange overlaps with another DatetimeRange.
 
         Args:
-            date_range (DatetimeRange): The DateRange to check for overlap with.
+            datetime_range (DatetimeRange): The DatetimeRange to check for overlap with.
 
         Returns:
             bool: True if there is overlap, False otherwise.
         """
-        return self.start <= date_range.stop and self.stop >= date_range.start
+        return self.start <= datetime_range.stop and self.stop >= datetime_range.start
 
-    def starts_before(self, date_range: "DatetimeRange") -> bool:
+    def starts_before(self, datetime_range: "DatetimeRange") -> bool:
         """
-        Checks if the DateRange starts before another DateRange.
+        Checks if the DatetimeRange starts before another DatetimeRange.
 
         Args:
-            date_range (DatetimeRange): The DateRange to compare with.
+            datetime_range (DatetimeRange): The DatetimeRange to compare with.
 
         Returns:
-            bool: True if the DateRange starts before the other DateRange,
+            bool: True if the DatetimeRange starts before the other DatetimeRange,
                 False otherwise.
         """
-        return self.start < date_range.start
+        return self.start < datetime_range.start
 
     def range(self, step: timedelta) -> Iterator[datetime]:
         """
@@ -376,43 +381,43 @@ class DatetimeRange:
 
     def is_contained_or_equal(self, other: "DatetimeRange") -> bool:
         """
-        Check if this DateRange is contained within or equal to another DateRange.
+        Check if this DatetimeRange is contained within or equal to another DatetimeRange.
 
         Args:
-            other (DatetimeRange): The other DateRange to compare with.
+            other (DatetimeRange): The other DatetimeRange to compare with.
 
         Returns:
-            bool: True if this DateRange is contained within or equal to the other DateRange,
+            bool: True if this DatetimeRange is contained within or equal to the other DatetimeRange,
                   False otherwise.
         """
         return self.start >= other.start and self.stop <= other.stop
 
     def is_contained_or_equal_daytime(self, other: "TimeRange") -> bool:
         """
-        Check if this DateRange is contained within or equal to a TimeRange.
+        Check if this DatetimeRange is contained within or equal to a TimeRange.
 
         Args:
-            other (DatetimeRange): The other DateRange to compare with.
+            other (DatetimeRange): The other DatetimeRange to compare with.
 
         Returns:
-            bool: True if this DateRange is contained within or equal to the other DateRange,
+            bool: True if this DatetimeRange is contained within or equal to the other DatetimeRange,
                   False otherwise.
         """
         return self.start >= other.start and self.stop <= other.stop
 
     @classmethod
-    def to_date_time(cls, date_range: "DatetimeRange") -> "TimeRange":
+    def to_date_time(cls, datetime_range: "DatetimeRange") -> "TimeRange":
         """
-        Create a TimeRange from a DateRange.
+        Create a TimeRange from a DatetimeRange.
 
         Args:
-            date_range (DatetimeRange): The DateRange to convert.
+            datetime_range (DatetimeRange): The DatetimeRange to convert.
 
         Returns:
             TimeRange: The equivalent TimeRange with start and stop times.
         """
-        start_time = date_range.start.time()
-        stop_time = date_range.stop.time()
+        start_time = datetime_range.start.time()
+        stop_time = datetime_range.stop.time()
 
         return cls(start_time, stop_time)
 
@@ -428,10 +433,6 @@ class TimeRange:
 
     Raises:
         ValueError: If the stop time is not later than the start time.
-
-    Attributes:
-        start (time): The start time of the range.
-        stop (time): The stop time of the range.
     """
 
     start: time
@@ -477,6 +478,10 @@ class TimeRange:
         raise TypeError()
 
     @property
+    def delta(self) -> timedelta:
+        return time_to_timedelta(self.start, self.stop)
+
+    @property
     def duration(self) -> int:
         """
         Calculates the duration of the TimeRange in minutes.
@@ -484,9 +489,7 @@ class TimeRange:
         Returns:
             int: The duration between the start and stop times in minutes.
         """
-        start_minutes = self.start.hour * 60 + self.start.minute
-        stop_minutes = self.stop.hour * 60 + self.stop.minute
-        return stop_minutes - start_minutes
+        return round(self.delta.total_seconds / 60)
 
     def overlaps(self, time_range: "TimeRange") -> bool:
         """
@@ -536,25 +539,24 @@ class TimeRange:
         return self.start >= other.start and self.stop <= other.stop
 
     @classmethod
-    def from_date_range(cls, date_range: DatetimeRange) -> "TimeRange":
+    def from_datetime_range(cls, datetime_range: DatetimeRange) -> "TimeRange":
         """
-        Create a TimeRange from a DateRange.
+        Create a TimeRange from a DatetimeRange.
 
         Args:
-            date_range (DatetimeRange): The DateRange to convert.
+            datetime_range (DatetimeRange): The DatetimeRange to convert.
 
         Returns:
             TimeRange: The equivalent TimeRange with start and stop times.
         """
-        breakpoint()
-        # Extract the time components (hours and minutes) from the start and stop datetimes
-        start_time = date_range.start.time()
-        stop_time = date_range.stop.time()
+        # Extract the time components (hours and minutes) from the start and stop datetime
+        start_time = datetime_range.start.timetz()
+        stop_time = datetime_range.stop.timetz()
 
         return cls(start_time, stop_time)
 
 
-class TimeRangeQueryset(models.QuerySet):
+class DatetimeRangeQueryset(models.QuerySet):
     """
     A custom queryset for querying objects with time ranges.
 
@@ -565,23 +567,23 @@ class TimeRangeQueryset(models.QuerySet):
 
     def filter(self, *args, **kwargs):
         """
-        Filters the queryset based on a DateRange.
+        Filters the queryset based on a DatetimeRange.
 
         Args:
             *args: Positional arguments.
             **kwargs: Keyword arguments.
 
         Keyword Args:
-            date_range (DatetimeRange): The DateRange for filtering.
+            datetime_range (DatetimeRange): The DatetimeRange for filtering.
 
         Returns:
             QuerySet: A filtered queryset.
         """
-        date_range = kwargs.get("date_range")
+        datetime_range = kwargs.get("datetime_range")
 
-        if date_range and isinstance(date_range, DatetimeRange):
-            kwargs["start"] = date_range.start
-            kwargs["stop"] = date_range.stop
+        if datetime_range and isinstance(datetime_range, DatetimeRange):
+            kwargs["start"] = datetime_range.start
+            kwargs["stop"] = datetime_range.stop
 
         return super().filter(*args, **kwargs)
 
@@ -644,22 +646,22 @@ class TimeRangeManager(models.Manager):
         Get the custom queryset for this manager.
 
         Returns:
-            TimeRangeQueryset: The custom queryset.
+            DatetimeRangeQueryset: The custom queryset.
         """
-        return TimeRangeQueryset(self.model, using=self._db)
+        return DatetimeRangeQueryset(self.model, using=self._db)
 
-    def in_range(self, date_range: DatetimeRange):
+    def in_range(self, datetime_range: DatetimeRange):
         """
-        Filter objects that are within the specified DateRange.
+        Filter objects that are within the specified DatetimeRange.
 
         Args:
-            date_range (DatetimeRange): The DateRange for filtering.
+            datetime_range (DatetimeRange): The DatetimeRange for filtering.
 
         Returns:
-            QuerySet: A filtered queryset containing objects within the DateRange.
+            QuerySet: A filtered queryset containing objects within the DatetimeRange.
         """
         return self.get_queryset().filter(
-            start__gte=date_range.start, stop__lte=date_range.stop
+            start__gte=datetime_range.start, stop__lte=datetime_range.stop
         )
 
 
@@ -681,45 +683,45 @@ class DatetimeRangeEntity(models.Model):
     objects = TimeRangeManager()
 
     @property
-    def date_range(self) -> DatetimeRange:
+    def datetime_range(self) -> DatetimeRange:
         """
-        Get the time range as a DateRange instance.
+        Get the time range as a DatetimeRange instance.
 
         Returns:
-            DatetimeRange: A DateRange representing the time range.
+            DatetimeRange: A DatetimeRange representing the time range.
         """
         return DatetimeRange(self.start, self.stop)
 
-    @date_range.setter
-    def date_range(self, value: DatetimeRange) -> None:
+    @datetime_range.setter
+    def datetime_range(self, value: DatetimeRange) -> None:
         """
-        Set the time range using a DateRange instance.
+        Set the time range using a DatetimeRange instance.
 
         Args:
-            value (DatetimeRange): The DateRange to set
+            value (DatetimeRange): The DatetimeRange to set
         """
         self.start = value.start
         self.stop = value.stop
 
     @classmethod
-    def new_in_date_range(cls, date_range: DatetimeRange):
+    def new_in_datetime_range(cls, datetime_range: DatetimeRange):
         """
-        Create a new instance within the specified DateRange.
+        Create a new instance within the specified DatetimeRange.
 
         Args:
-            date_range (DatetimeRange): The DateRange in which to create the instance.
+            datetime_range (DatetimeRange): The DatetimeRange in which to create the instance.
 
         Returns:
             DatetimeRangeEntity: A new instance with start and stop times
-                matching the DateRange.
+                matching the DatetimeRange.
         """
-        return cls(start=date_range.start, stop=date_range.stop)
+        return cls(start=datetime_range.start, stop=datetime_range.stop)
 
     def __str__(self) -> str:
         start_datetime = self.start.strftime("%Y-%m-%d %H:%M")
         stop_datetime = self.stop.strftime("%Y-%m-%d %H:%M")
         return (
-            f"{start_datetime} to {stop_datetime}"
+            f"{start_datetime} to {stop_datetime} so {self.time_delta_minutes} minutes"
         )
 
     @property
@@ -771,3 +773,39 @@ class ResourceEntity(UUIDLabelEntity):
 
     def __str__(self):
         return f"{self.short_prefix_uuid}: {self.value}"
+
+
+def time_to_timedelta(start_time: time, end_time: time) -> timedelta:
+    """
+    Calculate the timedelta between two time objects, considering midnight.
+
+    Args:
+        start_time (datetime.time): The starting time.
+        end_time (datetime.time): The ending time.
+
+    Returns:
+        datetime.timedelta: The timedelta representing the difference
+        between the two time objects.
+
+    Example:
+        >>> start = time(23, 0)  # 11:00 PM
+        >>> end = time(1, 30)    # 1:30 AM (next day)
+        >>> time_difference_to_timedelta(start, end)
+        datetime.timedelta(seconds=9000)  # 2 hours and 30 minutes
+    """
+    # Create datetime objects for today and tomorrow
+    today = datetime.today()
+    tomorrow = today + timedelta(days=1)
+
+    # Combine the date with the time objects
+    start_datetime = datetime.combine(today, start_time)
+    end_datetime = datetime.combine(today, end_time)
+
+    # Check if the end time is before the start time (crosses midnight)
+    if end_time < start_time:
+        end_datetime = datetime.combine(tomorrow, end_time)
+
+    # Calculate the timedelta
+    time_difference = end_datetime - start_datetime
+
+    return time_difference

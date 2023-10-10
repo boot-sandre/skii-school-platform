@@ -2,7 +2,6 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta, time
 from decimal import Decimal as Deci
-from numbers import Number
 from typing import Iterator
 
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -271,19 +270,21 @@ class DatetimeRange:
         self.validate_timezone_aware()
 
     def validate_timezone_aware(self):
-        """ Validates that datetime used for attribut start/stop is timezone aware.
+        """Validates that datetime used for attribut start/stop is timezone aware.
 
-            Raises:
-                ValueError: If ones of start/stop attribut is not datetime aware.
+        Raises:
+            ValueError: If ones of start/stop attribut is not datetime aware.
         """
         if not self.start.tzinfo or not self.stop.tzinfo:
-            raise ValueError(f"Datetime is not timezone aware ({self.start, self.stop}).")
+            raise ValueError(
+                f"Datetime is not timezone aware ({self.start, self.stop})."
+            )
 
     def validate_start_before_stop(self):
-        """ Validates that the stop date is later than the start date.
+        """Validates that the stop date is later than the start date.
 
-            Raises:
-                ValueError: If the start date is not later than the stop date.
+        Raises:
+            ValueError: If the start date is not later than the stop date.
         """
         if self.start >= self.stop:
             raise ValueError("Cannot stop before starting.")
@@ -380,15 +381,14 @@ class DatetimeRange:
             current_datetime = current_datetime + step
 
     def is_contained_or_equal(self, other: "DatetimeRange") -> bool:
-        """
-        Check if this DatetimeRange is contained within or equal to another DatetimeRange.
+        """ Check if this DatetimeRange is contained within or equal to another.
 
         Args:
             other (DatetimeRange): The other DatetimeRange to compare with.
 
         Returns:
-            bool: True if this DatetimeRange is contained within or equal to the other DatetimeRange,
-                  False otherwise.
+            bool: True if this DatetimeRange is contained within or equal to
+                  the other DatetimeRange, False otherwise.
         """
         return self.start >= other.start and self.stop <= other.stop
 
@@ -400,8 +400,8 @@ class DatetimeRange:
             other (DatetimeRange): The other DatetimeRange to compare with.
 
         Returns:
-            bool: True if this DatetimeRange is contained within or equal to the other DatetimeRange,
-                  False otherwise.
+            bool: True if this DatetimeRange is contained within or equal
+                  to the other DatetimeRange, False otherwise.
         """
         return self.start >= other.start and self.stop <= other.stop
 
@@ -527,14 +527,14 @@ class TimeRange:
 
     def is_contained_or_equal(self, other: "TimeRange") -> bool:
         """
-        Check if this TimeRange is completely contained within or equal to another TimeRange.
+        Check if this TimeRange is full contained within or equal to another TimeRange.
 
         Args:
             other (TimeRange): The other TimeRange to compare with.
 
         Returns:
-            bool: True if this TimeRange is completely contained within or equal to the other TimeRange,
-                  False otherwise.
+            bool: True if this TimeRange is completely contained within
+            or equal to the other TimeRange, False otherwise.
         """
         return self.start >= other.start and self.stop <= other.stop
 
@@ -549,7 +549,8 @@ class TimeRange:
         Returns:
             TimeRange: The equivalent TimeRange with start and stop times.
         """
-        # Extract the time components (hours and minutes) from the start and stop datetime
+        # Extract the time components (hours and minutes)
+        # from the start and stop datetime
         start_time = datetime_range.start.timetz()
         stop_time = datetime_range.stop.timetz()
 
@@ -709,7 +710,7 @@ class DatetimeRangeEntity(models.Model):
         Create a new instance within the specified DatetimeRange.
 
         Args:
-            datetime_range (DatetimeRange): The DatetimeRange in which to create the instance.
+            datetime_range (DatetimeRange): DatetimeRange to create the instance.
 
         Returns:
             DatetimeRangeEntity: A new instance with start and stop times
@@ -758,7 +759,7 @@ class AgentEntity(UUIDLabelEntity):
 class ResourceEntity(UUIDLabelEntity):
     """A resource is something you need, and you may use to achieve.
 
-    Resource can be reserved or used by and Event.
+    Resource can be reserved or used by an Event.
     """
 
     class Meta:

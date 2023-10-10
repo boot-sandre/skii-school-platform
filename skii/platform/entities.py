@@ -381,7 +381,7 @@ class DatetimeRange:
             current_datetime = current_datetime + step
 
     def is_contained_or_equal(self, other: "DatetimeRange") -> bool:
-        """ Check if this DatetimeRange is contained within or equal to another.
+        """Check if this DatetimeRange is contained within or equal to another.
 
         Args:
             other (DatetimeRange): The other DatetimeRange to compare with.

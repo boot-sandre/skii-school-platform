@@ -20,9 +20,16 @@ class TeacherLessonContract(TeacherContract):
     lessons: List[LessonContract] = Field(alias="lessonevent_set")
 
 
+class StudentLessonContract(TeacherContract):
+    """Return Teachers agents with lessons related."""
+
+    lessons: List[LessonContract] = Field(alias="events_linked")
+
+
 __all__ = [
     SkiiRecordContract,
     SkiiListContract,
     SkiiMsgContract,
     TeacherLessonContract,
+    StudentLessonContract,
 ]

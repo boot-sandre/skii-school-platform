@@ -29,6 +29,7 @@ from skii.platform.factories import (
 
 import logging
 
+from skii.platform.models.event import LessonEvent
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +49,8 @@ class SkiiTestClient(Client):
         Args:
             route_name (str): The route name to use for resolving/reversing the URL.
                 The format should be "api_name:route_name".
-            data (Optional[dict]): A dictionary containing filter arguments if the API view
-                implements Ninja Filters.
+            data (Optional[dict]): A dictionary containing filter arguments
+                if the API view implements Ninja Filters.
             **extra: Additional keyword arguments that will be used to resolve and
                 integrate into the reversed URL.
 
@@ -73,13 +74,13 @@ class SkiiTestClient(Client):
         return super().get(url, data=data, **extra)
 
     def post(
-            self,
-            route_name: str,
-            data: Any = None,
-            content_type: str = "application/json",
-            *args: Any,
-            headers: Optional[Dict[str, str]] = None,
-            **extra: Any,
+        self,
+        route_name: str,
+        data: Any = None,
+        content_type: str = "application/json",
+        *args: Any,
+        headers: Optional[Dict[str, str]] = None,
+        **extra: Any,
     ):
         """
         Perform a POST request to the API server.
@@ -87,10 +88,13 @@ class SkiiTestClient(Client):
         Args:
             route_name (str): The route name to use for resolving/reversing the URL.
                 The format should be "api_name:route_name".
-            data (Optional[dict]): A dictionary containing the data to include in the request body.
-            content_type (str): The content type of the request (default is "application/json").
+            data (Optional[dict]): Dictionary containing the data to
+                include in the request body.
+            content_type (str): Content type of the request
+                (default is "application/json").
             *args: Additional positional arguments.
-            headers (Optional[dict]): A dictionary containing custom HTTP headers to include in the request.
+            headers (Optional[dict]): A dictionary containing custom HTTP headers
+                to include in the request.
             **extra: Additional keyword arguments that will be used to resolve and
                 integrate into the reversed URL.
 
@@ -105,7 +109,9 @@ class SkiiTestClient(Client):
             201
         """
         url = reverse_lazy(route_name, kwargs=extra)
-        return super().post(url, data=data, content_type=content_type, *args, headers=headers, **extra)
+        return super().post(
+            url, data=data, content_type=content_type, *args, headers=headers, **extra
+        )
 
     def delete(self, route_name, *args, **kwargs):
         url = reverse_lazy(route_name, args=args, kwargs=kwargs)
@@ -171,7 +177,7 @@ class SkiiDateLessonDemo:
 
     @classmethod
     def generate_skii_lesson_ranges(cls) -> None:
-        """ Generate a list of DatetimeRange objects
+        """Generate a list of DatetimeRange objects
 
             The datetime object epresenting ski lesson dates for the month
             of December 2023.
@@ -232,7 +238,31 @@ class SkiiDateLessonDemo:
             logger.debug(str(datetime_range))
 
 
-class SkiiControllerTestCase(TestCase, SkiiDateLessonDemo):
+class SkiiLessonEventDemo:
+    def _create_demo_lessons(self) -> None:
+        """Create a sample of demo lessons."""
+        teacher = self.get_factory_instance("teacher")
+        teacher_other = self.get_factory_instance("teacher")
+        self._teacher = teacher
+        self._teacher_other = teacher_other
+        student = self.get_factory_instance("student")
+        student_other = self.get_factory_instance("student")
+        self._student = student
+        self._student_other = student_other
+
+        lesson_teacher_payload = dict(teacher=teacher, students=[student])
+
+        self.get_factory_instance("lesson", **lesson_teacher_payload)
+        lesson_teacher_payload.update(students=[student, student_other])
+        self.get_factory_instance("lesson", **lesson_teacher_payload)
+        lesson_teacher_payload.update(students=[student_other])
+        self.get_factory_instance("lesson", **lesson_teacher_payload)
+        lesson_teacher_payload.update(students=[student_other], teacher=teacher_other)
+        self.get_factory_instance("lesson", **lesson_teacher_payload)
+        self.assertEqual(LessonEvent.objects.count(), 4)
+
+
+class SkiiControllerTestCase(TestCase, SkiiDateLessonDemo, SkiiLessonEventDemo):
     """TestCase ninja api dedicated to skii platform."""
 
     client_class: Client = SkiiTestClient

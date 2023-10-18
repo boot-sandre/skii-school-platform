@@ -27,16 +27,14 @@ DATABASES = {
     }
 }
 
-
+DJANGO_LOG_LEVEL = "INFO"
+DJANGO_LOG_SQL_LEVEL = "INFO"
 # Python logging
-DJANGO_LOG_LEVEL = os.environ.get(
-    "DJANGO_LOG_LEVEL", default="DEBUG" if DEBUG else "INFO"
-)
 LOGGING.update(
     {
         "root": {
             "handlers": ["console"],
-            "level": DJANGO_LOG_LEVEL,
+            "level": "DEBUG",
         },
         "loggers": {
             "skii": {
@@ -63,7 +61,7 @@ LOGGING.update(
                 "propagate": True,
             },
             "django.db.backends": {
-                "level": "INFO",
+                "level": DJANGO_LOG_SQL_LEVEL,
                 "propagate": True,
             },
             "django.security": {

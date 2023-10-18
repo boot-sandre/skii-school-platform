@@ -26,7 +26,6 @@ SECRET_KEY = "django-insecure-c5ny1qhpz*3o%@-nchet4ohg=wb4)*)$1y_g4w_8vcuu2#f$ga
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-DJANGO_LOG_LEVEL = "INFO"
 
 ALLOWED_HOSTS = []
 
@@ -85,8 +84,14 @@ TEMPLATES = [
 WSGI_APPLICATION = "main.wsgi.application"
 
 # Python logging
+
+DJANGO_LOG_LEVEL = "INFO"
+DJANGO_LOG_SQL_LEVEL = "INFO"
 DJANGO_LOG_LEVEL = os.environ.get(
-    "DJANGO_LOG_LEVEL", default="DEBUG" if DEBUG else "INFO"
+    "DJANGO_LOG_LEVEL", default=DJANGO_LOG_LEVEL
+)
+DJANGO_LOG_SQL_LEVEL = os.environ.get(
+    "DJANGO_LOG_SQL_LEVEL", default=DJANGO_LOG_SQL_LEVEL
 )
 LOGGING = {
     "version": 1,
@@ -165,7 +170,7 @@ LOGGING = {
             "propagate": True,
         },
         "django.db.backends": {
-            "level": "INFO",
+            "level": DJANGO_LOG_SQL_LEVEL,
             "propagate": True,
         },
         "django.security": {

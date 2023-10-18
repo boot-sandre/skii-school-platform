@@ -59,9 +59,15 @@ def student_lessons(
 ):
     """Fetch student with them lessons reserved.
 
-    Pending an implementation of more advanced rights,
-    we will simply prohibit lesson requests from a student
-    other than the connected user.
+    This view permit's to use query filters:
+        - start: Datetime to filter lesson start up to
+        - stop: Datetime to filter lesson stop down to
+
+    They can be used independently, or together.
+
+    Security:   Pending an implementation of more advanced rights,
+                we will simply prohibit lesson requests from a student
+                other than the connected user.
     """
     agent = StudentAgent.objects.get(pk=student_pk)
     # If the logged user is a Student (filter(user=request.user).exist())
@@ -72,5 +78,8 @@ def student_lessons(
         raise PermissionError(MsgErrorStudent)
     lessons = LessonEvent.objects.all()
     lessons = filters.filter(lessons)
+    # TODO: Here we have an issue to correctly filter agent.lessons
+    #       Unittest test_student_lesson_filter_only_stop fail because of
+    #       agent.lessons get all related agent's lesson
     setattr(agent, "lessons", lessons)
     return 200, agent

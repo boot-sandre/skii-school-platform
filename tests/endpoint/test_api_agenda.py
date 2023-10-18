@@ -186,3 +186,39 @@ class TestAgendaController(SkiiControllerTestCase):
             2,
             msg=f"Needs fetch lesson after {lesson_ref.start}",
         )
+
+    def test_student_lesson_filter_only_start(self):
+        """Can fetch student lesson with only start filter."""
+        self.client_auth(self._student)
+        lesson_ref: LessonEvent = LessonEvent.objects.filter(
+            students=self._student
+        ).first()
+        res = self.client.get(
+            "skii:student_lessons",
+            dict(start=lesson_ref.start),
+            student_pk=str(self._student.pk),
+        )
+        result = res.json()
+        self.assertEqual(
+            len(result["lessons"]),
+            2,
+            msg=f"Needs fetch lesson after {lesson_ref.start}",
+        )
+
+    def test_student_lesson_filter_only_stop(self):
+        """Can fetch student lesson with only stop filter."""
+        self.client_auth(self._student)
+        lesson_ref: LessonEvent = LessonEvent.objects.filter(
+            students=self._student
+        ).order_by("stop").first()
+        res = self.client.get(
+            "skii:student_lessons",
+            dict(stop=lesson_ref.stop),
+            student_pk=str(self._student.pk),
+        )
+        result = res.json()
+        self.assertEqual(
+            len(result["lessons"]),
+            1,
+            msg=f"Needs fetch lesson after {lesson_ref.start}",
+        )

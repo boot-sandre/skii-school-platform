@@ -48,3 +48,4 @@ class LessonFilterSchema(FilterSchema):
                 stop__lte=self.stop
             )  # Filter for lessons stopping less than or equal to self.stop
         return q_filter
+

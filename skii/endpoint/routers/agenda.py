@@ -13,7 +13,7 @@ from skii.endpoint.schemas.response import TeacherLessonContract
 from skii.endpoint.schemas.response import StudentLessonContract
 from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.platform.models.event import LessonEvent
-
+from skii.platform.schemas.event import LessonContract
 
 UserModel = get_user_model()
 MsgErrorStudent = _(
@@ -38,10 +38,15 @@ def teacher_lessons(
     teacher_pk: IntStrUUID4,
     filters: LessonFilterSchema = Query(...),
 ):
-    lessons = LessonEvent.objects.all()
-    lessons = filters.filter(lessons)
+    """Fetch teacher with them lessons assigned.
+
+    This view permit's to use query filters:
+        - start: Datetime to filter lesson start up to
+        - stop: Datetime to filter lesson stop down to
+    """
     agent = TeacherAgent.objects.get(pk=teacher_pk)
-    setattr(agent, "lessons", lessons)
+    lessons = filters.filter(LessonEvent.objects.filter(teacher__pk=agent.pk))
+    setattr(agent, "lessons_assigned", lessons)
     return 200, agent
 
 
@@ -77,9 +82,15 @@ def student_lessons(
             StudentAgent.objects.filter(user=request.user).exists()):
         raise PermissionError(MsgErrorStudent)
     lessons = LessonEvent.objects.all()
-    lessons = filters.filter(lessons)
+    lessons = filters.filter(lessons).filter(students__pk=agent.pk)
+
     # TODO: Here we have an issue to correctly filter agent.lessons
     #       Unittest test_student_lesson_filter_only_stop fail because of
     #       agent.lessons get all related agent's lesson
-    setattr(agent, "lessons", lessons)
-    return 200, agent
+    lessons_dict_lst = [LessonContract.from_orm(less).dict() for less in lessons]
+
+    setattr(agent, "lessons_subscribed", lessons_dict_lst)
+    agent_resp = StudentLessonContract.from_orm(agent).dict()
+    agent_resp["lessons_subscribed"] = lessons_dict_lst
+
+    return 200, agent_resp

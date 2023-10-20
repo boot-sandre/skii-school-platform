@@ -27,7 +27,7 @@ DATABASES = {
     }
 }
 
-DJANGO_LOG_LEVEL = "INFO"
+DJANGO_LOG_LEVEL = "DEBUG"
 DJANGO_LOG_SQL_LEVEL = "INFO"
 # Python logging
 LOGGING.update(

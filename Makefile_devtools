@@ -26,14 +26,23 @@ check:
 .PHONY: check
 
 black:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Run black in write mode <---$(FORMATRESET)\n"
+	@echo ""
 	$(BLACK) --extend-exclude='/*/migrations/*|setup.py' .
 .PHONY: black
 
-dryblack:
+black-dry:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Run black in check only mode <---$(FORMATRESET)\n"
+	@echo ""
 	$(BLACK) --extend-exclude='/*/migrations/*|setup.py' --check .
-.PHONY: dryblack
+.PHONY: black-dry
 
 pycheck:
+	@echo ""
+	@printf "$(FORMATBLUE)$(FORMATBOLD)---> Pycheck <---$(FORMATRESET)\n"
+	@echo ""
 	pycheck --django
 .PHONY: pycheck
 
@@ -44,7 +53,7 @@ flake:
 	$(FLAKE) --statistics --show-source $(DJANGOPROJECT_DIR) apps/ skii/ tests/
 .PHONY: flake
 
-quality: check check-migrations pycheck
+quality: check check-migrations flake black-dry pycheck
 	@echo ""
 	@echo "Running quality checks"
 	@echo ""

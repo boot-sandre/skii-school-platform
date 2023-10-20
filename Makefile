@@ -48,7 +48,7 @@ help:
 	@echo "  check                         -- to run the check management command"
 	@echo "  flake                         -- to launch Flake8 checking"
 	@echo "  black                         -- to launch Black formating"
-	@echo "  dryblack                      -- to launch Black formating in dry mode"
+	@echo "  black-dry                     -- to launch Black formating in dry mode"
 	@echo "  pycheck                       -- to launch Pycheck code checks"
 	@echo "  quality                       -- to launch all quality checks"
 	@echo "  ci                            -- to launch all ci checks"

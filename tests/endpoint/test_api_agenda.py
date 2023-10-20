@@ -41,8 +41,8 @@ class TestAgendaController(SkiiControllerTestCase):
             route_name="skii:teacher_lessons", teacher_pk=self._teacher.pk
         )
         result = res.json()
-        self.assertDictKeys(result, ["user", "pk", "lessons"])
-        self.assertDictKeys(result["lessons"][0], LESSON_KEYS)
+        self.assertDictKeys(result, ["user", "pk", "lessons_assigned"])
+        self.assertDictKeys(result["lessons_assigned"][0], LESSON_KEYS)
         self.assertDictKeys(result["user"], USER_KEYS)
 
     def test_count_teacher_lessons(self):
@@ -54,7 +54,7 @@ class TestAgendaController(SkiiControllerTestCase):
         result = res.json()
 
         self.assertEqual(
-            len(result["lessons"]),
+            len(result["lessons_assigned"]),
             3,
             msg=f"Needs fetch only the 3 lessons related to teacher {self._teacher}",
         )
@@ -68,7 +68,7 @@ class TestAgendaController(SkiiControllerTestCase):
         result = res.json()
 
         self.assertEqual(
-            len(result["lessons"]),
+            len(result["lessons_assigned"]),
             1,
             msg=f"Needs fetch only the single lesson related "
             f"to other teacher {self._teacher_other}",
@@ -85,7 +85,7 @@ class TestAgendaController(SkiiControllerTestCase):
         result = res.json()
 
         self.assertEqual(
-            len(result["lessons"]),
+            len(result["lessons_assigned"]),
             3,
             msg="Needs fetch the three lesson related of other "
             f"teacher {self._teacher_other}",
@@ -94,19 +94,23 @@ class TestAgendaController(SkiiControllerTestCase):
     def test_teacher_lesson_range_start_to_stop(self):
         """Can fetch teacher lesson with range start/stop filter."""
         self.client_auth(self._teacher)
-        lesson_ref: LessonEvent = LessonEvent.objects.filter(
+        lesson_ref_start: LessonEvent = LessonEvent.objects.filter(
             teacher=self._teacher
-        ).first()
+        ).order_by("start").last()
+        lesson_ref_stop: LessonEvent = LessonEvent.objects.filter(
+            teacher=self._teacher
+        ).order_by("stop").last()
         res = self.client.get(
             "skii:teacher_lessons",
-            dict(start=lesson_ref.start, stop=lesson_ref.stop),
+            dict(start=lesson_ref_start.start, stop=lesson_ref_stop.stop),
             teacher_pk=str(self._teacher.pk),
         )
         result = res.json()
         self.assertEqual(
-            len(result["lessons"]),
-            3,
-            msg=f"Needs fetch lesson after {lesson_ref.start}",
+            len(result["lessons_assigned"]),
+            1,
+            msg=f"Needs fetch lesson start after {lesson_ref_start.start} "
+                f"and stop before {lesson_ref_stop.stop}",
         )
 
     def test_student_lessons_required_keys(self):
@@ -116,8 +120,8 @@ class TestAgendaController(SkiiControllerTestCase):
             route_name="skii:student_lessons", student_pk=self._student.pk
         )
         result = res.json()
-        self.assertDictKeys(result, ["user", "pk", "lessons"])
-        self.assertDictKeys(result["lessons"][0], LESSON_KEYS)
+        self.assertDictKeys(result, ["user", "pk", "lessons_subscribed"])
+        self.assertDictKeys(result["lessons_subscribed"][0], LESSON_KEYS)
         self.assertDictKeys(result["user"], USER_KEYS)
 
     def test_count_student_lessons(self):
@@ -129,7 +133,7 @@ class TestAgendaController(SkiiControllerTestCase):
         result = res.json()
 
         self.assertEqual(
-            len(result["lessons"]),
+            len(result["lessons_subscribed"]),
             2,
             msg=f"Needs fetch only the 3 lessons related to student {self._student}",
         )
@@ -143,7 +147,7 @@ class TestAgendaController(SkiiControllerTestCase):
         result = res.json()
 
         self.assertEqual(
-            len(result["lessons"]),
+            len(result["lessons_subscribed"]),
             3,
             msg=f"Needs fetch only the single lesson related "
             f"to other student {self._student_other}",
@@ -161,7 +165,7 @@ class TestAgendaController(SkiiControllerTestCase):
         assert pm.exception
         self.assertEqual(pm.exception.__str__(), MsgErrorStudent)
 
-    def test_teacher_can_student_lesson_forbidden(self):
+    def test_teacher_can_fetch_student_lesson(self):
         """Fetch student's lessons with a teacher account logged is authorized."""
         self.client_auth(self._teacher.user)
         res = self.client.get(
@@ -172,19 +176,23 @@ class TestAgendaController(SkiiControllerTestCase):
     def test_student_lesson_range_start_to_stop(self):
         """Can fetch student lesson with range start/stop filter."""
         self.client_auth(self._student)
-        lesson_ref: LessonEvent = LessonEvent.objects.filter(
+        lesson_ref_start: LessonEvent = LessonEvent.objects.filter(
             students=self._student
-        ).first()
+        ).order_by("start").last()
+        lesson_ref_stop: LessonEvent = LessonEvent.objects.filter(
+            students=self._student
+        ).order_by("stop").last()
         res = self.client.get(
             "skii:student_lessons",
-            dict(start=lesson_ref.start, stop=lesson_ref.stop),
+            dict(start=lesson_ref_start.start, stop=lesson_ref_stop.stop),
             student_pk=str(self._student.pk),
         )
         result = res.json()
         self.assertEqual(
-            len(result["lessons"]),
-            2,
-            msg=f"Needs fetch lesson after {lesson_ref.start}",
+            len(result["lessons_subscribed"]),
+            1,
+            msg=f"Needs fetch lesson start after {lesson_ref_start.start} "
+                f"and stop before {lesson_ref_stop.stop}",
         )
 
     def test_student_lesson_filter_only_start(self):
@@ -192,7 +200,7 @@ class TestAgendaController(SkiiControllerTestCase):
         self.client_auth(self._student)
         lesson_ref: LessonEvent = LessonEvent.objects.filter(
             students=self._student
-        ).first()
+        ).order_by("start").last()
         res = self.client.get(
             "skii:student_lessons",
             dict(start=lesson_ref.start),
@@ -200,9 +208,9 @@ class TestAgendaController(SkiiControllerTestCase):
         )
         result = res.json()
         self.assertEqual(
-            len(result["lessons"]),
-            2,
-            msg=f"Needs fetch lesson after {lesson_ref.start}",
+            len(result["lessons_subscribed"]),
+            1,
+            msg=f"Needs fetch lesson start after {lesson_ref.start}",
         )
 
     def test_student_lesson_filter_only_stop(self):
@@ -218,7 +226,7 @@ class TestAgendaController(SkiiControllerTestCase):
         )
         result = res.json()
         self.assertEqual(
-            len(result["lessons"]),
+            len(result["lessons_subscribed"]),
             1,
-            msg=f"Needs fetch lesson after {lesson_ref.start}",
+            msg=f"Needs fetch lesson stop before {lesson_ref.stop}",
         )

@@ -17,13 +17,13 @@ class SkiiMsgContract(Schema):
 class TeacherLessonContract(TeacherContract):
     """Return Teachers agents with lessons related."""
 
-    lessons: List[LessonContract] = Field(alias="lessonevent_set")
+    lessons_assigned: List[LessonContract]
 
 
 class StudentLessonContract(TeacherContract):
-    """Return Teachers agents with lessons related."""
+    """Return Student agents with lessons related."""
 
-    lessons: List[LessonContract] = Field(alias="events_linked")
+    lessons_subscribed: List[LessonContract]
 
 
 __all__ = [

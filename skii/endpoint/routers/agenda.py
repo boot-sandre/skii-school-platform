@@ -81,16 +81,8 @@ def student_lessons(
     if (request.user != agent.user and
             StudentAgent.objects.filter(user=request.user).exists()):
         raise PermissionError(MsgErrorStudent)
-    lessons = LessonEvent.objects.all()
-    lessons = filters.filter(lessons).filter(students__pk=agent.pk)
 
-    # TODO: Here we have an issue to correctly filter agent.lessons
-    #       Unittest test_student_lesson_filter_only_stop fail because of
-    #       agent.lessons get all related agent's lesson
-    lessons_dict_lst = [LessonContract.from_orm(less).dict() for less in lessons]
+    lessons = filters.filter(LessonEvent.objects.filter(students__pk=agent.pk))
+    setattr(agent, "lessons_subscribed", lessons)
 
-    setattr(agent, "lessons_subscribed", lessons_dict_lst)
-    agent_resp = StudentLessonContract.from_orm(agent).dict()
-    agent_resp["lessons_subscribed"] = lessons_dict_lst
-
-    return 200, agent_resp
+    return 200, agent

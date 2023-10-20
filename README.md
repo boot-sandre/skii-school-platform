@@ -6,9 +6,9 @@
 ## Features
 
 - User management with profile (student/teacher)
-- Planning management with schedule lesson
-- Location promote and location
-- Lesson level and certification
+- Planning management with scheduled lesson
+- Place/Skii station promote and location
+- Lesson level and certification (TODO)
 
 <details>
 <summary>:books: Read the <a href="https://boot-sandre.github.io/skii-school-platform">documentation</a></summary>
@@ -66,4 +66,47 @@ To do a quick check in the command line (not recorded in history):
 
 ```bash
 pycheck
+# or
+make pycheck
 ```
+#### Unittest
+
+To launch full set of project unittest
+
+```bash
+make test
+```
+
+#### Install
+
+To install project on a local dev environment
+```bash
+make install
+# Also if need to be logged
+make superuser
+```
+
+#### Launch and access
+
+To launch
+```bash
+make run
+```
+
+To access api docs you need to follow http://localhost:8000/skii/docs
+To access django admin you need to http://localhost:8000/admin/
+
+#### Enjoy
+
+All skii source code is licensed with mozilla MPL 2 and all new source python file needs to integrate this headers
+```python
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+# Copyright © Simon ANDRÉ <simon@emencia.com> synw (https://github.com/synw/)
+# project: SkiiSchoolPlatform
+# github: https://github.com/boot-sandre/skii-school-platform/
+# template: https://github.com/synw/django-spaninja
+```
+
+Enjoy and use it :P

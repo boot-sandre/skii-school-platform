@@ -1,6 +1,6 @@
 from typing import List, Type
 
-from ninja import Schema, Field
+from ninja import Schema
 from django.db.models import Model
 
 from skii.platform.schemas.agent import TeacherContract

@@ -15,7 +15,7 @@ INSTALLED_APPS += [  # noqa
 DJANGO_LOG_LEVEL = os.environ.get(
     "DJANGO_LOG_LEVEL", default="DEBUG" if DEBUG else "INFO"
 )
-LOGGING.update(     # noqa
+LOGGING.update(  # noqa
     {  # noqa
         "root": {
             "handlers": ["console"],

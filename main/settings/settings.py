@@ -87,9 +87,7 @@ WSGI_APPLICATION = "main.wsgi.application"
 
 DJANGO_LOG_LEVEL = "INFO"
 DJANGO_LOG_SQL_LEVEL = "INFO"
-DJANGO_LOG_LEVEL = os.environ.get(
-    "DJANGO_LOG_LEVEL", default=DJANGO_LOG_LEVEL
-)
+DJANGO_LOG_LEVEL = os.environ.get("DJANGO_LOG_LEVEL", default=DJANGO_LOG_LEVEL)
 DJANGO_LOG_SQL_LEVEL = os.environ.get(
     "DJANGO_LOG_SQL_LEVEL", default=DJANGO_LOG_SQL_LEVEL
 )

@@ -13,7 +13,6 @@ from skii.endpoint.schemas.response import TeacherLessonContract
 from skii.endpoint.schemas.response import StudentLessonContract
 from skii.endpoint.schemas.identifier import IntStrUUID4
 from skii.platform.models.event import LessonEvent
-from skii.platform.schemas.event import LessonContract
 
 UserModel = get_user_model()
 MsgErrorStudent = _(
@@ -78,8 +77,10 @@ def student_lessons(
     # If the logged user is a Student (filter(user=request.user).exist())
     # and different than the requested one (request.user)
     # Raise a Permission error.
-    if (request.user != agent.user and
-            StudentAgent.objects.filter(user=request.user).exists()):
+    if (
+        request.user != agent.user
+        and StudentAgent.objects.filter(user=request.user).exists()
+    ):
         raise PermissionError(MsgErrorStudent)
 
     lessons = filters.filter(LessonEvent.objects.filter(students__pk=agent.pk))

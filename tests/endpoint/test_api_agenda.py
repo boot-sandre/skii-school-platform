@@ -94,12 +94,12 @@ class TestAgendaController(SkiiControllerTestCase):
     def test_teacher_lesson_range_start_to_stop(self):
         """Can fetch teacher lesson with range start/stop filter."""
         self.client_auth(self._teacher)
-        lesson_ref_start: LessonEvent = LessonEvent.objects.filter(
-            teacher=self._teacher
-        ).order_by("start").last()
-        lesson_ref_stop: LessonEvent = LessonEvent.objects.filter(
-            teacher=self._teacher
-        ).order_by("stop").last()
+        lesson_ref_start: LessonEvent = (
+            LessonEvent.objects.filter(teacher=self._teacher).order_by("start").last()
+        )
+        lesson_ref_stop: LessonEvent = (
+            LessonEvent.objects.filter(teacher=self._teacher).order_by("stop").last()
+        )
         res = self.client.get(
             "skii:teacher_lessons",
             dict(start=lesson_ref_start.start, stop=lesson_ref_stop.stop),
@@ -110,7 +110,7 @@ class TestAgendaController(SkiiControllerTestCase):
             len(result["lessons_assigned"]),
             1,
             msg=f"Needs fetch lesson start after {lesson_ref_start.start} "
-                f"and stop before {lesson_ref_stop.stop}",
+            f"and stop before {lesson_ref_stop.stop}",
         )
 
     def test_student_lessons_required_keys(self):
@@ -176,12 +176,12 @@ class TestAgendaController(SkiiControllerTestCase):
     def test_student_lesson_range_start_to_stop(self):
         """Can fetch student lesson with range start/stop filter."""
         self.client_auth(self._student)
-        lesson_ref_start: LessonEvent = LessonEvent.objects.filter(
-            students=self._student
-        ).order_by("start").last()
-        lesson_ref_stop: LessonEvent = LessonEvent.objects.filter(
-            students=self._student
-        ).order_by("stop").last()
+        lesson_ref_start: LessonEvent = (
+            LessonEvent.objects.filter(students=self._student).order_by("start").last()
+        )
+        lesson_ref_stop: LessonEvent = (
+            LessonEvent.objects.filter(students=self._student).order_by("stop").last()
+        )
         res = self.client.get(
             "skii:student_lessons",
             dict(start=lesson_ref_start.start, stop=lesson_ref_stop.stop),
@@ -192,15 +192,15 @@ class TestAgendaController(SkiiControllerTestCase):
             len(result["lessons_subscribed"]),
             1,
             msg=f"Needs fetch lesson start after {lesson_ref_start.start} "
-                f"and stop before {lesson_ref_stop.stop}",
+            f"and stop before {lesson_ref_stop.stop}",
         )
 
     def test_student_lesson_filter_only_start(self):
         """Can fetch student lesson with only start filter."""
         self.client_auth(self._student)
-        lesson_ref: LessonEvent = LessonEvent.objects.filter(
-            students=self._student
-        ).order_by("start").last()
+        lesson_ref: LessonEvent = (
+            LessonEvent.objects.filter(students=self._student).order_by("start").last()
+        )
         res = self.client.get(
             "skii:student_lessons",
             dict(start=lesson_ref.start),
@@ -216,9 +216,9 @@ class TestAgendaController(SkiiControllerTestCase):
     def test_student_lesson_filter_only_stop(self):
         """Can fetch student lesson with only stop filter."""
         self.client_auth(self._student)
-        lesson_ref: LessonEvent = LessonEvent.objects.filter(
-            students=self._student
-        ).order_by("stop").first()
+        lesson_ref: LessonEvent = (
+            LessonEvent.objects.filter(students=self._student).order_by("stop").first()
+        )
         res = self.client.get(
             "skii:student_lessons",
             dict(stop=lesson_ref.stop),
